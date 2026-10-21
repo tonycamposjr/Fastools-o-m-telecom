@@ -127,17 +127,10 @@ export default function KmlMapTab({ showToast }: KmlMapTabProps) {
       list = list.filter(p => p.folder === selectedFolder);
     }
 
-    // Filter by Search Query (real-time matching against name, description, lat, lng, folder)
+    // Filter by Search Query (exclusivamente pelo nome principal do local)
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
-      list = list.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        `${p.lat},${p.lng}`.includes(q) ||
-        p.lat.toString().includes(q) ||
-        p.lng.toString().includes(q) ||
-        (p.folder && p.folder.toLowerCase().includes(q))
-      );
+      list = list.filter(p => p.name && p.name.toLowerCase().includes(q));
     }
 
     // Sort
@@ -881,57 +874,69 @@ export default function KmlMapTab({ showToast }: KmlMapTabProps) {
       {/* Active KML Summary & Persistence Status Bar */}
       {kmlData && (
         <div
+          id="kml-active-summary-bar"
+          className="kml-summary-bar"
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
             borderRadius: '12px',
-            padding: '16px 20px',
-            marginBottom: '20px',
+            padding: '12px 16px',
+            marginBottom: '16px',
             display: 'flex',
             flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '15px'
+            gap: '12px',
+            position: 'relative',
+            zIndex: 10
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: '1 1 260px', minWidth: 0 }}>
             <div
               style={{
-                width: '44px',
-                height: '44px',
+                width: '40px',
+                height: '40px',
+                minWidth: '40px',
                 borderRadius: '10px',
                 background: 'rgba(16, 185, 129, 0.15)',
                 color: 'var(--success)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '20px'
+                fontSize: '18px',
+                flexShrink: 0
               }}
             >
               <i className="fas fa-database"></i>
             </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--fg)' }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: 'var(--fg)', wordBreak: 'break-word' }}>
                   {kmlData.fileName}
                 </h3>
                 <span
+                  id="kml-clustering-badge"
                   style={{
                     background: 'rgba(16, 185, 129, 0.2)',
                     color: 'var(--success)',
                     fontSize: '11px',
                     fontWeight: 700,
-                    padding: '2px 8px',
+                    padding: '3px 8px',
                     borderRadius: '12px',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px'
+                    gap: '4px',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                    position: 'relative',
+                    zIndex: 2,
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
                   }}
                 >
                   <i className="fas fa-shield-alt"></i> Salvo (Clustering Ativo)
                 </span>
               </div>
-              <p style={{ margin: '2px 0 0 0', fontSize: '13px', color: 'var(--muted)' }}>
+              <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: 'var(--muted)', wordBreak: 'break-word' }}>
                 <strong>{kmlData.points.length}</strong> pontos mapeados
                 {kmlData.polylines.length > 0 && ` • ${kmlData.polylines.length} rotas/linhas`}
                 {currentRecord?.updatedAt && ` • Atualizado em: ${currentRecord.updatedAt}`}
@@ -940,7 +945,7 @@ export default function KmlMapTab({ showToast }: KmlMapTabProps) {
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', zIndex: 2 }}>
             <button
               className="db-btn primary"
               style={{ fontSize: '12px', padding: '8px 12px' }}
@@ -1019,7 +1024,7 @@ export default function KmlMapTab({ showToast }: KmlMapTabProps) {
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '20px', minHeight: '580px' }} className="kml-main-layout">
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) var(--side-panel-w)', gap: '20px', minHeight: '580px' }} className="kml-main-layout">
             {/* Left Column: Map Container */}
             <div 
               style={{ 
@@ -1080,7 +1085,7 @@ export default function KmlMapTab({ showToast }: KmlMapTabProps) {
                 className={mobileTab === 'map' ? 'mobile-map-fullscreen' : ''}
                 style={{
                   width: '100%',
-                  height: mobileTab === 'map' ? 'min(620px, calc(100vh - 200px))' : '520px',
+                  height: mobileTab === 'map' ? 'min(620px, calc(100vh - 200px))' : 'clamp(360px, 55vh, 800px)',
                   borderRadius: '12px',
                   border: '2px solid var(--border)',
                   boxShadow: '0 4px 12px var(--shadow)',
@@ -1124,15 +1129,39 @@ export default function KmlMapTab({ showToast }: KmlMapTabProps) {
             </div>
 
             {/* REAL-TIME SEARCH INPUT */}
-            <div className="search-box" style={{ minWidth: '100%', marginBottom: '10px' }}>
-              <i className="fas fa-search" style={{ color: searchQuery ? '#f59e0b' : undefined }}></i>
+            <div
+              className="search-box"
+              style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                minWidth: '100%',
+                flex: '0 0 auto',
+                marginBottom: '10px'
+              }}
+            >
+              <i
+                className="fas fa-search"
+                style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: searchQuery ? '#f59e0b' : 'var(--muted)',
+                  pointerEvents: 'none',
+                  zIndex: 3,
+                  fontSize: '13px'
+                }}
+              ></i>
               <input
                 type="text"
-                placeholder="Buscar ponto em tempo real..."
+                placeholder="Buscar nome do local (ex: OEI)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
-                  padding: '8px 12px 8px 36px',
+                  width: '100%',
+                  padding: '9px 12px 9px 34px',
                   fontSize: '12px',
                   borderColor: searchQuery ? '#f59e0b' : undefined,
                   boxShadow: searchQuery ? '0 0 8px rgba(245, 158, 11, 0.4)' : undefined

@@ -350,7 +350,7 @@ export default function CarimboTab({ showToast }: CarimboTabProps) {
   };
 
   return (
-    <div className="tab-content active" style={{ display: 'block' }}>
+    <div id="carimbo-tab" className="tab-content active carimbo-tab-content" style={{ display: 'block' }}>
       <h2><i className="fas fa-stamp"></i> CARIMBO DE REDE EXTERNA</h2>
 
       <form id="carimboForm" onSubmit={(e) => e.preventDefault()}>

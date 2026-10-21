@@ -1,18 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-/* ========== VARIÁVEIS CSS ========== */
+/* ========== VARIÁVEIS CSS (NEUMORPHISM DESIGN SYSTEM) ========== */
 :root {
-    --bg: #F8FAFC;
-    --card: #ffffff;
-    --muted: #64748B;
-    --fg: #0F172A;
-    --accent: #4F46E5;
-    --err: #EF4444;
-    --success: #10B981;
-    --warning: #F59E0B;
-    --border: #E2E8F0;
-    --shadow: rgba(148, 163, 184, 0.08);
+    --bg: #e2e8f0;
+    --card: #e2e8f0;
+    --card-surface: #e2e8f0;
+    --muted: #64748b;
+    --fg: #1e293b;
+    --fg-heading: #0f172a;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --err: #ef4444;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --border: rgba(255, 255, 255, 0.6);
+    
+    /* Neumorphic Shadow Tokens (Light Mode) */
+    --nm-light: #ffffff;
+    --nm-dark: #b8c2cc;
+    --nm-flat: 6px 6px 14px #b8c2cc, -6px -6px 14px #ffffff;
+    --nm-flat-sm: 3px 3px 8px #b8c2cc, -3px -3px 8px #ffffff;
+    --nm-flat-lg: 10px 10px 22px #b8c2cc, -10px -10px 22px #ffffff;
+    --nm-inset: inset 3px 3px 6px #b8c2cc, inset -3px -3px 6px #ffffff;
+    --nm-inset-deep: inset 5px 5px 10px #b8c2cc, inset -5px -5px 10px #ffffff;
+    --nm-convex: linear-gradient(145deg, #f2f7fc, #cbcfd8);
+    --nm-concave: linear-gradient(145deg, #cbcfd8, #f2f7fc);
+    
+    --shadow: rgba(148, 163, 184, 0.35);
     --gradient-start: #4F46E5;
     --gradient-end: #7C3AED;
     --accent-rgb: 79, 70, 229;
@@ -20,16 +35,31 @@
 }
 
 :root[data-theme="dark"] {
-    --bg: #0B0F19;
-    --card: #151B2C;
-    --muted: #94A3B8;
-    --fg: #F8FAFC;
-    --accent: #818CF8;
-    --err: #F87171;
-    --success: #34D399;
-    --warning: #FBBF24;
-    --border: #242E42;
-    --shadow: rgba(0, 0, 0, 0.3);
+    --bg: #1e222b;
+    --card: #1e222b;
+    --card-surface: #1e222b;
+    --muted: #94a3b8;
+    --fg: #f1f5f9;
+    --fg-heading: #ffffff;
+    --accent: #818cf8;
+    --accent-hover: #a5b4fc;
+    --err: #f87171;
+    --success: #34d399;
+    --warning: #fbbf24;
+    --border: rgba(255, 255, 255, 0.05);
+    
+    /* Neumorphic Shadow Tokens (Dark Mode) */
+    --nm-light: #282d38;
+    --nm-dark: #14171d;
+    --nm-flat: 6px 6px 14px #12151a, -6px -6px 14px #2a303c;
+    --nm-flat-sm: 3px 3px 8px #12151a, -3px -3px 8px #2a303c;
+    --nm-flat-lg: 10px 10px 22px #0e1014, -10px -10px 22px #2e3442;
+    --nm-inset: inset 3px 3px 6px #12151a, inset -3px -3px 6px #2a303c;
+    --nm-inset-deep: inset 5px 5px 10px #0e1014, inset -5px -5px 10px #2e3442;
+    --nm-convex: linear-gradient(145deg, #222631, #1a1e25);
+    --nm-concave: linear-gradient(145deg, #1a1e25, #222631);
+    
+    --shadow: rgba(0, 0, 0, 0.5);
     --gradient-start: #6366F1;
     --gradient-end: #8B5CF6;
     --accent-rgb: 129, 140, 248;
@@ -40,6 +70,13 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    min-width: 0;
+}
+
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
 }
 
 body {
@@ -49,10 +86,17 @@ body {
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
     min-height: 100vh;
-    padding: 20px;
+    min-height: 100dvh;
+    padding: clamp(8px, 2vw, 20px);
+}
+
+img, svg, video, canvas, iframe {
+    max-width: 100%;
+    height: auto;
 }
 
 .app-container {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     animation: fadeIn 0.5s ease;
@@ -63,69 +107,69 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ========== HEADER ========== */
+/* ========== HEADER (NEUMORPHIC ELEVATION) ========== */
 .app-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: clamp(14px, 3vw, 30px);
     position: relative;
+    width: 100%;
 }
 
 .app-title {
-    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-    color: white;
-    font-size: 28px;
-    font-weight: bold;
+    background: var(--card);
+    color: var(--fg-heading);
+    font-size: clamp(17px, 4vw, 26px);
+    font-weight: 700;
     text-align: center;
-    padding: 25px;
-    border-radius: 16px;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    padding: clamp(14px, 3vw, 24px);
+    border-radius: clamp(14px, 3vw, 20px);
+    margin-bottom: clamp(12px, 2.5vw, 25px);
+    box-shadow: var(--nm-flat);
+    border: 1px solid var(--border);
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: clamp(8px, 2vw, 14px);
+    line-height: 1.3;
 }
 
-.app-title::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+.app-title i {
+    color: var(--accent);
+    filter: drop-shadow(0 2px 4px rgba(var(--accent-rgb), 0.3));
+    font-size: 1.1em;
 }
 
 .version-badge {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    padding: 4px 12px;
+    top: 16px;
+    right: 18px;
+    background: var(--card);
+    color: var(--accent);
+    padding: 4px 14px;
     border-radius: 20px;
     font-size: 12px;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
+    font-weight: 700;
+    box-shadow: var(--nm-inset);
+    letter-spacing: 0.5px;
 }
 
-/* ========== CONTROLES ========== */
+/* ========== CONTROLES (NEUMORPHIC PILLS & BUTTONS) ========== */
 .controls-bar {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: clamp(6px, 1.5vw, 14px);
+    margin-bottom: clamp(12px, 2vw, 20px);
     flex-wrap: wrap;
+    width: 100%;
 }
 
-.theme-toggle, .export-btn, .reset-btn {
+.theme-toggle, .export-btn, .reset-btn, .neumorph-toggle-btn {
     background: var(--card);
-    border: 2px solid var(--accent);
+    border: 1px solid var(--border);
     color: var(--fg);
     border-radius: 50px;
     padding: 10px 20px;
@@ -134,74 +178,110 @@ body {
     align-items: center;
     gap: 8px;
     font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px var(--shadow);
+    font-size: 13px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--nm-flat-sm);
+    user-select: none;
 }
 
 .theme-toggle {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     justify-content: center;
     padding: 0;
     border-radius: 50%;
 }
 
-.theme-toggle:hover, .export-btn:hover, .reset-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--shadow);
+.theme-toggle i {
+    font-size: 16px;
+    color: var(--accent);
 }
 
-/* ========== TABS ========== */
+.theme-toggle:hover, .export-btn:hover, .reset-btn:hover, .neumorph-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--nm-flat);
+    color: var(--accent);
+}
+
+.theme-toggle:active, .export-btn:active, .reset-btn:active, .neumorph-toggle-btn:active {
+    transform: translateY(1px);
+    box-shadow: var(--nm-inset);
+}
+
+.neumorph-toggle-btn.active {
+    background: var(--card);
+    color: var(--accent);
+    box-shadow: var(--nm-inset);
+    border-color: rgba(var(--accent-rgb), 0.3);
+}
+
+.neumorph-toggle-btn i {
+    color: var(--accent);
+}
+
+/* ========== TABS (NEUMORPHIC TRACK & PILLS) ========== */
 .tabs-container {
     display: flex;
     background: var(--card);
-    border-radius: 20px 20px 0 0;
-    overflow: hidden;
-    box-shadow: 0 10px 40px var(--shadow);
+    border-radius: 20px;
+    padding: 8px;
+    box-shadow: var(--nm-inset);
     flex-wrap: wrap;
     position: relative;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
 .tab-button {
     flex: 1;
-    padding: 18px 24px;
-    background: transparent;
+    padding: 14px 20px;
+    background: var(--card);
     border: none;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--muted);
-    border-bottom: 3px solid transparent;
+    border-radius: 14px;
     min-width: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    box-shadow: var(--nm-flat-sm);
+    user-select: none;
 }
 
 .tab-button.active {
     color: var(--accent);
-    border-bottom: 3px solid var(--accent);
-    background: rgba(var(--accent-rgb), 0.05);
+    background: var(--card);
+    box-shadow: var(--nm-inset);
+    font-weight: 700;
 }
 
 .tab-button:hover:not(.active) {
-    background: rgba(0, 0, 0, 0.03);
+    transform: translateY(-2px);
+    color: var(--fg);
+    box-shadow: var(--nm-flat);
+}
+
+.tab-button:active {
+    box-shadow: var(--nm-inset);
 }
 
 .tab-content {
     display: none;
     background: var(--card);
-    border-radius: 0 0 20px 20px;
+    border-radius: 24px;
     padding: 35px;
-    box-shadow: 0 10px 40px var(--shadow);
+    box-shadow: var(--nm-flat);
+    border: 1px solid var(--border);
     margin-bottom: 40px;
     animation: slideUp 0.3s ease;
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -209,7 +289,7 @@ body {
     display: block;
 }
 
-/* ========== FORMULÁRIOS GERAIS ========== */
+/* ========== FORMULÁRIOS (NEUMORPHIC DEBOSSED INSETS) ========== */
 .form-group {
     margin-bottom: 24px;
     position: relative;
@@ -220,10 +300,11 @@ label {
     display: block;
     margin-bottom: 10px;
     color: var(--fg);
-    font-size: 15px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
+    letter-spacing: 0.2px;
 }
 
 .required {
@@ -239,33 +320,33 @@ select,
 textarea {
     width: 100%;
     padding: 14px 18px;
-    border-radius: 12px;
-    border: 2px solid var(--border);
+    border-radius: 14px;
+    border: none;
     background: var(--card);
     color: var(--fg);
     font-size: 15px;
-    transition: all 0.3s ease;
+    box-shadow: var(--nm-inset);
+    transition: all 0.25s ease;
+    outline: none;
 }
 
 input[type="file"] {
     cursor: pointer;
-    padding: 12px;
+    padding: 12px 18px;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-    border-color: var(--accent);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
-    transform: translateY(-1px);
+    box-shadow: var(--nm-inset-deep), 0 0 0 2px rgba(var(--accent-rgb), 0.35);
+    color: var(--fg);
 }
 
 input.invalid {
-    border-color: var(--err);
+    box-shadow: var(--nm-inset), 0 0 0 2px rgba(239, 68, 68, 0.4);
 }
 
-/* ========== BOTÕES ========== */
+/* ========== BOTÕES (NEUMORPHIC TACTILE 3D) ========== */
 .btn-container {
     margin-top: 35px;
     display: flex;
@@ -275,13 +356,13 @@ input.invalid {
 }
 
 .btn {
-    padding: 15px 28px;
-    border-radius: 12px;
+    padding: 14px 28px;
+    border-radius: 16px;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     min-width: 160px;
     display: flex;
     align-items: center;
@@ -289,56 +370,49 @@ input.invalid {
     gap: 10px;
     position: relative;
     overflow: hidden;
-}
-
-.btn::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 5px;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.5);
-    opacity: 0;
-    border-radius: 100%;
-    transform: scale(1, 1) translate(-50%);
-    transform-origin: 50% 50%;
+    user-select: none;
+    box-shadow: var(--nm-flat-sm);
 }
 
 .btn-primary {
     background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-    color: white;
-    box-shadow: 0 6px 20px rgba(var(--gradient-start-rgb), 0.3);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.35), var(--nm-flat-sm);
 }
 
 .btn-secondary {
-    background: linear-gradient(135deg, #6c757d, #495057);
-    color: white;
-    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+    background: var(--card);
+    color: var(--fg);
+    box-shadow: var(--nm-flat-sm);
 }
 
 .btn-success {
-    background: linear-gradient(135deg, var(--success), #20c997);
-    color: white;
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35), var(--nm-flat-sm);
 }
 
 .btn-warning {
-    background: linear-gradient(135deg, var(--warning), #f59e0b);
-    color: white;
-    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, var(--warning), #d97706);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35), var(--nm-flat-sm);
 }
 
 .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    box-shadow: var(--nm-flat);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.45), var(--nm-flat);
 }
 
 .btn:active {
-    transform: translateY(-1px);
+    transform: translateY(1px);
+    box-shadow: var(--nm-inset);
 }
 
-/* ========== RADIO & CHECKBOX ========== */
+/* ========== RADIO & CHECKBOX (NEUMORPHIC) ========== */
 .radio-group {
     display: flex;
     gap: 25px;
@@ -353,12 +427,12 @@ input[type="radio"] {
 
 .radio-label {
     position: relative;
-    padding-left: 35px;
+    padding-left: 36px;
     cursor: pointer;
     font-weight: 500;
     user-select: none;
     color: var(--fg);
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
 }
 
 .radio-label::before {
@@ -367,12 +441,12 @@ input[type="radio"] {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 22px;
-    height: 22px;
-    border: 2px solid var(--accent);
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: var(--card);
-    transition: all 0.3s ease;
+    box-shadow: var(--nm-flat-sm);
+    transition: all 0.2s ease;
 }
 
 .radio-label::after {
@@ -381,11 +455,16 @@ input[type="radio"] {
     left: 7px;
     top: 50%;
     transform: translateY(-50%) scale(0);
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--accent);
-    transition: transform 0.3s ease;
+    box-shadow: 0 0 8px var(--accent);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+input[type="radio"]:checked + .radio-label::before {
+    box-shadow: var(--nm-inset);
 }
 
 input[type="radio"]:checked + .radio-label::after {
@@ -394,13 +473,14 @@ input[type="radio"]:checked + .radio-label::after {
 
 input[type="radio"]:checked + .radio-label {
     color: var(--accent);
+    font-weight: 600;
 }
 
-/* ========== MENSAGENS ========== */
+/* ========== MENSAGENS (NEUMORPHIC EMBOSSED) ========== */
 .calculation-helper {
-    background: rgba(var(--accent-rgb), 0.1);
-    border: 1px solid var(--accent);
-    border-radius: 10px;
+    background: var(--card);
+    box-shadow: var(--nm-inset);
+    border-radius: 14px;
     padding: 16px;
     margin-top: 12px;
     font-size: 14px;
@@ -420,14 +500,15 @@ input[type="radio"]:checked + .radio-label {
 }
 
 .success-message {
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid var(--success);
+    background: var(--card);
+    box-shadow: var(--nm-inset);
     color: var(--success);
-    padding: 14px;
-    border-radius: 10px;
+    padding: 14px 18px;
+    border-radius: 14px;
     margin-top: 20px;
     display: none;
     animation: slideDown 0.3s ease;
+    border-left: 4px solid var(--success);
 }
 
 @keyframes slideDown {
@@ -435,31 +516,29 @@ input[type="radio"]:checked + .radio-label {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ========== RESULTADOS ========== */
+/* ========== RESULTADOS (NEUMORPHIC RECESS & EMBOSS) ========== */
 #resultado, #conversionResult, #resultadoCalculadora {
     display: none;
     margin-top: 35px;
-    border: 2px solid var(--accent);
     padding: 30px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.05), rgba(255, 255, 255, 0.1));
+    border-radius: 20px;
+    background: var(--card);
+    box-shadow: var(--nm-inset-deep);
     font-size: 15px;
     line-height: 1.7;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     animation: scaleIn 0.3s ease;
 }
 
 @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.95); }
+    from { opacity: 0; transform: scale(0.97); }
     to { opacity: 1; transform: scale(1); }
 }
 
 .carimbo-preview {
-    border: 3px dashed var(--accent);
     padding: 25px;
-    border-radius: 15px;
-    background-color: var(--card);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    background: var(--card);
+    box-shadow: var(--nm-inset);
     position: relative;
     margin-top: 25px;
 }
@@ -469,15 +548,17 @@ input[type="radio"]:checked + .radio-label {
     position: absolute;
     top: -12px;
     left: 25px;
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 12px;
     color: var(--accent);
     background: var(--card);
-    padding: 0 12px;
-    transform: rotate(-2deg);
+    padding: 2px 14px;
+    border-radius: 20px;
+    box-shadow: var(--nm-flat-sm);
+    letter-spacing: 0.5px;
 }
 
-/* ========== CALCULADORA ÓPTICA ========== */
+/* ========== CALCULADORA ÓPTICA (NEUMORPHIC) ========== */
 .input-group {
     margin-bottom: 22px;
 }
@@ -486,36 +567,43 @@ input[type="radio"]:checked + .radio-label {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    background-color: var(--accent);
-    color: white;
-    font-size: 12px;
+    background: var(--card);
+    box-shadow: var(--nm-flat-sm);
+    color: var(--accent);
+    font-size: 11px;
     cursor: help;
     position: relative;
     margin-left: 8px;
     font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.tooltip-icon:hover {
+    box-shadow: var(--nm-inset);
 }
 
 .tooltip-icon .tooltip-text {
     visibility: hidden;
     width: 250px;
-    background-color: var(--fg);
-    color: var(--bg);
+    background-color: var(--fg-heading);
+    color: var(--card);
     text-align: center;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 12px;
     position: absolute;
     z-index: 100;
-    bottom: 125%;
+    bottom: 130%;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
-    transition: opacity 0.3s;
-    font-size: 13px;
+    transition: opacity 0.25s;
+    font-size: 12px;
     font-weight: normal;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
 }
 
 .tooltip-icon:hover .tooltip-text {
@@ -525,30 +613,39 @@ input[type="radio"]:checked + .radio-label {
 
 .preset-selector {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 25px;
     flex-wrap: wrap;
 }
 
 .preset-btn {
-    padding: 10px 20px;
+    padding: 10px 18px;
     background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 8px;
+    border: none;
+    border-radius: 14px;
     cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    box-shadow: var(--nm-flat-sm);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
 }
 
 .preset-btn.active {
-    border-color: var(--accent);
-    background: rgba(var(--accent-rgb), 0.1);
+    box-shadow: var(--nm-inset);
     color: var(--accent);
+    font-weight: 700;
 }
 
-.preset-btn:hover {
+.preset-btn:hover:not(.active) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--shadow);
+    box-shadow: var(--nm-flat);
+    color: var(--fg);
+}
+
+.preset-btn:active {
+    box-shadow: var(--nm-inset);
 }
 
 .status {
@@ -955,27 +1052,43 @@ td[colspan] {
 }
 
 .search-box {
-    flex: 1;
-    min-width: 300px;
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+}
+
+.db-actions .search-box {
+    flex: 1 1 280px;
+    min-width: 260px;
 }
 
 .search-box i {
     position: absolute;
-    left: 15px;
+    left: 14px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--muted);
+    pointer-events: none;
+    z-index: 2;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 .search-box input {
     width: 100%;
-    padding: 12px 20px 12px 45px;
+    padding: 11px 18px 11px 40px !important;
     border-radius: 10px;
     border: 2px solid var(--border);
     background: var(--card);
     color: var(--fg);
     font-size: 14px;
+    line-height: 1.4;
 }
 
 .search-box input:focus {
@@ -1880,189 +1993,567 @@ td[colspan] {
     border-radius: 6px !important;
 }
 
-/* ========== RESPONSIVIDADE ========== */
-@media (max-width: 900px) {
-    .nsap-main {
-        grid-template-columns: 1fr;
+/* ========== RESPONSIVIDADE COMPLETA (TABLET & ULTRA-COMPACT MOBILE) ========== */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+    }
+
+    .detalhes-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
     }
 }
 
-@media (max-width: 768px) {
-    body { padding: 10px; }
-    .app-title { font-size: 22px; padding: 20px 15px; }
-    .version-badge { top: 10px; right: 10px; }
-    
+@media (max-width: 900px) {
+    .nsap-main {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+    }
+}
+
+/* Modo Tablet (769px até 900px) */
+@media (min-width: 641px) and (max-width: 768px) {
+    body {
+        padding: 10px 12px;
+    }
+
+    .app-title {
+        font-size: 18px;
+        padding: 14px 16px;
+    }
+
+    .tabs-container {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+        gap: 6px;
+        padding: 6px;
+    }
+
+    .tab-button {
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        padding: 10px 14px !important;
+        font-size: 13px !important;
+        min-width: unset !important;
+        min-height: 38px;
+    }
+
+    .tab-content {
+        padding: 16px;
+        border-radius: 14px;
+        margin-bottom: 20px;
+    }
+
+    .form-row {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+    }
+}
+
+/* ==========================================================================
+   MODO MOBILE ULTRA-COMPACTO (<= 640px) — ALTA DENSIDADE & ELEMENTOS MENORES
+   ========================================================================== */
+@media (max-width: 640px) {
+    body {
+        padding: 4px 6px !important;
+    }
+
+    .app-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .app-header {
+        margin-bottom: 6px !important;
+    }
+
+    .app-title {
+        font-size: 13.5px !important;
+        padding: 8px 10px !important;
+        border-radius: 10px !important;
+        margin-bottom: 6px !important;
+        gap: 6px !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        box-shadow: var(--nm-flat-sm) !important;
+    }
+
+    .app-title i {
+        font-size: 14px !important;
+    }
+
+    .version-badge {
+        position: static !important;
+        margin-left: 4px !important;
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+        border-radius: 10px !important;
+    }
+
+    .controls-bar {
+        justify-content: center !important;
+        gap: 5px !important;
+        margin-bottom: 6px !important;
+        flex-wrap: wrap !important;
+    }
+
+    .theme-toggle,
+    .export-btn,
+    .reset-btn,
+    .neumorph-toggle-btn {
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+        height: 28px !important;
+        min-height: 28px !important;
+        border-radius: 14px !important;
+        gap: 4px !important;
+    }
+
+    .theme-toggle {
+        width: 28px !important;
+        height: 28px !important;
+        padding: 0 !important;
+    }
+
+    .theme-toggle i {
+        font-size: 12px !important;
+    }
+
+    /* Abas de Navegação Compactas */
     .tabs-container {
         flex-wrap: nowrap !important;
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
-        border-radius: 12px 12px 0 0;
+        border-radius: 10px !important;
+        gap: 4px !important;
+        padding: 4px !important;
+        margin-bottom: 8px !important;
+        box-shadow: var(--nm-inset) !important;
     }
-    
+
     .tabs-container::-webkit-scrollbar {
-        height: 5px;
+        height: 3px !important;
     }
-    
-    .tabs-container::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    
+
     .tabs-container::-webkit-scrollbar-thumb {
-        background: var(--border);
-        border-radius: 4px;
+        background: var(--border) !important;
+        border-radius: 3px !important;
     }
-    
+
     .tab-button {
         flex: 0 0 auto !important;
         white-space: nowrap !important;
-        padding: 14px 20px !important;
-        font-size: 14px !important;
+        padding: 6px 10px !important;
+        font-size: 11px !important;
         min-width: unset !important;
-    }
-    
-    .tab-content { padding: 20px; }
-    .btn { width: 100%; min-width: auto; }
-    .btn-container { flex-direction: column; gap: 15px; }
-    .controls-bar { justify-content: center; }
-    
-    .stats-container { grid-template-columns: repeat(2, 1fr); }
-    .db-actions { flex-direction: column; align-items: stretch; }
-    .search-box { min-width: 100%; }
-    .filter-group { flex-direction: column; align-items: stretch; }
-    .filter-group select,
-    .filter-group input { min-width: 100%; }
-    .action-buttons { flex-direction: column; gap: 4px; }
-    
-    .nsap-row { grid-template-columns: 1fr; }
-    .nsap-key { margin-bottom: 5px; }
-    
-    table { width: 100%; }
-    th, td { padding: 12px; }
-    
-    .modal-content.large,
-    .modal-content.xlarge { width: 95%; margin: 10px; }
-
-    /* Estilos responsivos de clientes para celular */
-    .table-container {
-        border: none !important;
-        background: transparent !important;
-        min-height: auto !important;
-        box-shadow: none !important;
+        min-height: 30px !important;
+        border-radius: 7px !important;
+        gap: 5px !important;
     }
 
-    .desktop-only-table {
+    .tab-button i {
+        font-size: 11px !important;
+    }
+
+    /* Caixa de Conteúdo da Aba Compacta */
+    .tab-content {
+        padding: 10px 8px !important;
+        border-radius: 12px !important;
+        margin-bottom: 12px !important;
+        box-shadow: var(--nm-flat-sm) !important;
+    }
+
+    /* Formulários Compactos e Otimizados para Caber Muito Mais Itens */
+    .form-group {
+        margin-bottom: 6px !important;
+    }
+
+    label {
+        font-size: 11px !important;
+        margin-bottom: 2px !important;
+        gap: 4px !important;
+        font-weight: 600 !important;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    input[type="email"],
+    input[type="date"],
+    select,
+    textarea {
+        padding: 5px 8px !important;
+        font-size: 12px !important;
+        border-radius: 7px !important;
+        min-height: 30px !important;
+        height: 30px !important;
+        line-height: 1.25 !important;
+        box-shadow: var(--nm-inset) !important;
+    }
+
+    textarea {
+        height: auto !important;
+        min-height: 50px !important;
+        padding: 6px 8px !important;
+    }
+
+    input[type="file"] {
+        padding: 4px 8px !important;
+        height: 30px !important;
+    }
+
+    .form-row {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    .radio-group {
+        gap: 10px !important;
+        margin-top: 3px !important;
+    }
+
+    .radio-label {
+        padding-left: 22px !important;
+        font-size: 11.5px !important;
+    }
+
+    .radio-label::before {
+        width: 15px !important;
+        height: 15px !important;
+    }
+
+    .radio-label::after {
+        left: 4px !important;
+        width: 7px !important;
+        height: 7px !important;
+    }
+
+    /* Botões de Ação Compactos */
+    .btn-container {
+        margin-top: 10px !important;
+        gap: 6px !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+    }
+
+    .btn {
+        width: auto !important;
+        flex: 1 1 auto !important;
+        min-width: 100px !important;
+        padding: 6px 12px !important;
+        font-size: 11.5px !important;
+        border-radius: 8px !important;
+        min-height: 30px !important;
+        gap: 4px !important;
+    }
+
+    /* Títulos de Seção Internos Compactos */
+    h3, h4, .section-title {
+        font-size: 12px !important;
+        margin: 8px 0 4px 0 !important;
+        padding-bottom: 2px !important;
+    }
+
+    /* Dashboard e Cards na Tela Inicial — SEMPRE DE DOIS EM DOIS NO MOBILE */
+    .dashboard-intro {
+        margin-bottom: 10px !important;
+        text-align: center !important;
+    }
+
+    .dashboard-intro h2 {
+        font-size: 13.5px !important;
+        font-weight: 800 !important;
+        margin-bottom: 3px !important;
+    }
+
+    .dashboard-intro p {
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+        max-width: 95% !important;
+    }
+
+    .dashboard-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+        width: 100% !important;
+    }
+
+    .dashboard-card {
+        padding: 10px 8px 8px 8px !important;
+        border-radius: 12px !important;
+        min-height: 98px !important;
+        gap: 4px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        box-shadow: var(--nm-flat-sm) !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    .dashboard-card-glow {
+        height: 3px !important;
+    }
+
+    .dashboard-card-top {
+        gap: 6px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+
+    .dashboard-card-header {
+        margin-bottom: 0 !important;
+        width: 100% !important;
+    }
+
+    .dashboard-card-icon,
+    .card-icon {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 13px !important;
+        border-radius: 8px !important;
+    }
+
+    .dashboard-card-title,
+    .card-title {
+        font-size: 11px !important;
+        line-height: 1.2 !important;
+        margin-top: 2px !important;
+        margin-bottom: 0 !important;
+        font-weight: 700 !important;
+        text-align: left !important;
+        word-break: break-word !important;
+    }
+
+    /* Ocultar descrições dos cards na tela inicial em modo mobile */
+    .dashboard-card-desc,
+    .card-desc {
         display: none !important;
     }
-    
-    .mobile-client-cards {
+
+    .dashboard-card-footer {
+        margin-top: auto !important;
+        padding-top: 2px !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
         display: flex !important;
-        flex-direction: column;
-        gap: 16px;
-        margin-top: 10px;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        color: var(--tool-color, var(--accent)) !important;
+        gap: 3px !important;
     }
-}
 
-@media (max-width: 480px) {
-    .app-title { font-size: 20px; padding: 18px 12px; }
-    .tab-button { padding: 12px 16px !important; font-size: 13px !important; min-width: unset !important; }
-    .tab-content { padding: 10px; }
-    
-    .stats-container { grid-template-columns: 1fr; }
-    .preset-selector { flex-direction: column; }
-    .preset-btn { width: 100%; }
-    
-    input[type="text"], input[type="number"], input[type="file"], select { padding: 12px 15px; }
-    .radio-group { flex-direction: column; align-items: flex-start; gap: 15px; }
-    
-    .form-row { grid-template-columns: 1fr !important; gap: 15px; }
-    .backup-options { grid-template-columns: 1fr; }
-    
-    .btn { padding: 14px 20px; font-size: 15px; }
+    .dashboard-card-footer i {
+        font-size: 9px !important;
+        margin-left: 2px !important;
+    }
 
-    /* Card de clientes - Aproveitar melhor a largura em telas pequenas */
+    /* Estatísticas e Métricas */
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .stat-card {
+        padding: 6px 8px !important;
+        border-radius: 8px !important;
+        gap: 6px !important;
+    }
+
+    .stat-card i {
+        font-size: 18px !important;
+    }
+
+    .stat-card h3 {
+        font-size: 15px !important;
+    }
+
+    .stat-card p {
+        font-size: 9.5px !important;
+        margin-top: 1px !important;
+    }
+
+    /* Presets e Filtros */
+    .preset-selector {
+        gap: 4px !important;
+        margin-bottom: 8px !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    .preset-btn {
+        padding: 4px 8px !important;
+        font-size: 10.5px !important;
+        border-radius: 6px !important;
+        min-height: 26px !important;
+    }
+
+    .db-actions {
+        gap: 6px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .db-btn {
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+        border-radius: 6px !important;
+        min-height: 28px !important;
+    }
+
+    .search-box {
+        min-width: 100% !important;
+        font-size: 11.5px !important;
+    }
+
+    .filter-group {
+        gap: 4px !important;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        min-width: 80px !important;
+        padding: 4px 6px !important;
+        font-size: 11px !important;
+        height: 28px !important;
+    }
+
+    /* Cards de Clientes no Banco de Dados Mobile */
     .client-mobile-card {
-        padding: 12px 12px 12px 16px; /* Menor padding para dar mais espaço ao conteúdo */
-        border-radius: 10px;
-        box-shadow: 0 2px 8px var(--shadow);
+        padding: 8px 10px !important;
+        border-radius: 8px !important;
+        gap: 4px !important;
+        margin-bottom: 4px !important;
     }
 
     .client-card-header {
-        padding-bottom: 8px;
-        margin-bottom: 10px;
-        gap: 8px;
+        padding-bottom: 4px !important;
+        margin-bottom: 4px !important;
     }
 
     .client-card-name {
-        font-size: 15px;
-    }
-
-    .client-card-body {
-        gap: 8px;
-        font-size: 12px;
+        font-size: 12px !important;
     }
 
     .client-card-item {
-        gap: 6px;
-    }
-
-    .client-card-item i {
-        font-size: 11px;
-        width: 14px;
-        margin-top: 2px;
+        font-size: 10.5px !important;
+        gap: 4px !important;
     }
 
     .client-card-grid {
         grid-template-columns: repeat(3, 1fr) !important;
-        gap: 4px;
-        padding: 6px;
-        margin: 4px 0;
+        gap: 3px !important;
+        padding: 3px 5px !important;
+        margin: 2px 0 !important;
     }
 
-    .client-card-grid-item .client-card-label {
-        font-size: 8px;
+    .client-card-label {
+        font-size: 7.5px !important;
     }
 
-    .client-card-grid-item .client-card-value {
-        font-size: 11px;
+    .client-card-value {
+        font-size: 9.5px !important;
     }
 
     .client-card-history-block {
-        padding: 8px;
-        margin: 4px 0;
+        padding: 4px 6px !important;
+        margin: 2px 0 !important;
     }
 
     .history-block-title {
-        font-size: 9px;
-        margin-bottom: 3px;
+        font-size: 8px !important;
     }
 
     .history-block-content {
-        font-size: 12px;
-        line-height: 1.35;
+        font-size: 9.5px !important;
+        line-height: 1.25 !important;
     }
 
     .client-card-footer {
-        padding-top: 8px;
-        margin-top: 8px;
-    }
-
-    .client-card-footer .action-buttons {
-        gap: 4px !important;
+        padding-top: 4px !important;
+        margin-top: 4px !important;
     }
 
     .client-card-footer .action-btn {
-        padding: 8px 6px !important;
+        padding: 3px 6px !important;
+        font-size: 9.5px !important;
+        height: 26px !important;
+        border-radius: 5px !important;
+    }
+
+    /* NSAP e Carimbo */
+    .nsap-panel {
+        padding: 8px !important;
+    }
+
+    .nsap-row {
+        grid-template-columns: 1fr !important;
+        gap: 2px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .nsap-key {
+        font-size: 10px !important;
+    }
+
+    .nsap-value {
         font-size: 11px !important;
-        height: 34px !important;
+        padding: 5px 8px !important;
         border-radius: 6px !important;
     }
-}
 
-@media (max-width: 360px) {
-    .app-title { font-size: 18px; }
-    .tab-button { padding: 10px 12px !important; font-size: 12px !important; }
-    .btn { padding: 14px 16px; font-size: 15px; }
+    .carimbo-preview {
+        padding: 10px !important;
+        border-radius: 8px !important;
+        font-size: 10.5px !important;
+        margin-top: 10px !important;
+    }
+
+    #resultado, #conversionResult, #resultadoCalculadora {
+        padding: 8px 10px !important;
+        font-size: 10.5px !important;
+        border-radius: 8px !important;
+        margin-top: 10px !important;
+    }
+
+    .calculation-helper {
+        padding: 6px 8px !important;
+        font-size: 10.5px !important;
+        border-radius: 8px !important;
+        margin-top: 6px !important;
+    }
+
+    pre, code {
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+        white-space: pre-wrap !important;
+        word-break: break-all !important;
+        overflow-x: auto !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .modal-content.large,
+    .modal-content.xlarge {
+        width: 96% !important;
+        padding: 10px !important;
+        margin: 6px auto !important;
+    }
 }
 
 /* ========== IMPRESSÃO ========== */
@@ -2082,7 +2573,7 @@ td[colspan] {
     }
 }
 
-/* ========== DASHBOARD CARDS & NAVIGATION ========== */
+/* ========== DASHBOARD CARDS & NAVIGATION (NEUMORPHIC) ========== */
 .dashboard-container {
     animation: fadeIn 0.4s ease-out;
     margin-bottom: 40px;
@@ -2097,7 +2588,7 @@ td[colspan] {
     font-family: 'Outfit', sans-serif;
     font-size: 26px;
     font-weight: 700;
-    color: var(--fg);
+    color: var(--fg-heading);
     margin-bottom: 8px;
 }
 
@@ -2118,8 +2609,8 @@ td[colspan] {
 
 .dashboard-card {
     background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 16px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
     padding: 26px;
     cursor: pointer;
     position: relative;
@@ -2128,8 +2619,8 @@ td[colspan] {
     flex-direction: column;
     justify-content: space-between;
     min-height: 220px;
-    box-shadow: 0 4px 12px var(--shadow);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--nm-flat);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dashboard-card-glow {
@@ -2139,8 +2630,9 @@ td[colspan] {
     width: 100%;
     height: 4px;
     background: var(--tool-color, var(--accent));
-    opacity: 0.8;
-    transition: height 0.3s ease;
+    opacity: 0.9;
+    box-shadow: 0 0 10px var(--tool-color, var(--accent));
+    transition: height 0.25s ease;
 }
 
 .dashboard-card:hover .dashboard-card-glow {
@@ -2160,31 +2652,33 @@ td[colspan] {
 }
 
 .dashboard-card-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 22px;
-    background: rgba(var(--tool-color-rgb, var(--accent-rgb)), 0.1);
+    background: var(--card);
+    box-shadow: var(--nm-inset);
     color: var(--tool-color, var(--accent));
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .dashboard-card:hover .dashboard-card-icon {
-    transform: scale(1.1) rotate(5deg);
+    transform: scale(1.08);
+    box-shadow: var(--nm-flat-sm), 0 0 16px rgba(var(--tool-color-rgb, var(--accent-rgb)), 0.35);
     background: var(--tool-color, var(--accent));
-    color: white;
+    color: #ffffff;
 }
 
 .dashboard-card-title {
     font-family: 'Outfit', sans-serif;
     font-size: 19px;
     font-weight: 700;
-    color: var(--fg);
+    color: var(--fg-heading);
     margin-top: 4px;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
 }
 
 .dashboard-card:hover .dashboard-card-title {
@@ -2205,17 +2699,13 @@ td[colspan] {
     font-weight: 600;
     font-size: 13px;
     color: var(--tool-color, var(--accent));
-    opacity: 0.8;
-    transition: all 0.3s ease;
+    opacity: 0.9;
+    transition: all 0.2s ease;
 }
 
 .dashboard-card-footer i {
     margin-left: 6px;
-    transition: transform 0.3s ease;
-}
-
-.dashboard-card:hover .dashboard-card-footer {
-    opacity: 1;
+    transition: transform 0.2s ease;
 }
 
 .dashboard-card:hover .dashboard-card-footer i {
@@ -2223,9 +2713,13 @@ td[colspan] {
 }
 
 .dashboard-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--tool-color, var(--accent));
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    transform: translateY(-5px);
+    box-shadow: var(--nm-flat-lg);
+}
+
+.dashboard-card:active {
+    transform: translateY(0);
+    box-shadow: var(--nm-inset);
 }
 
 /* ========== BACK TO DASHBOARD BUTTON ========== */
@@ -2238,26 +2732,31 @@ td[colspan] {
 
 .back-to-dashboard-btn {
     background: var(--card);
-    border: 2px solid var(--border);
+    border: 1px solid var(--border);
     color: var(--fg);
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 600;
-    padding: 10px 18px;
+    padding: 10px 20px;
     border-radius: 50px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px var(--shadow);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--nm-flat-sm);
+    user-select: none;
 }
 
 .back-to-dashboard-btn:hover {
-    border-color: var(--accent);
     color: var(--accent);
-    transform: translateX(-3px);
-    box-shadow: 0 6px 16px var(--shadow);
+    transform: translateY(-2px);
+    box-shadow: var(--nm-flat);
+}
+
+.back-to-dashboard-btn:active {
+    transform: translateY(1px);
+    box-shadow: var(--nm-inset);
 }
 
 .back-to-dashboard-btn i {
@@ -2268,22 +2767,10 @@ td[colspan] {
     transform: translateX(-3px);
 }
 
-@media (max-width: 480px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    
-    .dashboard-card {
-        min-height: unset;
-        padding: 20px;
-    }
-}
-
-/* ========== BUTTON SKEUOMORPHISM TOGGLE ========== */
-.skeuo-toggle-btn {
+/* ========== BOTÃO NEUMORFISMO TOGGLE ========== */
+.skeuo-toggle-btn, .neumorph-toggle-btn {
     background: var(--card);
-    border: 2px solid #8b5cf6;
+    border: 1px solid var(--border);
     color: var(--fg);
     border-radius: 50px;
     padding: 10px 18px;
@@ -2293,130 +2780,70 @@ td[colspan] {
     gap: 8px;
     font-weight: 600;
     font-size: 13px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px var(--shadow);
+    transition: all 0.2s ease;
+    box-shadow: var(--nm-flat-sm);
+    user-select: none;
 }
 
-.skeuo-toggle-btn:hover {
-    background: rgba(139, 92, 246, 0.1);
+.skeuo-toggle-btn:hover, .neumorph-toggle-btn:hover {
+    color: var(--accent);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px var(--shadow);
+    box-shadow: var(--nm-flat);
 }
 
-.skeuo-toggle-btn.active {
-    background: linear-gradient(135deg, #8b5cf6, #6366f1);
-    color: white;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+.skeuo-toggle-btn:active, .neumorph-toggle-btn:active {
+    transform: translateY(1px);
+    box-shadow: var(--nm-inset);
 }
 
-/* ========== DESIGN SKEUOMÓRFICO (SKEUOMORPHISM COMPLETE THEME - LIGHT & DARK) ========== */
+.skeuo-toggle-btn.active, .neumorph-toggle-btn.active {
+    background: var(--card);
+    color: var(--accent);
+    box-shadow: var(--nm-inset);
+    border-color: rgba(var(--accent-rgb), 0.35);
+}
 
-/* --- TEMA CLARO SKEUOMÓRFICO (LIGHT MODE SKEUOMORPHISM) --- */
+/* ========== DESIGN NEUMORFISMO PRO (NEUMORPHISM DEEP THEME SYSTEM) ========== */
+
+/* --- TEMA CLARO NEUMÓRFICO PRO (LIGHT NEUMORPHISM) --- */
+:root.neumorphic-mode:not([data-theme="dark"]), 
+html.neumorphic-mode:not([data-theme="dark"]),
 :root.skeuomorphic-mode:not([data-theme="dark"]), 
 html.skeuomorphic-mode:not([data-theme="dark"]) {
-    --bg: #eef2f7;
-    --card: #f8fafc;
-    --muted: #64748b;
-    --fg: #0f172a;
+    --bg: #e0e5ec;
+    --card: #e0e5ec;
+    --card-surface: #e0e5ec;
+    --muted: #627288;
+    --fg: #1e293b;
+    --fg-heading: #0f172a;
     --accent: #4f46e5;
-    --border: #cbd5e1;
-    --shadow: rgba(148, 163, 184, 0.35);
+    --border: rgba(255, 255, 255, 0.7);
+    --nm-light: #ffffff;
+    --nm-dark: #a3b1c6;
+    --nm-flat: 8px 8px 18px #a3b1c6, -8px -8px 18px #ffffff;
+    --nm-flat-sm: 4px 4px 10px #a3b1c6, -4px -4px 10px #ffffff;
+    --nm-flat-lg: 12px 12px 26px #a3b1c6, -12px -12px 26px #ffffff;
+    --nm-inset: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff;
+    --nm-inset-deep: inset 6px 6px 12px #9ba9bd, inset -6px -6px 12px #ffffff;
+    --shadow: rgba(163, 177, 198, 0.5);
 }
 
+.neumorphic-mode:not([data-theme="dark"]) body,
 .skeuomorphic-mode:not([data-theme="dark"]) body {
-    background: radial-gradient(circle at 50% 0%, #ffffff 0%, #e2e8f0 100%) !important;
-    color: #0f172a !important;
+    background: #e0e5ec !important;
+    color: #1e293b !important;
 }
 
-/* Light Skeuomorphic Header Metal Panel */
-.skeuomorphic-mode:not([data-theme="dark"]) .app-title {
-    background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%) !important;
-    border: 2px solid #94a3b8 !important;
-    box-shadow: 
-        0 8px 25px rgba(100, 116, 139, 0.25), 
-        inset 0 1px 2px #ffffff, 
-        inset 0 -3px 6px rgba(148, 163, 184, 0.5) !important;
-    border-radius: 16px !important;
-    color: #0f172a !important;
-    text-shadow: 0 1px 1px #ffffff !important;
-    position: relative;
-}
-
-.skeuomorphic-mode:not([data-theme="dark"]) .version-badge {
-    background: linear-gradient(180deg, #4f46e5 0%, #3730a3 100%) !important;
-    color: #ffffff !important;
-    border: 1px solid #818cf8 !important;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 2px 5px rgba(0, 0, 0, 0.2) !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* Light Physical 3D Tactile Push Buttons */
-.skeuomorphic-mode:not([data-theme="dark"]) button,
-.skeuomorphic-mode:not([data-theme="dark"]) .btn,
-.skeuomorphic-mode:not([data-theme="dark"]) .preset-btn,
-.skeuomorphic-mode:not([data-theme="dark"]) .action-btn,
-.skeuomorphic-mode:not([data-theme="dark"]) .back-to-dashboard-btn,
-.skeuomorphic-mode:not([data-theme="dark"]) .theme-toggle,
-.skeuomorphic-mode:not([data-theme="dark"]) .export-btn,
-.skeuomorphic-mode:not([data-theme="dark"]) .reset-btn,
-.skeuomorphic-mode:not([data-theme="dark"]) .skeuo-toggle-btn {
-    background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%) !important;
-    border-top: 1px solid #ffffff !important;
-    border-left: 1px solid #ffffff !important;
-    border-right: 1px solid #cbd5e1 !important;
-    border-bottom: 2px solid #94a3b8 !important;
-    box-shadow: 
-        0 4px 8px rgba(148, 163, 184, 0.35), 
-        inset 0 1px 0 #ffffff, 
-        inset 0 -1px 2px rgba(0, 0, 0, 0.08) !important;
-    color: #0f172a !important;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-    transition: all 0.15s ease !important;
-}
-
-.skeuomorphic-mode:not([data-theme="dark"]) button:hover,
-.skeuomorphic-mode:not([data-theme="dark"]) .btn:hover,
-.skeuomorphic-mode:not([data-theme="dark"]) .action-btn:hover {
-    background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 
-        0 6px 14px rgba(148, 163, 184, 0.45), 
-        inset 0 1px 1px #ffffff !important;
-}
-
-.skeuomorphic-mode:not([data-theme="dark"]) button:active,
-.skeuomorphic-mode:not([data-theme="dark"]) .btn:active,
-.skeuomorphic-mode:not([data-theme="dark"]) .action-btn:active {
-    transform: translateY(2px) !important;
-    box-shadow: 
-        inset 0 3px 6px rgba(0, 0, 0, 0.18), 
-        0 1px 2px rgba(0, 0, 0, 0.1) !important;
-    border-bottom-width: 1px !important;
-}
-
-/* Light Primary Action Buttons */
-.skeuomorphic-mode:not([data-theme="dark"]) .btn-primary,
-.skeuomorphic-mode:not([data-theme="dark"]) .db-btn:not(.secondary):not(.danger) {
-    background: linear-gradient(180deg, #4f46e5 0%, #3730a3 100%) !important;
-    border-top: 1px solid #a5b4fc !important;
-    border-bottom: 2px solid #1e1b4b !important;
-    color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
-    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
-}
-
-/* Light Skeuomorphic Toggle Active Button State */
-.skeuomorphic-mode:not([data-theme="dark"]) .skeuo-toggle-btn.active {
-    background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%) !important;
-    border-top: 1px solid #ddd6fe !important;
-    border-bottom: 2px solid #4c1d95 !important;
-    box-shadow: 0 0 15px rgba(139, 92, 246, 0.5), inset 0 1px 1px #ffffff !important;
-    color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* Light Tactile 3D Cards */
+/* Light Neumorphic Cards */
+.neumorphic-mode:not([data-theme="dark"]) .dashboard-card,
+.neumorphic-mode:not([data-theme="dark"]) .client-mobile-card,
+.neumorphic-mode:not([data-theme="dark"]) .stat-card,
+.neumorphic-mode:not([data-theme="dark"]) .nsap-container,
+.neumorphic-mode:not([data-theme="dark"]) .section,
+.neumorphic-mode:not([data-theme="dark"]) .tab-content,
+.neumorphic-mode:not([data-theme="dark"]) .modal-content,
+.neumorphic-mode:not([data-theme="dark"]) .filters-container,
+.neumorphic-mode:not([data-theme="dark"]) .table-container,
 .skeuomorphic-mode:not([data-theme="dark"]) .dashboard-card,
 .skeuomorphic-mode:not([data-theme="dark"]) .client-mobile-card,
 .skeuomorphic-mode:not([data-theme="dark"]) .stat-card,
@@ -2426,147 +2853,134 @@ html.skeuomorphic-mode:not([data-theme="dark"]) {
 .skeuomorphic-mode:not([data-theme="dark"]) .modal-content,
 .skeuomorphic-mode:not([data-theme="dark"]) .filters-container,
 .skeuomorphic-mode:not([data-theme="dark"]) .table-container {
-    background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%) !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 12px !important;
-    box-shadow: 
-        6px 6px 16px rgba(148, 163, 184, 0.35), 
-        -4px -4px 12px #ffffff, 
-        inset 0 1px 1px #ffffff !important;
-    color: #0f172a !important;
+    background: #e0e5ec !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    border-radius: 20px !important;
+    box-shadow: 8px 8px 18px #a3b1c6, -8px -8px 18px #ffffff !important;
+    color: #1e293b !important;
 }
 
-/* Light Recessed Inset LCD/Terminal Inputs */
+/* Light Neumorphic Inputs & Form Fields */
+.neumorphic-mode:not([data-theme="dark"]) input,
+.neumorphic-mode:not([data-theme="dark"]) select,
+.neumorphic-mode:not([data-theme="dark"]) textarea,
+.neumorphic-mode:not([data-theme="dark"]) .nsap-input,
+.neumorphic-mode:not([data-theme="dark"]) .search-box input,
 .skeuomorphic-mode:not([data-theme="dark"]) input,
 .skeuomorphic-mode:not([data-theme="dark"]) select,
 .skeuomorphic-mode:not([data-theme="dark"]) textarea,
 .skeuomorphic-mode:not([data-theme="dark"]) .nsap-input,
 .skeuomorphic-mode:not([data-theme="dark"]) .search-box input {
-    background: #f1f5f9 !important;
-    border: 1px solid #cbd5e1 !important;
-    color: #0f172a !important;
-    box-shadow: 
-        inset 3px 3px 6px rgba(148, 163, 184, 0.5), 
-        inset -2px -2px 4px #ffffff !important;
+    background: #e0e5ec !important;
+    border: none !important;
+    color: #1e293b !important;
+    box-shadow: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff !important;
+    border-radius: 14px !important;
 }
 
+.neumorphic-mode:not([data-theme="dark"]) input:focus,
+.neumorphic-mode:not([data-theme="dark"]) select:focus,
+.neumorphic-mode:not([data-theme="dark"]) textarea:focus,
 .skeuomorphic-mode:not([data-theme="dark"]) input:focus,
 .skeuomorphic-mode:not([data-theme="dark"]) select:focus,
 .skeuomorphic-mode:not([data-theme="dark"]) textarea:focus {
-    border-color: #4f46e5 !important;
-    box-shadow: 
-        inset 3px 3px 6px rgba(148, 163, 184, 0.6), 
-        0 0 10px rgba(79, 70, 229, 0.3) !important;
+    box-shadow: inset 5px 5px 10px #9ba9bd, inset -5px -5px 10px #ffffff, 0 0 0 2px rgba(79, 70, 229, 0.4) !important;
 }
 
-/* Light Status Badges */
-.skeuomorphic-mode:not([data-theme="dark"]) .status-badge {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), inset 0 1px 1px #ffffff !important;
-    border-radius: 10px !important;
-    font-weight: 800 !important;
+/* Light Neumorphic Push Buttons */
+.neumorphic-mode:not([data-theme="dark"]) button,
+.neumorphic-mode:not([data-theme="dark"]) .btn,
+.neumorphic-mode:not([data-theme="dark"]) .preset-btn,
+.neumorphic-mode:not([data-theme="dark"]) .action-btn,
+.neumorphic-mode:not([data-theme="dark"]) .back-to-dashboard-btn,
+.neumorphic-mode:not([data-theme="dark"]) .theme-toggle,
+.neumorphic-mode:not([data-theme="dark"]) .export-btn,
+.neumorphic-mode:not([data-theme="dark"]) .reset-btn,
+.neumorphic-mode:not([data-theme="dark"]) .neumorph-toggle-btn,
+.skeuomorphic-mode:not([data-theme="dark"]) button,
+.skeuomorphic-mode:not([data-theme="dark"]) .btn,
+.skeuomorphic-mode:not([data-theme="dark"]) .preset-btn,
+.skeuomorphic-mode:not([data-theme="dark"]) .action-btn,
+.skeuomorphic-mode:not([data-theme="dark"]) .back-to-dashboard-btn,
+.skeuomorphic-mode:not([data-theme="dark"]) .theme-toggle,
+.skeuomorphic-mode:not([data-theme="dark"]) .export-btn,
+.skeuomorphic-mode:not([data-theme="dark"]) .reset-btn,
+.skeuomorphic-mode:not([data-theme="dark"]) .skeuo-toggle-btn {
+    background: #e0e5ec !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 5px 5px 12px #a3b1c6, -5px -5px 12px #ffffff !important;
+    color: #1e293b !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* --- TEMA ESCURO SKEUOMÓRFICO (DARK MODE SKEUOMORPHISM) --- */
+.neumorphic-mode:not([data-theme="dark"]) button:hover,
+.neumorphic-mode:not([data-theme="dark"]) .btn:hover,
+.neumorphic-mode:not([data-theme="dark"]) .action-btn:hover,
+.skeuomorphic-mode:not([data-theme="dark"]) button:hover,
+.skeuomorphic-mode:not([data-theme="dark"]) .btn:hover,
+.skeuomorphic-mode:not([data-theme="dark"]) .action-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 8px 8px 18px #a3b1c6, -8px -8px 18px #ffffff !important;
+}
+
+.neumorphic-mode:not([data-theme="dark"]) button:active,
+.neumorphic-mode:not([data-theme="dark"]) .btn:active,
+.neumorphic-mode:not([data-theme="dark"]) .action-btn:active,
+.skeuomorphic-mode:not([data-theme="dark"]) button:active,
+.skeuomorphic-mode:not([data-theme="dark"]) .btn:active,
+.skeuomorphic-mode:not([data-theme="dark"]) .action-btn:active {
+    transform: translateY(1px) !important;
+    box-shadow: inset 4px 4px 8px #a3b1c6, inset -4px -4px 8px #ffffff !important;
+}
+
+/* Light Accent Primary Buttons */
+.neumorphic-mode:not([data-theme="dark"]) .btn-primary,
+.skeuomorphic-mode:not([data-theme="dark"]) .btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 5px 5px 14px #a3b1c6, -5px -5px 14px #ffffff, 0 4px 14px rgba(79, 70, 229, 0.4) !important;
+}
+
+/* --- TEMA ESCURO NEUMÓRFICO PRO (DARK NEUMORPHISM) --- */
+:root.neumorphic-mode[data-theme="dark"], 
+html.neumorphic-mode[data-theme="dark"],
 :root.skeuomorphic-mode[data-theme="dark"], 
 html.skeuomorphic-mode[data-theme="dark"] {
-    --bg: #1c202a;
-    --card: #282d3c;
-    --muted: #94a3b8;
-    --fg: #f8fafc;
-    --accent: #6366f1;
-    --border: #3d4558;
-    --shadow: rgba(0, 0, 0, 0.5);
+    --bg: #1a1d24;
+    --card: #1a1d24;
+    --card-surface: #1a1d24;
+    --muted: #8e9bb0;
+    --fg: #f1f5f9;
+    --fg-heading: #ffffff;
+    --accent: #818cf8;
+    --border: rgba(255, 255, 255, 0.04);
+    --nm-light: #252a34;
+    --nm-dark: #0f1115;
+    --nm-flat: 8px 8px 18px #0e1014, -8px -8px 18px #262a34;
+    --nm-flat-sm: 4px 4px 10px #0e1014, -4px -4px 10px #262a34;
+    --nm-flat-lg: 12px 12px 26px #0a0c0f, -12px -12px 26px #2b303c;
+    --nm-inset: inset 4px 4px 8px #0e1014, inset -4px -4px 8px #262a34;
+    --nm-inset-deep: inset 6px 6px 12px #0a0c0f, inset -6px -6px 12px #262a34;
+    --shadow: rgba(0, 0, 0, 0.6);
 }
 
+.neumorphic-mode[data-theme="dark"] body,
 .skeuomorphic-mode[data-theme="dark"] body {
-    background: radial-gradient(circle at 50% 0%, #2b3142 0%, #161922 100%) !important;
+    background: #1a1d24 !important;
     color: #f1f5f9 !important;
 }
 
-/* Dark Header Skeuomorphic Metal Panel */
-.skeuomorphic-mode[data-theme="dark"] .app-title {
-    background: linear-gradient(180deg, #3a4154 0%, #212634 100%) !important;
-    border: 2px solid #4f586f !important;
-    box-shadow: 
-        0 10px 25px rgba(0, 0, 0, 0.5), 
-        inset 0 1px 1px rgba(255, 255, 255, 0.35), 
-        inset 0 -3px 6px rgba(0, 0, 0, 0.6) !important;
-    border-radius: 16px !important;
-    color: #f8fafc !important;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
-    position: relative;
-}
-
-.skeuomorphic-mode[data-theme="dark"] .version-badge {
-    background: linear-gradient(180deg, #6366f1 0%, #3730a3 100%) !important;
-    border: 1px solid #a5b4fc !important;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 2px 6px rgba(0, 0, 0, 0.5) !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Dark Physical 3D Tactile Push Buttons */
-.skeuomorphic-mode[data-theme="dark"] button,
-.skeuomorphic-mode[data-theme="dark"] .btn,
-.skeuomorphic-mode[data-theme="dark"] .preset-btn,
-.skeuomorphic-mode[data-theme="dark"] .action-btn,
-.skeuomorphic-mode[data-theme="dark"] .back-to-dashboard-btn,
-.skeuomorphic-mode[data-theme="dark"] .theme-toggle,
-.skeuomorphic-mode[data-theme="dark"] .export-btn,
-.skeuomorphic-mode[data-theme="dark"] .reset-btn,
-.skeuomorphic-mode[data-theme="dark"] .skeuo-toggle-btn {
-    background: linear-gradient(180deg, #3d4558 0%, #232836 100%) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-right: 1px solid rgba(0, 0, 0, 0.4) !important;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.7) !important;
-    box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.45), 
-        inset 0 1px 0 rgba(255, 255, 255, 0.25), 
-        inset 0 -1px 2px rgba(0, 0, 0, 0.5) !important;
-    color: #f8fafc !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-    transition: all 0.15s ease !important;
-}
-
-.skeuomorphic-mode[data-theme="dark"] button:hover,
-.skeuomorphic-mode[data-theme="dark"] .btn:hover,
-.skeuomorphic-mode[data-theme="dark"] .action-btn:hover {
-    background: linear-gradient(180deg, #4b556d 0%, #2b3142 100%) !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.55), 
-        inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
-}
-
-.skeuomorphic-mode[data-theme="dark"] button:active,
-.skeuomorphic-mode[data-theme="dark"] .btn:active,
-.skeuomorphic-mode[data-theme="dark"] .action-btn:active {
-    transform: translateY(2px) !important;
-    box-shadow: 
-        inset 0 3px 6px rgba(0, 0, 0, 0.7), 
-        0 1px 2px rgba(0, 0, 0, 0.3) !important;
-    border-bottom-width: 1px !important;
-}
-
-/* Dark Primary Action Buttons */
-.skeuomorphic-mode[data-theme="dark"] .btn-primary,
-.skeuomorphic-mode[data-theme="dark"] .db-btn:not(.secondary):not(.danger) {
-    background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%) !important;
-    border-top: 1px solid #c7d2fe !important;
-    border-bottom: 2px solid #1e1b4b !important;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
-}
-
-/* Dark Skeuomorphic Toggle Active Button State */
-.skeuomorphic-mode[data-theme="dark"] .skeuo-toggle-btn.active {
-    background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%) !important;
-    border-top: 1px solid #fef08a !important;
-    border-bottom: 2px solid #78350f !important;
-    box-shadow: 0 0 18px rgba(245, 158, 11, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.6) !important;
-    color: #ffffff !important;
-}
-
-/* Dark Tactile 3D Cards */
+/* Dark Neumorphic Cards */
+.neumorphic-mode[data-theme="dark"] .dashboard-card,
+.neumorphic-mode[data-theme="dark"] .client-mobile-card,
+.neumorphic-mode[data-theme="dark"] .stat-card,
+.neumorphic-mode[data-theme="dark"] .nsap-container,
+.neumorphic-mode[data-theme="dark"] .section,
+.neumorphic-mode[data-theme="dark"] .tab-content,
+.neumorphic-mode[data-theme="dark"] .modal-content,
+.neumorphic-mode[data-theme="dark"] .filters-container,
+.neumorphic-mode[data-theme="dark"] .table-container,
 .skeuomorphic-mode[data-theme="dark"] .dashboard-card,
 .skeuomorphic-mode[data-theme="dark"] .client-mobile-card,
 .skeuomorphic-mode[data-theme="dark"] .stat-card,
@@ -2576,45 +2990,101 @@ html.skeuomorphic-mode[data-theme="dark"] {
 .skeuomorphic-mode[data-theme="dark"] .modal-content,
 .skeuomorphic-mode[data-theme="dark"] .filters-container,
 .skeuomorphic-mode[data-theme="dark"] .table-container {
-    background: linear-gradient(145deg, #2b3140 0%, #1e222d 100%) !important;
-    border: 1px solid #434c60 !important;
-    border-radius: 12px !important;
-    box-shadow: 
-        6px 6px 16px rgba(0, 0, 0, 0.55), 
-        -3px -3px 8px rgba(255, 255, 255, 0.04), 
-        inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+    background: #1a1d24 !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+    border-radius: 20px !important;
+    box-shadow: 8px 8px 18px #0e1014, -8px -8px 18px #262a34 !important;
+    color: #f1f5f9 !important;
 }
 
-/* Dark Recessed Inset Terminal/LCD Inputs */
+/* Dark Neumorphic Inputs & Fields */
+.neumorphic-mode[data-theme="dark"] input,
+.neumorphic-mode[data-theme="dark"] select,
+.neumorphic-mode[data-theme="dark"] textarea,
+.neumorphic-mode[data-theme="dark"] .nsap-input,
+.neumorphic-mode[data-theme="dark"] .search-box input,
 .skeuomorphic-mode[data-theme="dark"] input,
 .skeuomorphic-mode[data-theme="dark"] select,
 .skeuomorphic-mode[data-theme="dark"] textarea,
 .skeuomorphic-mode[data-theme="dark"] .nsap-input,
 .skeuomorphic-mode[data-theme="dark"] .search-box input {
-    background: #11141b !important;
-    border: 1px solid #333a4c !important;
-    color: #38edf8 !important;
-    box-shadow: 
-        inset 3px 3px 6px rgba(0, 0, 0, 0.8), 
-        inset -1px -1px 2px rgba(255, 255, 255, 0.05) !important;
-    text-shadow: 0 0 3px rgba(56, 237, 248, 0.3) !important;
+    background: #15181e !important;
+    border: none !important;
+    color: #f1f5f9 !important;
+    box-shadow: inset 4px 4px 8px #0c0e12, inset -4px -4px 8px #222630 !important;
+    border-radius: 14px !important;
 }
 
+.neumorphic-mode[data-theme="dark"] input:focus,
+.neumorphic-mode[data-theme="dark"] select:focus,
+.neumorphic-mode[data-theme="dark"] textarea:focus,
 .skeuomorphic-mode[data-theme="dark"] input:focus,
 .skeuomorphic-mode[data-theme="dark"] select:focus,
 .skeuomorphic-mode[data-theme="dark"] textarea:focus {
-    border-color: #38edf8 !important;
-    box-shadow: 
-        inset 3px 3px 6px rgba(0, 0, 0, 0.9), 
-        0 0 10px rgba(56, 237, 248, 0.4) !important;
+    box-shadow: inset 5px 5px 10px #090b0e, inset -5px -5px 10px #222630, 0 0 0 2px rgba(129, 140, 248, 0.4) !important;
 }
 
-/* Dark Glowing LED Badges */
-.skeuomorphic-mode[data-theme="dark"] .status-badge {
-    box-shadow: 0 0 8px currentColor, inset 0 1px 1px rgba(255, 255, 255, 0.6) !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-    border-radius: 10px !important;
-    font-weight: 800 !important;
+/* Dark Neumorphic Push Buttons */
+.neumorphic-mode[data-theme="dark"] button,
+.neumorphic-mode[data-theme="dark"] .btn,
+.neumorphic-mode[data-theme="dark"] .preset-btn,
+.neumorphic-mode[data-theme="dark"] .action-btn,
+.neumorphic-mode[data-theme="dark"] .back-to-dashboard-btn,
+.neumorphic-mode[data-theme="dark"] .theme-toggle,
+.neumorphic-mode[data-theme="dark"] .export-btn,
+.neumorphic-mode[data-theme="dark"] .reset-btn,
+.neumorphic-mode[data-theme="dark"] .neumorph-toggle-btn,
+.skeuomorphic-mode[data-theme="dark"] button,
+.skeuomorphic-mode[data-theme="dark"] .btn,
+.skeuomorphic-mode[data-theme="dark"] .preset-btn,
+.skeuomorphic-mode[data-theme="dark"] .action-btn,
+.skeuomorphic-mode[data-theme="dark"] .back-to-dashboard-btn,
+.skeuomorphic-mode[data-theme="dark"] .theme-toggle,
+.skeuomorphic-mode[data-theme="dark"] .export-btn,
+.skeuomorphic-mode[data-theme="dark"] .reset-btn,
+.skeuomorphic-mode[data-theme="dark"] .skeuo-toggle-btn {
+    background: #1a1d24 !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+    box-shadow: 5px 5px 12px #0e1014, -5px -5px 12px #262a34 !important;
+    color: #f1f5f9 !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.neumorphic-mode[data-theme="dark"] button:hover,
+.neumorphic-mode[data-theme="dark"] .btn:hover,
+.neumorphic-mode[data-theme="dark"] .action-btn:hover,
+.skeuomorphic-mode[data-theme="dark"] button:hover,
+.skeuomorphic-mode[data-theme="dark"] .btn:hover,
+.skeuomorphic-mode[data-theme="dark"] .action-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 8px 8px 18px #0e1014, -8px -8px 18px #262a34 !important;
+}
+
+.neumorphic-mode[data-theme="dark"] button:active,
+.neumorphic-mode[data-theme="dark"] .btn:active,
+.neumorphic-mode[data-theme="dark"] .action-btn:active,
+.skeuomorphic-mode[data-theme="dark"] button:active,
+.skeuomorphic-mode[data-theme="dark"] .btn:active,
+.skeuomorphic-mode[data-theme="dark"] .action-btn:active {
+    transform: translateY(1px) !important;
+    box-shadow: inset 4px 4px 8px #0e1014, inset -4px -4px 8px #262a34 !important;
+}
+
+/* Dark Accent Primary Buttons */
+.neumorphic-mode[data-theme="dark"] .btn-primary,
+.skeuomorphic-mode[data-theme="dark"] .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 5px 5px 14px #0e1014, -5px -5px 14px #262a34, 0 4px 14px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* Soft LED Status Badges */
+.neumorphic-mode .status-badge,
+.skeuomorphic-mode .status-badge {
+    box-shadow: var(--nm-flat-sm) !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
 }
 
 /* KML Map Layout Responsive & Mobile Screen Optimizations */
@@ -2657,80 +3127,16 @@ html.skeuomorphic-mode[data-theme="dark"] {
         color: #ffffff;
         box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.4);
     }
-}
 
-/* Comprehensive Mobile Screen Optimizations (< 640px) */
-@media (max-width: 640px) {
-    body {
-        padding: 6px !important;
+    .kml-summary-bar {
+        position: relative !important;
+        z-index: 10 !important;
     }
 
-    .app-container {
-        padding: 0 !important;
-    }
-
-    .app-header {
-        margin-bottom: 12px !important;
-    }
-
-    .app-title {
-        font-size: 18px !important;
-        padding: 14px 10px !important;
-        margin-bottom: 10px !important;
-        border-radius: 12px !important;
-    }
-
-    .version-badge {
-        font-size: 10px !important;
-        padding: 2px 6px !important;
-    }
-
-    .controls-bar {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 6px !important;
-        margin-bottom: 12px !important;
-    }
-
-    .controls-bar button, 
-    .btn, 
-    .db-btn, 
-    .back-to-dashboard-btn,
-    .view-mode-btn {
-        min-height: 44px !important;
-        font-size: 13px !important;
-        padding: 8px 14px !important;
-        touch-action: manipulation;
-    }
-
-    /* Prevent auto-zoom on iOS inputs */
-    input, select, textarea {
-        font-size: 16px !important;
-        min-height: 44px !important;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr !important;
-        gap: 12px !important;
-    }
-
-    .dashboard-card {
-        padding: 16px !important;
-    }
-
-    .table-container {
-        overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        border-radius: 8px !important;
-        max-width: 100% !important;
-    }
-
-    .modal-content {
-        width: 96% !important;
-        padding: 16px !important;
-        max-height: 92vh !important;
-        overflow-y: auto !important;
+    #kml-clustering-badge {
+        position: relative !important;
+        z-index: 2 !important;
+        flex-shrink: 0 !important;
     }
 
     /* KML Map height adjustment on mobile */
@@ -2848,6 +3254,50 @@ html.skeuomorphic-mode[data-theme="dark"] {
     font-size: 14px !important;
     border: 2px solid #ffffff !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ==========================================================================
+   LAYOUT VERTICAL EM COLUNA ÚNICA (ITENS UM ABAIXO DO OUTRO)
+   Para: Carimbo de Fibras, Calculadora Óptica e Script Datacom
+   ========================================================================== */
+#carimbo-tab .form-row,
+.carimbo-tab-content .form-row,
+#carimboForm .form-row,
+#calculadora-tab .form-row,
+.calc-tab-content .form-row,
+#datacom-tab .form-row,
+.datacom-tab-content .form-row,
+#datacom-tab .section-body .form-row {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+}
+
+#carimbo-tab .form-group,
+.carimbo-tab-content .form-group,
+#calculadora-tab .input-group,
+.calc-tab-content .input-group,
+#datacom-tab .form-group,
+.datacom-tab-content .form-group {
+    width: 100% !important;
+    grid-column: 1 / -1 !important;
+    margin-bottom: 0 !important;
+}
+
+#carimbo-tab input,
+#carimbo-tab select,
+#carimbo-tab textarea,
+#calculadora-tab input,
+#calculadora-tab select,
+#calculadora-tab textarea,
+#datacom-tab input,
+#datacom-tab select,
+#datacom-tab textarea {
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 

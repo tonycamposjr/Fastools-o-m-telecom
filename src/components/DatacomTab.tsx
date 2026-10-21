@@ -37,11 +37,12 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
   const [conversionFactor, setConversionFactor] = useState<1024 | 1000>(1024);
   const [burstPercent, setBurstPercent] = useState<number>(10);
 
-  // --- CREDENCIAIS & SNMP ---
-  const [user1, setUser1] = useState('');
-  const [user1Hash, setUser1Hash] = useState('');
-  const [user2, setUser2] = useState('');
-  const [user2Hash, setUser2Hash] = useState('');
+  // --- SELEÇÃO DE USUÁRIO DATACOM ---
+  // Opção 1: admin + txn1
+  // Opção 2: oper_b2b + txn1
+  // Opção 3: admin + oper_b2b + txn1
+  // Nota: txn1 é usuário fixo obrigatório em todas as opções.
+  const [userOption, setUserOption] = useState<'1' | '2' | '3'>('1');
   const [snmpRo1, setSnmpRo1] = useState('GESTION');
   const [snmpRo2, setSnmpRo2] = useState('SMART');
   const [snmpRo3, setSnmpRo3] = useState('701hHg61');
@@ -133,10 +134,9 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
         if (data.conversionFactor !== undefined) setConversionFactor(data.conversionFactor);
         if (data.burstPercent !== undefined) setBurstPercent(Number(data.burstPercent));
         
-        if (data.user1 !== undefined) setUser1(data.user1);
-        if (data.user1Hash !== undefined) setUser1Hash(data.user1Hash);
-        if (data.user2 !== undefined) setUser2(data.user2);
-        if (data.user2Hash !== undefined) setUser2Hash(data.user2Hash);
+        if (data.userOption !== undefined && ['1', '2', '3'].includes(data.userOption)) {
+          setUserOption(data.userOption);
+        }
         if (data.snmpRo1 !== undefined) setSnmpRo1(data.snmpRo1);
         if (data.snmpRo2 !== undefined) setSnmpRo2(data.snmpRo2);
         if (data.snmpRo3 !== undefined) setSnmpRo3(data.snmpRo3);
@@ -184,7 +184,7 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
       vlanSvc, vlanSvcName, descUplink, descSvc,
       symmetric, rlIn, rlOut, autoBurst, burstIn, burstOut,
       conversionFactor, burstPercent,
-      user1, user1Hash, user2, user2Hash, snmpRo1, snmpRo2, snmpRo3, snmpRo4, snmpRw,
+      userOption, snmpRo1, snmpRo2, snmpRo3, snmpRo4, snmpRw,
       snmpHosts, syslogHosts, sntp1, sntp2,
       hasE1, e1SourceIp, e1DestIp, e1PwVlan, e1PwPriority, e1TdmStart, e1TdmEnd,
       e1BundleInterface, e1CircuitName, e1JitterBuffer, e1PacketDelay, e1VlanName
@@ -200,7 +200,7 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
     vlanSvc, vlanSvcName, descUplink, descSvc,
     symmetric, rlIn, rlOut, autoBurst, burstIn, burstOut,
     conversionFactor, burstPercent,
-    user1, user1Hash, user2, user2Hash, snmpRo1, snmpRo2, snmpRo3, snmpRo4, snmpRw,
+    userOption, snmpRo1, snmpRo2, snmpRo3, snmpRo4, snmpRw,
     snmpHosts, syslogHosts, sntp1, sntp2,
     hasE1, e1SourceIp, e1DestIp, e1PwVlan, e1PwPriority, e1TdmStart, e1TdmEnd,
     e1BundleInterface, e1CircuitName, e1JitterBuffer, e1PacketDelay, e1VlanName
@@ -445,6 +445,19 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
     if (sntp[0]) setSntp1(sntp[0]);
     if (sntp[1]) setSntp2(sntp[1]);
 
+    const hasAdmin = /username\s+admin\b/i.test(text);
+    const hasOperB2b = /username\s+oper_b2b\b/i.test(text);
+    if (hasAdmin && hasOperB2b) {
+      setUserOption('3');
+      found++;
+    } else if (hasOperB2b) {
+      setUserOption('2');
+      found++;
+    } else if (hasAdmin) {
+      setUserOption('1');
+      found++;
+    }
+
     const e1Pw = text.match(/^interface pw 1\/1\s*\n\s*source-ip-addr\s+(\S+)\s*\n\s*vlan\s+(\d+)\s+priority\s+(\d+)/m);
     if (e1Pw) {
       setHasE1(true);
@@ -563,11 +576,10 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
       errList.push('Rate-limit de saída inválido (mínimo 64 kbps).');
     }
 
-    // Credenciais
-    if (!user1.trim()) errList.push('Usuário 1 (Admin) obrigatório.');
-    if (!user1Hash.trim()) errList.push('Hash da senha do Usuário 1 obrigatório.');
-    if (!user2.trim()) errList.push('Usuário 2 obrigatório.');
-    if (!user2Hash.trim()) errList.push('Hash da senha do Usuário 2 obrigatório.');
+    // Validação de Usuários Datacom
+    if (!['1', '2', '3'].includes(userOption)) {
+      errList.push('Opção de seleção de usuário Datacom inválida. Selecione 1, 2 ou 3.');
+    }
 
     // E1 Params validation
     if (hasE1) {
@@ -621,10 +633,21 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
     script += `!\n`;
     script += `terminal timeout 300\n`;
     script += `!\n`;
-    script += `username ${user1.trim()} access-level 15\n`;
-    script += `username ${user1.trim()} password 7 ${user1Hash.trim()}\n`;
-    script += `username ${user2.trim()} access-level 15\n`;
-    script += `username ${user2.trim()} password 7 ${user2Hash.trim()}\n`;
+    if (userOption === '1') {
+      script += `username admin access-level 15\n`;
+      script += `username admin password 7 765634b9a7a0ea75278b23ecd66a4a99f30a62a3\n`;
+    } else if (userOption === '2') {
+      script += `username oper_b2b access-level 15\n`;
+      script += `username oper_b2b password 7 a10f80c75270b1f4ea92015eaa0f4198eb7062fe\n`;
+    } else if (userOption === '3') {
+      script += `username admin access-level 15\n`;
+      script += `username admin password 7 765634b9a7a0ea75278b23ecd66a4a99f30a62a3\n`;
+      script += `username oper_b2b access-level 15\n`;
+      script += `username oper_b2b password 7 a10f80c75270b1f4ea92015eaa0f4198eb7062fe\n`;
+    }
+    // Usuário fixo obrigatório (sempre incluído)
+    script += `username txn1 access-level 15\n`;
+    script += `username txn1 password 7 7b767b39ebedfaa1a42c487344e97c0b6cab7ad6\n`;
     script += `!\n`;
     script += `clock timezone Brasilia -3\n`;
     script += `!\n`;
@@ -810,10 +833,7 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
       setAutoBurst(false);
       setBurstIn('512');
       setBurstOut('512');
-      setUser1('');
-      setUser1Hash('');
-      setUser2('');
-      setUser2Hash('');
+      setUserOption('1');
       setSnmpRo1('GESTION');
       setSnmpRo2('SMART');
       setSnmpRo3('701hHg61');
@@ -853,7 +873,7 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
   };
 
   return (
-    <div className="tab-content active" style={{ display: 'block' }}>
+    <div id="datacom-tab" className="tab-content active datacom-tab-content" style={{ display: 'block' }}>
       {restoreBannerVisible && (
         <div className="restore-banner show" style={{ display: 'flex', marginBottom: '20px' }}>
           <span>💾 Dados de sessão anterior encontrados. Deseja restaurar?</span>
@@ -1408,49 +1428,158 @@ export default function DatacomTab({ showToast }: DatacomTabProps) {
             </p>
           </div>
 
-          <h3 style={{ fontSize: '15px', color: 'var(--accent)', borderBottom: '1px solid var(--border)', paddingBottom: '5px' }}>Usuários de Acesso</h3>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="user1">Usuário 1 (Admin) <span className="required">*</span></label>
-              <input
-                type="text"
-                id="user1"
-                placeholder="ex: admin"
-                value={user1}
-                onChange={(e) => setUser1(e.target.value)}
-              />
+          {/* --- SELEÇÃO DE USUÁRIO DATACOM --- */}
+          <div style={{ background: 'rgba(var(--accent-rgb), 0.03)', border: '1px solid var(--border)', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
+            <div style={{ 
+              fontFamily: 'var(--font-mono, monospace)', 
+              fontSize: '13px', 
+              color: 'var(--accent)', 
+              fontWeight: 'bold', 
+              textAlign: 'center', 
+              background: 'rgba(0,0,0,0.15)', 
+              padding: '10px', 
+              borderRadius: '8px', 
+              marginBottom: '15px',
+              whiteSpace: 'pre',
+              lineHeight: '1.4'
+            }}>
+{`========================================
+       SELEÇÃO DE USUÁRIO DATACOM
+========================================`}
             </div>
-            <div className="form-group">
-              <label htmlFor="user1_hash">Hash de Senha — Usuário 1 <span className="required">*</span></label>
-              <input
-                type="text"
-                id="user1_hash"
-                placeholder="Hash SHA1 (password 7)"
-                value={user1Hash}
-                onChange={(e) => setUser1Hash(e.target.value)}
-              />
+
+            <div className="form-group" style={{ marginBottom: '15px' }}>
+              <label htmlFor="user_option_select" style={{ fontWeight: 600, fontSize: '14px', marginBottom: '8px' }}>
+                Escolha uma opção: <span className="required">*</span>
+              </label>
+              
+              {/* Grid de Opções Rápidas [1], [2], [3] */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginBottom: '12px' }}>
+                <button
+                  type="button"
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    textAlign: 'left',
+                    border: userOption === '1' ? '2px solid var(--accent)' : '1px solid var(--border)',
+                    background: userOption === '1' ? 'rgba(var(--accent-rgb), 0.15)' : 'var(--card)',
+                    color: userOption === '1' ? 'var(--accent)' : 'var(--fg)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}
+                  onClick={() => setUserOption('1')}
+                >
+                  <span style={{ fontWeight: 'bold', fontSize: '14px' }}>[1] admin</span>
+                  <span style={{ fontSize: '12px', color: 'var(--muted)' }}>admin + txn1 (fixo)</span>
+                </button>
+
+                <button
+                  type="button"
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    textAlign: 'left',
+                    border: userOption === '2' ? '2px solid var(--accent)' : '1px solid var(--border)',
+                    background: userOption === '2' ? 'rgba(var(--accent-rgb), 0.15)' : 'var(--card)',
+                    color: userOption === '2' ? 'var(--accent)' : 'var(--fg)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}
+                  onClick={() => setUserOption('2')}
+                >
+                  <span style={{ fontWeight: 'bold', fontSize: '14px' }}>[2] oper_b2b</span>
+                  <span style={{ fontSize: '12px', color: 'var(--muted)' }}>oper_b2b + txn1 (fixo)</span>
+                </button>
+
+                <button
+                  type="button"
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '8px',
+                    textAlign: 'left',
+                    border: userOption === '3' ? '2px solid var(--accent)' : '1px solid var(--border)',
+                    background: userOption === '3' ? 'rgba(var(--accent-rgb), 0.15)' : 'var(--card)',
+                    color: userOption === '3' ? 'var(--accent)' : 'var(--fg)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}
+                  onClick={() => setUserOption('3')}
+                >
+                  <span style={{ fontWeight: 'bold', fontSize: '14px' }}>[3] admin + oper_b2b</span>
+                  <span style={{ fontSize: '12px', color: 'var(--muted)' }}>admin + oper_b2b + txn1 (fixo)</span>
+                </button>
+              </div>
+
+              {/* Seletor dropdown alternativo */}
+              <select
+                id="user_option_select"
+                value={userOption}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '1' || val === '2' || val === '3') {
+                    setUserOption(val);
+                  }
+                }}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--fg)' }}
+              >
+                <option value="1">[1] admin (inclui admin + txn1)</option>
+                <option value="2">[2] oper_b2b (inclui oper_b2b + txn1)</option>
+                <option value="3">[3] admin + oper_b2b (inclui admin + oper_b2b + txn1)</option>
+              </select>
             </div>
-          </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="user2">Usuário 2 <span className="required">*</span></label>
-              <input
-                type="text"
-                id="user2"
-                placeholder="ex: txn1"
-                value={user2}
-                onChange={(e) => setUser2(e.target.value)}
-              />
+
+            {/* Aviso do Usuário Fixo */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', color: 'var(--success)' }}>
+              <i className="fas fa-lock"></i>
+              <span>
+                <strong>Usuário fixo obrigatório:</strong> <code>txn1</code> (access-level 15) está integrado automaticamente e será incluído uma única vez no script final.
+              </span>
             </div>
-            <div className="form-group">
-              <label htmlFor="user2_hash">Hash de Senha — Usuário 2 <span className="required">*</span></label>
-              <input
-                type="text"
-                id="user2_hash"
-                placeholder="Hash SHA1 (password 7)"
-                value={user2Hash}
-                onChange={(e) => setUser2Hash(e.target.value)}
-              />
+
+            {/* Pré-visualização do Bloco de Usuários */}
+            <div style={{ marginTop: '12px', maxWidth: '100%' }}>
+              <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600 }}>
+                Prévia do bloco de credenciais a ser gerado:
+              </span>
+              <pre style={{ 
+                margin: '6px 0 0 0', 
+                padding: '10px 12px', 
+                background: '#0a0d1a', 
+                color: '#86efac', 
+                borderRadius: '6px', 
+                fontSize: '12px', 
+                fontFamily: 'monospace',
+                lineHeight: '1.4',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-all',
+                overflowX: 'auto',
+                maxWidth: '100%',
+                boxSizing: 'border-box'
+              }}>
+{userOption === '1' && `username admin access-level 15
+username admin password 7 765634b9a7a0ea75278b23ecd66a4a99f30a62a3
+username txn1 access-level 15
+username txn1 password 7 7b767b39ebedfaa1a42c487344e97c0b6cab7ad6`}
+{userOption === '2' && `username oper_b2b access-level 15
+username oper_b2b password 7 a10f80c75270b1f4ea92015eaa0f4198eb7062fe
+username txn1 access-level 15
+username txn1 password 7 7b767b39ebedfaa1a42c487344e97c0b6cab7ad6`}
+{userOption === '3' && `username admin access-level 15
+username admin password 7 765634b9a7a0ea75278b23ecd66a4a99f30a62a3
+username oper_b2b access-level 15
+username oper_b2b password 7 a10f80c75270b1f4ea92015eaa0f4198eb7062fe
+username txn1 access-level 15
+username txn1 password 7 7b767b39ebedfaa1a42c487344e97c0b6cab7ad6`}
+              </pre>
             </div>
           </div>
 

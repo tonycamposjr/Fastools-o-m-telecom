@@ -236,7 +236,7 @@ export default function CalculadoraTab({ showToast }: CalculadoraTabProps) {
   };
 
   return (
-    <div className="tab-content active" style={{ display: 'block' }}>
+    <div id="calculadora-tab" className="tab-content active calc-tab-content" style={{ display: 'block' }}>
       <h2><i className="fas fa-calculator"></i> Calculadora Avançada de Enlace Óptico</h2>
 
       {/* Preset Selector */}

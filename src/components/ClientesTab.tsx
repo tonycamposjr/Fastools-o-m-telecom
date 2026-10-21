@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ClienteRecord, HistoricoItem, RecordStatus, RecordPrioridade } from '../types';
 import { collection, getDocs, setDoc, doc, deleteDoc, writeBatch } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { dbRede as db } from '../lib/firebase';
 
 interface ClientesTabProps {
   showToast: (msg: string, type: 'success' | 'error' | 'info' | 'warning') => void;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TaRecord, TaStatus } from '../types';
 import { collection, getDocs, setDoc, doc, deleteDoc, writeBatch } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { dbRede as db } from '../lib/firebase';
 import { jsPDF } from 'jspdf';
 
 interface TaTabProps {
@@ -850,7 +850,7 @@ export default function TaTab({ showToast }: TaTabProps) {
                     {/* Essential timestamps summary line */}
                     <div style={{ 
                       display: 'flex', 
-                      justify: 'space-between', 
+                      justifyContent: 'space-between', 
                       alignItems: 'center',
                       background: 'var(--bg)', 
                       border: '1px solid var(--border)', 

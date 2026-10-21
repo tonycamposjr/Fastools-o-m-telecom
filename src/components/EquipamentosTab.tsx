@@ -152,8 +152,8 @@ export default function EquipamentosTab({ showToast }: EquipamentosTabProps) {
           // Clear previous Dexie records
           await dbEquipamentos.equipamentos.clear();
 
-          // Batch bulkAdd in chunks of 1,000 for maximum performance without blocking UI
-          const chunkSize = 1000;
+          // Batch bulkAdd in chunks of 2,000 for maximum performance without blocking UI
+          const chunkSize = 2000;
           for (let i = 0; i < total; i += chunkSize) {
             const chunk = parsedItems.slice(i, i + chunkSize);
             await dbEquipamentos.equipamentos.bulkAdd(chunk);
@@ -162,7 +162,7 @@ export default function EquipamentosTab({ showToast }: EquipamentosTabProps) {
             setImportProgress({ current: currentProcessed, total });
 
             // Allow UI re-render
-            await new Promise(res => setTimeout(res, 10));
+            await new Promise(res => setTimeout(res, 5));
           }
 
           showToast(`Importação concluída! ${total.toLocaleString('pt-BR')} equipamentos cadastrados no IndexedDB.`, 'success');
@@ -695,7 +695,7 @@ export default function EquipamentosTab({ showToast }: EquipamentosTabProps) {
                 {importing ? 'Processando e gravando dados...' : 'Clique para selecionar ou arraste o arquivo CSV aqui'}
               </p>
               <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>
-                Suporta arquivos de até 100.000 linhas (~21.600 equipamentos)
+                Suporta arquivos de até 140.000 linhas
               </p>
               <input 
                 type="file" 

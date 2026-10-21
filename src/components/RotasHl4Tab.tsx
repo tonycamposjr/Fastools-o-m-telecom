@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { collection, onSnapshot, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { db, storage, handleFirestoreError, OperationType } from '../lib/firebase';
+import { dbRede as db, storage, handleFirestoreError, OperationType } from '../lib/firebase';
 import { RotaHL4Item } from '../types';
 
 interface RotasHl4TabProps {
