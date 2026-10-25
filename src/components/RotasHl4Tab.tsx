@@ -3,6 +3,7 @@ import { collection, onSnapshot, addDoc, deleteDoc, doc } from 'firebase/firesto
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { dbRede as db, storage, handleFirestoreError, OperationType } from '../lib/firebase';
 import { RotaHL4Item } from '../types';
+import RotasHl4MapaTab from './RotasHl4MapaTab';
 
 interface RotasHl4TabProps {
   showToast?: (message: string, type?: 'success' | 'error' | 'info' | 'warning') => void;
@@ -30,6 +31,8 @@ export default function RotasHl4Tab({ showToast }: RotasHl4TabProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  // 'mapa' exibe o mapa interativo (SVG 1:1 dos PDFs); 'png' exibe o fluxo de upload/galeria
+  const [modoVisao, setModoVisao] = useState<'mapa' | 'png'>('mapa');
   
   // Fullscreen Preview Modal State
   const [selectedImage, setSelectedImage] = useState<{ url: string; title: string; date?: string } | null>(null);
@@ -495,6 +498,40 @@ export default function RotasHl4Tab({ showToast }: RotasHl4TabProps) {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '6px', marginRight: '4px' }}>
+            <button
+              onClick={() => setModoVisao('mapa')}
+              style={{
+                background: modoVisao === 'mapa' ? '#6366f1' : 'rgba(255, 255, 255, 0.08)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '8px 14px',
+                borderRadius: '10px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+              title="Mapa interativo das rotas HL4"
+            >
+              <i className="fas fa-project-diagram"></i> Mapa Interativo
+            </button>
+            <button
+              onClick={() => setModoVisao('png')}
+              style={{
+                background: modoVisao === 'png' ? '#6366f1' : 'rgba(255, 255, 255, 0.08)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '8px 14px',
+                borderRadius: '10px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+              title="Upload e galeria de PNGs das rotas"
+            >
+              <i className="fas fa-images"></i> PNGs
+            </button>
+          </div>
           <span
             style={{
               background: 'rgba(99, 102, 241, 0.15)',
@@ -511,6 +548,8 @@ export default function RotasHl4Tab({ showToast }: RotasHl4TabProps) {
         </div>
       </div>
 
+      {modoVisao === 'png' ? (
+        <>
       {/* DRAG & DROP ZONE FLUTUANTE */}
       <div
         onDragOver={handleDragOver}
@@ -1229,6 +1268,10 @@ export default function RotasHl4Tab({ showToast }: RotasHl4TabProps) {
             </div>
           ))}
         </div>
+      )}
+        </>
+      ) : (
+        <RotasHl4MapaTab />
       )}
 
       {/* MODAL FULLSCREEN COM CONTROLES DE ZOOM E DOWNLOAD */}
