@@ -939,7 +939,7 @@ export default function TaTab({ showToast }: TaTabProps) {
       {isFormModalOpen && (
         <div className="modal" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', zIndex: 9999, overflowY: 'auto', padding: '15px' }}>
           <div className="modal-content large" style={{ background: 'var(--card)', borderRadius: '15px', padding: '25px', maxWidth: '650px', width: '100%', position: 'relative', animation: 'scaleUp 0.3s ease', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', border: '2px solid var(--border)' }}>
-            <span className="close" onClick={() => setIsFormModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px', cursor: 'pointer', color: 'var(--muted)' }}>&times;</span>
+            <span className="close" onClick={() => setIsFormModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px' }}>&times;</span>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <i className="fas fa-file-signature"></i>
               {editingRecord ? 'Editar Registro de TA' : 'Registrar Novo TA'}
@@ -1115,7 +1115,7 @@ export default function TaTab({ showToast }: TaTabProps) {
       {isDetailModalOpen && viewingRecord && (
         <div className="modal" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', zIndex: 9999, padding: '15px' }}>
           <div className="modal-content large" style={{ background: 'var(--card)', borderRadius: '15px', padding: '25px', maxWidth: '650px', width: '100%', position: 'relative', animation: 'scaleUp 0.3s ease', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', border: '2px solid var(--border)' }}>
-            <span className="close" onClick={() => setIsDetailModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px', cursor: 'pointer', color: 'var(--muted)' }}>&times;</span>
+            <span className="close" onClick={() => setIsDetailModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px' }}>&times;</span>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '2px solid var(--border)', paddingBottom: '15px', marginBottom: '20px' }}>
               <div style={{ width: '45px', height: '45px', borderRadius: '10px', background: 'rgba(var(--accent-rgb), 0.1)', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--accent)', fontSize: '20px' }}>
@@ -1241,7 +1241,7 @@ export default function TaTab({ showToast }: TaTabProps) {
       {isBackupModalOpen && (
         <div className="modal" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', zIndex: 9999, padding: '15px' }}>
           <div className="modal-content large" style={{ background: 'var(--card)', borderRadius: '15px', padding: '25px', maxWidth: '550px', width: '100%', position: 'relative', animation: 'scaleUp 0.3s ease', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', border: '2px solid var(--border)' }}>
-            <span className="close" onClick={() => setIsBackupModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px', cursor: 'pointer', color: 'var(--muted)' }}>&times;</span>
+            <span className="close" onClick={() => setIsBackupModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px' }}>&times;</span>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <i className="fas fa-save"></i> Backup e Restauração de TAs
             </h3>
@@ -1287,7 +1287,7 @@ export default function TaTab({ showToast }: TaTabProps) {
       {isReportModalOpen && (
         <div className="modal" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', zIndex: 9999, padding: '15px' }}>
           <div className="modal-content large" style={{ background: 'var(--card)', borderRadius: '15px', padding: '25px', maxWidth: '600px', width: '100%', position: 'relative', animation: 'scaleUp 0.3s ease', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', border: '2px solid var(--border)' }}>
-            <span className="close" onClick={() => setIsReportModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px', cursor: 'pointer', color: 'var(--muted)' }}>&times;</span>
+            <span className="close" onClick={() => setIsReportModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px' }}>&times;</span>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--accent)', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <i className="fas fa-stamp"></i> Carimbo do Termo de Atendimento (TA)
             </h3>
@@ -1324,7 +1324,7 @@ export default function TaTab({ showToast }: TaTabProps) {
       {isPasswordModalOpen && (
         <div className="modal" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', zIndex: 10000, padding: '15px' }}>
           <div className="modal-content" style={{ background: 'var(--card)', borderRadius: '15px', padding: '25px', maxWidth: '400px', width: '100%', position: 'relative', animation: 'scaleUp 0.3s ease', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', border: '2px solid var(--border)' }}>
-            <span className="close" onClick={() => setIsPasswordModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px', cursor: 'pointer', color: 'var(--muted)' }}>&times;</span>
+            <span className="close" onClick={() => setIsPasswordModalOpen(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px' }}>&times;</span>
             <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#ef4444', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <i className="fas fa-key"></i> Autorização Requerida
             </h3>
@@ -1365,7 +1365,7 @@ export default function TaTab({ showToast }: TaTabProps) {
       {showResolucaoWarningModal && (
         <div className="modal" style={{ display: 'flex', position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.7)', justifyContent: 'center', alignItems: 'center', zIndex: 10001, padding: '15px' }}>
           <div className="modal-content" style={{ background: 'var(--card)', borderRadius: '15px', padding: '25px', maxWidth: '450px', width: '100%', position: 'relative', animation: 'scaleUp 0.3s ease', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', border: '2px solid var(--border)' }}>
-            <span className="close" onClick={() => setShowResolucaoWarningModal(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px', cursor: 'pointer', color: 'var(--muted)' }}>&times;</span>
+            <span className="close" onClick={() => setShowResolucaoWarningModal(false)} style={{ position: 'absolute', top: '15px', right: '20px', fontSize: '24px' }}>&times;</span>
             <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <i className="fas fa-exclamation-triangle"></i> Atenção: Resolução Pendente
             </h3>

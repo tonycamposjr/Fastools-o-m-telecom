@@ -3300,4 +3300,51 @@ html.skeuomorphic-mode[data-theme="dark"] {
     box-sizing: border-box !important;
 }
 
+/* ========== HOVER STATES UNIFICADOS (elementos que faltavam) ==========
+   Só em ponteiros de verdade (@media hover:hover) — não dispara no toque.
+   Estilo sutil skeuomórfico: elevação leve + realce de cor existente. */
+@media (hover: hover) {
+    /* Copiar (NSAP/Datacom/Carimbo) e baixar arquivo */
+    .copy-btn:hover,
+    .dl-btn:hover {
+        background: linear-gradient(135deg, var(--accent), #1e4fb8);
+        filter: brightness(1.06);
+        box-shadow: var(--nm-flat-sm);
+    }
+
+    /* Fechar modais (botão .close-modal e “×” .close) */
+    .close-modal,
+    .close {
+        transition: color 0.15s ease, transform 0.15s ease;
+    }
+
+    .close-modal:hover,
+    .close:hover {
+        color: var(--danger, #dc2626);
+        transform: scale(1.12);
+    }
+
+    .close-modal:active,
+    .close:active {
+        transform: scale(0.94);
+    }
+
+    /* Botões compactos avulsos (.btn-sm sem .btn) — Script Datacom etc. */
+    .btn-sm {
+        transition: all 0.18s ease;
+    }
+
+    .btn-sm:hover:not(:disabled):not(.active) {
+        transform: translateY(-2px);
+        box-shadow: var(--nm-flat);
+        filter: brightness(1.04);
+    }
+
+    .btn-sm:active:not(:disabled) {
+        transform: translateY(1px);
+        box-shadow: var(--nm-inset);
+    }
+}
+
+
 
