@@ -28,6 +28,7 @@ const TaTab = lazy(() => import('./components/TaTab'));
 const RotasHl4Tab = lazy(() => import('./components/RotasHl4Tab'));
 const EquipamentosTab = lazy(() => import('./components/EquipamentosTab'));
 const KmlMapTab = lazy(() => import('./components/KmlMapTab'));
+const TopologiaTab = lazy(() => import('./components/TopologiaTab'));
 
 const TabFallback = () => (
   <div
@@ -154,6 +155,15 @@ const TOOLS: ToolDef[] = [
     icon: 'fa-map-marked-alt',
     color: '#10b981',
     colorRgb: '16, 185, 129',
+  },
+  {
+    id: 'topologia',
+    name: 'Mapa de Topologia',
+    short: 'Topologia',
+    desc: 'Gerador automático de diagramas de topologia de rede (SVG/PNG/PDF) com rotas, equipamentos e caixas de informação.',
+    icon: 'fa-diagram-project',
+    color: '#7C3AED',
+    colorRgb: '124, 58, 237',
   },
 ];
 
@@ -866,6 +876,7 @@ export default function App() {
                   {activeTab === 'rotas_hl4' && <RotasHl4Tab showToast={showToast} />}
                   {activeTab === 'equipamentos' && <EquipamentosTab showToast={showToast} />}
                   {activeTab === 'kml' && <KmlMapTab showToast={showToast} />}
+                  {activeTab === 'topologia' && <TopologiaTab showToast={showToast} />}
                   {activeTab === 'admin' && user?.role === 'admin' && <AdminTab showToast={showToast} />}
                 </ErrorBoundary>
               </Suspense>

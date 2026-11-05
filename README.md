@@ -76,7 +76,7 @@ cd backend && npm test      # 20 testes: dois usuários não acessam dados/arqui
 
 ---
 
-## Ferramentas incluídas (11)
+## Ferramentas incluídas (12)
 
 | Ferramenta | O que faz |
 |---|---|
@@ -91,6 +91,7 @@ cd backend && npm test      # 20 testes: dois usuários não acessam dados/arqui
 | **Rotas HL4** | Mapas/rotas HL4 em PNG (upload + visualização) |
 | **Consulta de Equipamentos** | Catálogo IndexedDB (~21.600 itens) com busca e filtros |
 | **Mapa KML** | Carrega `.KML`, mostra pontos no mapa (Leaflet) e abre rota no Google Maps |
+| **Mapa de Topologia** | Gerador automático de diagramas de topologia de rede (SVG/PNG/PDF) com rotas, equipamentos e caixas de informação |
 
 ## Como rodar
 
@@ -108,7 +109,7 @@ A cada push na `main`, o workflow `.github/workflows/pages.yml` publica o front-
 
 **https://tonycamposjr.github.io/Fastools-o-m-telecom/**
 
-No Pages **não existe backend** — o app abre em **Modo Local**: as 11 ferramentas
+No Pages **não existe backend** — o app abre em **Modo Local**: as 12 ferramentas
 funcionam com dados gravados no próprio dispositivo e o Leitor OTDR mantém
 histórico/limiares em `localStorage`. O chip laranja "Modo Local (sem servidor)"
 fica no topo com o botão **Entrar**, que reconecta quando um backend está no ar
@@ -154,7 +155,7 @@ src/
   App.tsx            # Shell: painel, abas, tema, navegação + gate de autenticação
   index.css          # Base de layout herdada do sistema de rede (estrutura, grids, mídia queries)
   skeuo.css          # TEMA SKEUOMÓRFICO: tokens de materiais, relevos, LEDs, claro/escuro, módulo OTDR
-  components/        # 10 ferramentas de rede + AuthScreen (login/cadastro) + AdminTab (painel admin)
+  components/        # 12 ferramentas de rede + AuthScreen (login/cadastro) + AdminTab (painel admin)
   otdr/
     sor.ts           # Parser binário .SOR + tipos + helpers (fidelidade bit a bit com o original)
     OtdrModule.tsx   # Módulo OTDR completo (UI, canvas do traço, eventos, nuvem própria, PDF)
