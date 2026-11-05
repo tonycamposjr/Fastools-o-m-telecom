@@ -1,4 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+// Logo oficial da Vivo embutido no bundle (data URI em tempo de build → 100% offline,
+// incluído por padrão em todo projeto novo e em todas as exportações PNG/SVG/PDF).
+import defaultLogoDataUri from '../assets/logo-vivo.svg?inline';
 
 /**
  * ==========================================================================
@@ -591,10 +594,6 @@ function computeLayout(p: Projeto): Layout {
 
 const LOGO_KEY = 'topoCustomLogo';  // logotipo personalizado ("Novo projeto"/"Limpar" nunca apagam)
 const PROJ_KEY = 'topoProject';     // autosave do projeto
-const DEFAULT_LOGO = `${import.meta.env.BASE_URL || '/'}logo-vivo.svg`;
-
-const svgToDataUri = (svg: string) =>
-  `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
 
 const slug = (s: string) =>
   (s || 'topologia').trim().toLowerCase().replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'topologia';
@@ -633,17 +632,9 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
     try { localStorage.setItem(PROJ_KEY, JSON.stringify(proj)); } catch { /* quota */ }
   }, [proj]);
 
-  /* logotipo: padrão Vivo embutido + personalizado salvo em localStorage */
+  /* logotipo: padrão Vivo (embutido no bundle) + personalizado salvo em localStorage */
   const [customLogo, setCustomLogo] = useState<string>(() => localStorage.getItem(LOGO_KEY) || '');
-  const [defaultLogo, setDefaultLogo] = useState<string>('');
-  useEffect(() => {
-    fetch(DEFAULT_LOGO)
-      .then((r) => (r.ok ? r.text() : Promise.reject(new Error('logo ausente'))))
-      .then(svgToDataUri)
-      .then(setDefaultLogo)
-      .catch(() => setDefaultLogo(''));
-  }, []);
-  const logoDataUri = customLogo || defaultLogo;
+  const logoDataUri = customLogo || defaultLogoDataUri;
 
   const onLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -910,7 +901,8 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
                 </button>
               </div>
               <p className="topo-hint">
-                Logo padrão embutido: <code>public/logo-vivo.svg</code> — substitua pelo arquivo oficial mantendo o nome.
+                O logo oficial da Vivo já vem <b>embutido no código</b> (<code>src/assets/logo-vivo.svg</code>) — funciona
+                offline e é incluído em todas as exportações. Você pode enviar outro se precisar (salvo neste dispositivo).
               </p>
             </div>
           </section>
@@ -1158,7 +1150,7 @@ const TopoSvg: React.FC<{
 
     {/* Logotipo: data URI embutido — garante presença em PNG/SVG/PDF */}
     {logo ? (
-      <image href={logo} x={MARGIN - 20} y={MARGIN - 30} width={165} height={68} preserveAspectRatio="xMidYMid meet" />
+      <image href={logo} x={MARGIN - 20} y={MARGIN - 30} width={186} height={59} preserveAspectRatio="xMidYMid meet" />
     ) : null}
 
     {/* Título do projeto centralizado no topo */}
