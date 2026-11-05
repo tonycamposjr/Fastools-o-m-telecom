@@ -2,6 +2,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 // Logo oficial da Vivo embutido no bundle (data URI em tempo de build → 100% offline,
 // incluído por padrão em todo projeto novo e em todas as exportações PNG/SVG/PDF).
 import defaultLogoDataUri from '../assets/logo-vivo.svg?inline';
+// Persistência na nuvem — mesmo padrão das abas TA/Clientes: banco Firestore (dbRede)
+// com espelho em localStorage e fallback local quando a nuvem está indisponível.
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { dbRede, handleFirestoreError, OperationType } from '../lib/firebase';
 
 /**
  * ==========================================================================
@@ -593,7 +597,9 @@ function computeLayout(p: Projeto): Layout {
 /* ========================= PERSISTÊNCIA / DOWNLOAD ========================= */
 
 const LOGO_KEY = 'topoCustomLogo';  // logotipo personalizado ("Novo projeto"/"Limpar" nunca apagam)
-const PROJ_KEY = 'topoProject';     // autosave do projeto
+const PROJ_KEY = 'topoProject';     // autosave local (espelho do banco)
+const TOPO_COL = 'topologia_projetos'; // coleção no Firestore dbRede
+const CURRENT_DOC_ID = 'atual';        // documento do projeto em edição
 
 const slug = (s: string) =>
   (s || 'topologia').trim().toLowerCase().replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'topologia';
@@ -616,10 +622,35 @@ function dataUriToBlob(dataUri: string): Blob {
   return new Blob([arr], { type: meta.split(':')[1]?.split(';')[0] || 'image/png' });
 }
 
+/** Remove `undefined` recursivamente (Firestore não aceita) e preserva strings/arrays/objetos. */
+function sanitizeForFirestore(value: unknown): any {
+  if (Array.isArray(value)) return value.filter((v) => v !== undefined).map((v) => sanitizeForFirestore(v));
+  if (value && typeof value === 'object') {
+    const clean: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      if (v !== undefined) clean[k] = sanitizeForFirestore(v);
+    }
+    return clean;
+  }
+  return value ?? '';
+}
+
+/** Indica se o projeto tem conteúdo (não vazio) — usado para seedar/arquivar. */
+function projetoTemDados(p: Projeto): boolean {
+  return Boolean(
+    (p.titulo && p.titulo.trim()) ||
+    p.rotas.length > 0 ||
+    p.routers.some((r) => r.nome.trim())
+  );
+}
+
+/** Carimbo de data (ISO) para comparações nuvem ↔ local. */
+const nowIso = () => new Date().toISOString();
+
 /* ========================= COMPONENTE ========================= */
 
 const TopologiaTab: React.FC<Props> = ({ showToast }) => {
-  /* projeto + autosave */
+  /* projeto + autosave local imediato (o espelho na nuvem é debounced, abaixo) */
   const [proj, setProj] = useState<Projeto>(() => {
     try {
       const raw = localStorage.getItem(PROJ_KEY);
@@ -631,6 +662,96 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
   useEffect(() => {
     try { localStorage.setItem(PROJ_KEY, JSON.stringify(proj)); } catch { /* quota */ }
   }, [proj]);
+
+  /* ---------- persistência na nuvem (Firestore dbRede — coleção topologia_projetos) ----------
+     • Carrega: decide entre nuvem e local pelo carimbo updatedAt (o mais recente vence,
+       exatamente como nas abas TA/Registros: nuvem indisponível → usa local sem perder nada);
+     • Autosave (900 ms após a última edição): grava o documento 'atual' na nuvem;
+     • Supressão inicial (skipCloudSave) evita sobrescrever a nuvem antes da decisão.         */
+  const [cloudStatus, setCloudStatus] = useState<'checking' | 'cloud' | 'local' | 'saving'>('checking');
+  const skipCloudSave = useRef(true);
+
+  const pushCloud = (p: Projeto, ts: string) => {
+    setCloudStatus('saving');
+    setDoc(
+      doc(dbRede, TOPO_COL, CURRENT_DOC_ID),
+      { ...sanitizeForFirestore(p), updatedAt: ts }
+    )
+      .then(() => setCloudStatus('cloud'))
+      .catch((err) => {
+        handleFirestoreError(err, OperationType.WRITE, `${TOPO_COL}/${CURRENT_DOC_ID}`);
+        setCloudStatus('local');
+      });
+  };
+
+  /* Arquiva o projeto atual em um documento próprio (histórico no banco) antes de
+     substituí-lo — "Novo projeto" e "Carregar exemplo" nunca perdem o que existia. */
+  const archiveProj = (p: Projeto, motivo: string) => {
+    if (!projetoTemDados(p)) return;
+    const id = `arq_${Date.now().toString(36)}_${uid()}`;
+    const snapshot = { ...sanitizeForFirestore(p), motivo, arquivadoEm: nowIso() };
+    setDoc(doc(dbRede, TOPO_COL, id), snapshot).catch((err) => {
+      handleFirestoreError(err, OperationType.WRITE, `${TOPO_COL}/${id}`);
+    });
+  };
+
+  // decisão inicial: nuvem vs local (roda uma vez)
+  useEffect(() => {
+    let cancelled = false;
+    const decide = async () => {
+      const localTs = (() => {
+        try {
+          const raw = localStorage.getItem(PROJ_KEY);
+          return raw ? String((JSON.parse(raw) as { updatedAt?: string }).updatedAt ?? '') : '';
+        } catch { return ''; }
+      })();
+      try {
+        const snap = await getDoc(doc(dbRede, TOPO_COL, CURRENT_DOC_ID));
+        if (cancelled) return;
+        if (snap.exists()) {
+          const cloud = snap.data() as Projeto & { updatedAt?: string };
+          const cloudTs = String(cloud.updatedAt ?? '');
+          const localRich = projetoTemDados(proj);
+          const cloudRich = projetoTemDados(cloud);
+          if (cloudRich && (!localRich || cloudTs >= localTs)) {
+            // nuvem mais recente (ou local vazio) → restaura da nuvem
+            setProj({ ...projetoVazio(), ...cloud });
+          } else if (localRich) {
+            // local mais recente (edições offline) → devolve ao banco
+            pushCloud(proj, nowIso());
+          } else {
+            setCloudStatus('cloud');
+          }
+        } else if (projetoTemDados(proj)) {
+          // banco vazio e local tem dados → semeia a nuvem (como faz a aba TA)
+          pushCloud(proj, nowIso());
+        } else {
+          setCloudStatus('cloud');
+        }
+        skipCloudSave.current = false;
+      } catch (err) {
+        handleFirestoreError(err, OperationType.GET, `${TOPO_COL}/${CURRENT_DOC_ID}`);
+        if (cancelled) return;
+        setCloudStatus('local');
+        showToast('Sem acesso à nuvem — as rotas continuam salvas neste dispositivo.', 'warning');
+        skipCloudSave.current = false;
+      }
+    };
+    decide();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // autosave na nuvem: 900 ms após a última edição (debounce de digitação)
+  useEffect(() => {
+    if (cloudStatus === 'checking') return;
+    const t = setTimeout(() => {
+      if (skipCloudSave.current) return;
+      pushCloud(proj, nowIso());
+    }, 900);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [proj, cloudStatus === 'checking']);
 
   /* logotipo: padrão Vivo (embutido no bundle) + personalizado salvo em localStorage */
   const [customLogo, setCustomLogo] = useState<string>(() => localStorage.getItem(LOGO_KEY) || '');
@@ -751,13 +872,15 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
   };
 
   const novoProjeto = () => {
+    archiveProj(proj, 'novo-projeto'); // histórico no banco antes de zerar
     setProj(projetoVazio());
-    showToast('Novo projeto criado — o logotipo é preservado.', 'info');
+    showToast('Novo projeto criado — o anterior foi arquivado no banco. O logotipo é preservado.', 'info');
   };
 
   const carregarExemplo = () => {
+    archiveProj(proj, 'carregar-exemplo'); // histórico no banco antes de substituir
     setProj(exemploBORACEIA());
-    showToast('Exemplo BORACEIA carregado.', 'success');
+    showToast('Exemplo BORACEIA carregado (projeto anterior arquivado no banco).', 'success');
   };
 
   /* layout memoizado (função pura → só recalcula quando o projeto muda) */
@@ -1065,6 +1188,20 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
 
           <section className="topo-card">
             <h3><i className="fas fa-gear" /> Ações</h3>
+            <div className="topo-cloud-row">
+              <span className={`topo-cloud ${cloudStatus}`}>
+                <i className={
+                  cloudStatus === 'cloud' ? 'fas fa-cloud'
+                  : cloudStatus === 'saving' ? 'fas fa-cloud-upload-alt'
+                  : cloudStatus === 'local' ? 'fas fa-laptop'
+                  : 'fas fa-satellite-dish'
+                } />
+                {cloudStatus === 'cloud' && 'Salvo no banco (nuvem)'}
+                {cloudStatus === 'saving' && 'Salvando no banco…'}
+                {cloudStatus === 'local' && 'Sem nuvem — salvo neste dispositivo'}
+                {cloudStatus === 'checking' && 'Conectando ao banco…'}
+              </span>
+            </div>
             <div className="topo-actions">
               <button className="btn btn-sm" onClick={carregarExemplo}><i className="fas fa-flask" /> Carregar exemplo</button>
               <button className="btn btn-sm" onClick={novoProjeto}><i className="fas fa-file" /> Novo projeto</button>
@@ -1082,7 +1219,9 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
               <button className="btn btn-secondary btn-sm" onClick={baixarPdf}><i className="fas fa-file-pdf" /> Baixar PDF</button>
             </div>
             <p className="topo-hint">
-              O projeto é salvo automaticamente neste dispositivo (autosave). “Novo projeto” nunca apaga o logotipo.
+              Cada rota criada é salva automaticamente no <b>banco de dados (nuvem)</b> — o carimbo
+              acima confirma. Se a nuvem estiver indisponível, fica salva no dispositivo e volta ao banco quando a
+              conexão existir. “Novo projeto” nunca apaga o logotipo e arquiva o projeto anterior no banco.
             </p>
           </section>
         </div>

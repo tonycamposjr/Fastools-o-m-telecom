@@ -3902,6 +3902,34 @@ html.sk-skin [tabindex]:focus-visible {
   margin-bottom: 8px;
 }
 
+/* status de persistência (nuvem/local) */
+.topo-cloud-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.topo-cloud {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--sk-btn-grad);
+  color: var(--fg);
+  box-shadow: var(--nm-flat-sm);
+}
+
+.topo-cloud i { font-size: 11px; }
+.topo-cloud.cloud i { color: var(--success, #10b981); }
+.topo-cloud.saving { opacity: 0.75; font-style: italic; }
+.topo-cloud.local { color: var(--warning, #f59e0b); }
+.topo-cloud.checking { opacity: 0.7; }
+
 .topo-inline-btn { cursor: pointer; }
 
 .topo-logo-row {
