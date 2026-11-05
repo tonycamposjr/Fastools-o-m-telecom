@@ -6,6 +6,10 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
   return {
+    define: {
+      // Timestamp do build (exibido no rodapé — substitui o "hoje" do relógio do aparelho)
+      __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+    },
     plugins: [
       react(),
       tailwindcss(),
@@ -23,23 +27,25 @@ export default defineConfig(() => {
           background_color: '#DDE3EB',
           display: 'standalone',
           orientation: 'any',
-          start_url: '/',
-          scope: '/',
+          // Caminhos RELATIVOS: funcionam tanto no GitHub Pages (subcaminho)
+          // quanto no backend próprio servido na raiz.
+          start_url: './',
+          scope: './',
           icons: [
             {
-              src: '/pwa-192x192.png',
+              src: 'pwa-192x192.png',
               sizes: '192x192',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: '/pwa-512x512.png',
+              src: 'pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: '/pwa-512x512.png',
+              src: 'pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',

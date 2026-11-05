@@ -5,8 +5,10 @@ Projeto único que integra as **duas ferramentas** em um só app:
 1. **Sistema Unificado de Ferramentas de Rede** (base v3.1 — 10 utilitários)
 2. **Leitor OTDR — Análise SOR** (módulo completo de leitura/analise de traços `.SOR`)
 
-Visual **skeuomórfico** ("instrumento de campo"): superfícies com relevo e materiais,
-modo claro/escuro, e layout **responsivo para celular** com barra de navegação inferior.
+Visual **neumórfico + glassmorphism** ("vidrofosco"): superfícies translúcidas com blur,
+sombras suaves de dupla luz, modo claro/escuro, e layout **responsivo para celular** com
+barra de navegação inferior. O antigo acabamento skeuomórfico foi removido — o botão
+**"Glass ON"** liga/desliga a camada de vidro (modo plano para telas simples).
 
 ---
 
@@ -166,9 +168,8 @@ src/
 - **Stack**: React 19 + Vite 6 + TypeScript + Tailwind v4 + `vite-plugin-pwa` + Dexie + Leaflet + Firebase.
 - As **bibliotecas externas** (Font Awesome, Leaflet CSS, jsPDF, html2canvas) vêm por CDN
   e são **cacheadas pelo service worker** para uso offline.
-- O botão **"Realista ON"** liga/desliga o acabamento skeuomórfico (modo plano para telas simples).
-- O botão **"Dashboard ON"** alterna o layout: no **desktop**, exibe um painel com **menu lateral esquerdo** de ferramentas (abas); no celular o layout mobile (barra inferior + gaveta) continua igual.
-- Os dois apps originais **não foram alterados** — continuam intactos em `TESTES APP/`.
+- O botão **"Glass ON"** liga/desliga a camada de vidro (neumorfismo + glassmorphism; modo plano para telas simples).
+- O botão **"Dashboard ON"** alterna o layout: no **desktop**, exibe um painel com **menu lateral esquerdo** de ferramentas (abas); no celular o layout mobile (barra inferior + gaveta) continua igual.- Os dois apps originais **não foram alterados** — continuam intactos em `TESTES APP/`.
 - A configuração do Firebase é a mesma dos apps originais (chaves públicas de web).
 
 ---

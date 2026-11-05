@@ -123,24 +123,24 @@ html.sk-skin {
   --shadow: rgba(24, 33, 52, 0.35);
 
   /* Tokens do tema skeuomórfico */
-  --sk-edge: #aab5c3;
-  --sk-edge-soft: #bcc6d2;
-  --sk-panel-grad: linear-gradient(180deg, #fbfcfe 0%, #f1f5f9 55%, #e8eef5 100%);
-  --sk-chrome-grad: linear-gradient(180deg, #fafcfe 0%, #e9eef4 46%, #dde4ed 54%, #ccd5e1 100%);
-  --sk-btn-grad: linear-gradient(180deg, #fdfefe 0%, #eef2f7 45%, #e2e8f0 52%, #d2dae5 100%);
-  --sk-btn-grad-pressed: linear-gradient(180deg, #dde3ec 0%, #eaeff5 60%, #f4f7fb 100%);
-  --sk-well-grad: linear-gradient(180deg, #e6ebf2 0%, #f4f7fb 60%, #fbfdff 100%);
-  --sk-engrave: 0 1px 0 rgba(255, 255, 255, 0.92);
-  --sk-out: 0 1px 2px rgba(24, 33, 52, 0.14), 0 10px 22px -10px rgba(24, 33, 52, 0.35);
+  --sk-edge: rgba(255, 255, 255, 0.85);
+  --sk-edge-soft: rgba(255, 255, 255, 0.6);
+  --sk-panel-grad: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.44));
+  --sk-chrome-grad: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.52));
+  --sk-btn-grad: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  --sk-btn-grad-pressed: linear-gradient(180deg, rgba(24, 33, 52, 0.06), rgba(255, 255, 255, 0.4));
+  --sk-well-grad: linear-gradient(180deg, rgba(24, 33, 52, 0.055), rgba(24, 33, 52, 0.025));
+  --sk-engrave: none;
+  --sk-out: 0 2px 4px rgba(24, 33, 52, 0.05), 0 18px 40px -16px rgba(24, 33, 52, 0.28);
 
   /* Sombras neumórficas convertidas em relevos skeuomórficos */
-  --nm-flat: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(126, 138, 156, 0.22), 0 1px 2px rgba(24, 33, 52, 0.12), 0 8px 18px -8px rgba(24, 33, 52, 0.28);
-  --nm-flat-sm: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(24, 33, 52, 0.13), 0 4px 10px -4px rgba(24, 33, 52, 0.24);
-  --nm-flat-lg: inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(126, 138, 156, 0.25), 0 2px 3px rgba(24, 33, 52, 0.12), 0 18px 34px -12px rgba(24, 33, 52, 0.35);
-  --nm-inset: inset 0 2px 5px rgba(24, 33, 52, 0.26), inset 0 10px 18px -12px rgba(24, 33, 52, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.85);
-  --nm-inset-deep: inset 0 3px 7px rgba(24, 33, 52, 0.32), inset 0 14px 26px -14px rgba(24, 33, 52, 0.42), inset 0 -1px 0 rgba(255, 255, 255, 0.8);
-  --nm-convex: linear-gradient(180deg, #fdfefe 0%, #eef2f7 45%, #e2e8f0 52%, #d2dae5 100%);
-  --nm-concave: linear-gradient(180deg, #ccd5e1 0%, #dde4ed 50%, #e9eef4 55%, #fafcfe 100%);
+  --nm-flat: 0 1px 2px rgba(24, 33, 52, 0.05), 0 12px 26px -10px rgba(24, 33, 52, 0.2);
+  --nm-flat-sm: 0 1px 2px rgba(24, 33, 52, 0.06), 0 6px 14px -6px rgba(24, 33, 52, 0.16);
+  --nm-flat-lg: 0 2px 4px rgba(24, 33, 52, 0.05), 0 24px 48px -16px rgba(24, 33, 52, 0.24);
+  --nm-inset: inset 0 2px 6px rgba(24, 33, 52, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  --nm-inset-deep: inset 0 3px 9px rgba(24, 33, 52, 0.13), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  --nm-convex: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.5));
+  --nm-concave: linear-gradient(135deg, rgba(24, 33, 52, 0.05), rgba(255, 255, 255, 0.3));
 }
 
 /* ======================= 1b. TOKENS (ESCURO) ======================= */
@@ -158,39 +158,37 @@ html.sk-skin[data-theme="dark"] {
   --gradient-end: #3b7ce4;
   --shadow: rgba(0, 0, 0, 0.6);
 
-  --sk-edge: #454e5c;
-  --sk-edge-soft: #3c4450;
-  --sk-panel-grad: linear-gradient(180deg, #313742 0%, #282d36 55%, #232830 100%);
-  --sk-chrome-grad: linear-gradient(180deg, #3b414b 0%, #2e333c 48%, #272c34 100%);
-  --sk-btn-grad: linear-gradient(180deg, #3a4049 0%, #2f343d 45%, #282d35 100%);
-  --sk-btn-grad-pressed: linear-gradient(180deg, #22262d 0%, #2a2f37 60%, #313742 100%);
-  --sk-well-grad: linear-gradient(180deg, #1c2027 0%, #232830 70%, #262c35 100%);
-  --sk-engrave: 0 1px 0 rgba(0, 0, 0, 0.55);
+  --sk-edge: rgba(255, 255, 255, 0.1);
+  --sk-edge-soft: rgba(255, 255, 255, 0.06);
+  --sk-panel-grad: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+  --sk-chrome-grad: linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.04));
+  --sk-btn-grad: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.045));
+  --sk-btn-grad-pressed: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+  --sk-well-grad: linear-gradient(180deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.4));
+  --sk-engrave: none;
 
-  --nm-flat: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.45), 0 10px 22px -10px rgba(0, 0, 0, 0.6);
-  --nm-flat-sm: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 2px rgba(0, 0, 0, 0.45), 0 5px 12px -5px rgba(0, 0, 0, 0.55);
-  --nm-flat-lg: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.55), 0 3px 5px rgba(0, 0, 0, 0.4), 0 22px 40px -14px rgba(0, 0, 0, 0.7);
-  --nm-inset: inset 0 2px 5px rgba(0, 0, 0, 0.55), inset 0 10px 18px -12px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.06);
-  --nm-inset-deep: inset 0 3px 8px rgba(0, 0, 0, 0.62), inset 0 16px 28px -14px rgba(0, 0, 0, 0.7), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
-  --nm-convex: linear-gradient(180deg, #3b414b 0%, #313742 45%, #282d36 100%);
-  --nm-concave: linear-gradient(180deg, #232830 0%, #282d36 50%, #313742 55%, #3b414b 100%);
+  --nm-flat: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 26px -10px rgba(0, 0, 0, 0.5);
+  --nm-flat-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 14px -6px rgba(0, 0, 0, 0.45);
+  --nm-flat-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 24px 48px -16px rgba(0, 0, 0, 0.6);
+  --nm-inset: inset 0 2px 6px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.06);
+  --nm-inset-deep: inset 0 3px 9px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  --nm-convex: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  --nm-concave: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
 }
 
 /* ======================= 2. BASE / FUNDO ======================= */
 html.sk-skin body {
   background-color: var(--bg);
   background-image:
-    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 55%),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(90deg, rgba(20, 30, 50, 0.022) 0 1px, transparent 1px 3px);
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 55%),
+    radial-gradient(90% 70% at 90% 100%, rgba(var(--accent-rgb), 0.06), transparent 60%);
   background-attachment: fixed;
 }
 
 html.sk-skin[data-theme="dark"] body {
   background-image:
-    radial-gradient(120% 80% at 50% -10%, rgba(120, 150, 210, 0.10), transparent 55%),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.014) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.10) 0 1px, transparent 1px 3px);
+    radial-gradient(120% 90% at 50% -10%, rgba(120, 150, 210, 0.12), transparent 55%),
+    radial-gradient(90% 70% at 90% 100%, rgba(var(--accent-rgb), 0.05), transparent 60%);
 }
 
 html.sk-skin ::selection {
@@ -209,19 +207,19 @@ html.sk-skin .app-title {
   background: var(--sk-chrome-grad);
   border: 1px solid var(--sk-edge);
   color: var(--fg-heading);
-  text-shadow: var(--sk-engrave);
+  text-shadow: none;
   border-radius: 18px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.35), var(--sk-out);
+  box-shadow: var(--sk-out);
 }
 
 html.sk-skin[data-theme="dark"] .app-title {
-  text-shadow: var(--sk-engrave);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), inset 0 -1px 0 rgba(0, 0, 0, 0.5), var(--sk-out);
+  text-shadow: none;
+  box-shadow: var(--sk-out);
 }
 
 html.sk-skin .app-title i {
   color: #fff;
-  background: radial-gradient(circle at 32% 28%, #7fb2f7 0%, #3b7ce4 55%, #2a63c8 100%);
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
   -webkit-background-clip: initial;
   background-clip: initial;
   width: 40px;
@@ -232,19 +230,19 @@ html.sk-skin .app-title i {
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  border: 1px solid #27568f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.25), 0 3px 7px -2px rgba(30, 80, 170, 0.6);
+  border: none;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.25), 0 3px 7px -2px rgba(30, 80, 170, 0.6);
   filter: none;
 }
 
 html.sk-skin .version-badge {
-  background: linear-gradient(180deg, #f8e3a3 0%, #e8b83e 45%, #c99a1e 100%);
-  color: #4d3a05;
-  border: 1px solid #a97f12;
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
   border-radius: 8px;
   font-weight: 800;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(101, 74, 8, 0.5);
+  
+  box-shadow: 0 2px 4px -1px rgba(101, 74, 8, 0.5);
 }
 
 /* Botões da barra de controles */
@@ -261,7 +259,7 @@ html.sk-skin .neumorph-toggle-btn {
   font-weight: 700;
   letter-spacing: 0.01em;
   text-shadow: var(--sk-engrave);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(126, 138, 156, 0.35), 0 1px 2px rgba(24, 33, 52, 0.18), 0 5px 10px -5px rgba(24, 33, 52, 0.35);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.18), 0 5px 10px -5px rgba(24, 33, 52, 0.35);
   transition: filter 0.15s ease, transform 0.08s ease;
 }
 
@@ -290,11 +288,11 @@ html.sk-skin .theme-toggle {
 
 html.sk-skin .sk-skin-toggle-btn.active,
 html.sk-skin .neumorph-toggle-btn.active {
-  background: linear-gradient(180deg, #6ea2f2 0%, #3b7ce4 48%, #2f6fdb 52%, #275fc0 100%);
-  border-color: #2a5cae;
+  background: linear-gradient(135deg, #4a86e8, #275fc0);
+  border-color: rgba(0, 0, 0, 0.16);
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.28);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 5px rgba(30, 80, 170, 0.45);
+  
+  box-shadow: 0 2px 5px rgba(30, 80, 170, 0.45);
 }
 
 html.sk-skin .reset-btn:hover {
@@ -328,11 +326,11 @@ html.sk-skin .tab-button.active {
   background: var(--sk-btn-grad);
   border-color: var(--sk-edge);
   color: var(--accent);
-  box-shadow: inset 0 2px 5px rgba(24, 33, 52, 0.18), inset 0 -1px 0 rgba(255, 255, 255, 0.85), 0 1px 2px rgba(24, 33, 52, 0.15);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin[data-theme="dark"] .tab-button.active {
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55), inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin .view-mode-selector {
@@ -354,7 +352,7 @@ html.sk-skin .view-mode-btn.active {
   background: var(--sk-btn-grad);
   border-color: var(--sk-edge);
   color: var(--accent);
-  box-shadow: inset 0 2px 4px rgba(24, 33, 52, 0.2), inset 0 -1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: var(--nm-inset);
 }
 
 /* ======================= 5. FORMULÁRIOS ======================= */
@@ -381,7 +379,7 @@ html.sk-skin .search-box input {
   border: 1px solid var(--sk-edge-soft);
   border-radius: 10px;
   color: var(--fg);
-  box-shadow: inset 0 2px 4px rgba(24, 33, 52, 0.18), inset 0 8px 14px -10px rgba(24, 33, 52, 0.22), inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: var(--nm-inset);
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -397,14 +395,14 @@ html.sk-skin textarea:focus,
 html.sk-skin .nsap-input:focus,
 html.sk-skin .search-box input:focus {
   border-color: var(--accent);
-  box-shadow: inset 0 2px 4px rgba(24, 33, 52, 0.14), 0 0 0 3px rgba(var(--accent-rgb), 0.22), inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin input.invalid,
 html.sk-skin select.invalid,
 html.sk-skin textarea.invalid {
   border-color: #d43a3f;
-  box-shadow: inset 0 2px 4px rgba(24, 33, 52, 0.16), 0 0 0 3px rgba(212, 58, 63, 0.2);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin input[type="checkbox"],
@@ -421,7 +419,7 @@ html.sk-skin .search-box {
   background: var(--sk-well-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 12px;
-  box-shadow: inset 0 2px 4px rgba(24, 33, 52, 0.16), inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin .search-box i {
@@ -432,7 +430,7 @@ html.sk-skin .radio-label {
   background: var(--sk-btn-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 10px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.12);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.12);
   color: var(--fg);
   font-weight: 600;
   cursor: pointer;
@@ -441,7 +439,7 @@ html.sk-skin .radio-label {
 html.sk-skin .radio-label:has(input:checked) {
   border-color: var(--accent);
   color: var(--accent);
-  box-shadow: inset 0 2px 5px rgba(24, 33, 52, 0.16), inset 0 -1px 0 rgba(255, 255, 255, 0.8), 0 0 0 2px rgba(var(--accent-rgb), 0.18);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin .toggle-row {
@@ -462,7 +460,7 @@ html.sk-skin .tooltip-text {
   color: #eef2f8;
   border: 1px solid #171c24;
   border-radius: 10px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 20px -6px rgba(10, 16, 26, 0.6);
+  box-shadow: 0 8px 20px -6px rgba(10, 16, 26, 0.6);
 }
 
 html.sk-skin .tooltip-icon {
@@ -483,12 +481,12 @@ html.sk-skin .import-zone {
 html.sk-skin .import-zone:hover,
 html.sk-skin .import-zone.drag-over {
   border-color: var(--accent);
-  background: linear-gradient(180deg, #e9eff8 0%, #f5f8fc 60%, #fbfdff 100%);
+  background: linear-gradient(135deg, #e9eff8, #fbfdff);
 }
 
 html.sk-skin[data-theme="dark"] .import-zone:hover,
 html.sk-skin[data-theme="dark"] .import-zone.drag-over {
-  background: linear-gradient(180deg, #232c3a 0%, #29313d 70%, #2c3541 100%);
+  background: linear-gradient(135deg, #232c3a, #2c3541);
 }
 
 /* ======================= 6. BOTÕES ======================= */
@@ -499,9 +497,11 @@ html.sk-skin .btn {
   border-radius: 12px;
   font-weight: 700;
   letter-spacing: 0.015em;
-  text-shadow: var(--sk-engrave);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(126, 138, 156, 0.35), 0 1px 2px rgba(24, 33, 52, 0.18), 0 5px 10px -5px rgba(24, 33, 52, 0.35);
-  transition: filter 0.15s ease, transform 0.08s ease, box-shadow 0.08s ease;
+  text-shadow: none;
+  box-shadow: var(--nm-flat-sm);
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 html.sk-skin[data-theme="dark"] .btn {
@@ -519,11 +519,11 @@ html.sk-skin .btn:active {
 }
 
 html.sk-skin .btn-primary {
-  background: linear-gradient(180deg, #79aaf4 0%, #4b86e6 46%, #2f6fdb 54%, #275fc0 100%);
-  border-color: #2a5cae;
+  background: linear-gradient(135deg, #4a86e8, #275fc0);
+  border-color: rgba(0, 0, 0, 0.16);
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.28);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 2px 5px rgba(30, 80, 170, 0.4), 0 8px 16px -8px rgba(30, 80, 170, 0.55);
+  text-shadow: none;
+  box-shadow: 0 2px 5px rgba(30, 80, 170, 0.35), 0 8px 16px -8px rgba(30, 80, 170, 0.5);
 }
 
 html.sk-skin .btn-primary:hover {
@@ -541,19 +541,19 @@ html.sk-skin[data-theme="dark"] .btn-secondary {
 }
 
 html.sk-skin .btn-success {
-  background: linear-gradient(180deg, #7ed09f 0%, #2fae76 48%, #22a06b 54%, #178a5a 100%);
+  background: linear-gradient(135deg, #2fae76, #178a5a);
   border-color: #147a4e;
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.16), 0 2px 5px rgba(23, 122, 78, 0.38);
+  
+  box-shadow: 0 2px 5px rgba(23, 122, 78, 0.38);
 }
 
 html.sk-skin .btn-warning {
-  background: linear-gradient(180deg, #f7c164 0%, #efa52b 48%, #e39413 54%, #c77f08 100%);
+  background: linear-gradient(135deg, #efa52b, #c77f08);
   border-color: #a96c06;
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.22);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.14), 0 2px 5px rgba(169, 108, 6, 0.35);
+  
+  box-shadow: 0 2px 5px rgba(169, 108, 6, 0.35);
 }
 
 html.sk-skin .btn-sm {
@@ -568,7 +568,7 @@ html.sk-skin .db-btn {
   border-radius: 10px;
   font-weight: 700;
   text-shadow: var(--sk-engrave);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.16), 0 4px 8px -4px rgba(24, 33, 52, 0.3);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.16), 0 4px 8px -4px rgba(24, 33, 52, 0.3);
   transition: filter 0.15s ease, transform 0.08s ease;
 }
 
@@ -586,31 +586,31 @@ html.sk-skin .db-btn:active {
 }
 
 html.sk-skin .db-btn.primary {
-  background: linear-gradient(180deg, #79aaf4 0%, #4b86e6 46%, #2f6fdb 54%, #275fc0 100%);
-  border-color: #2a5cae;
+  background: linear-gradient(135deg, #4a86e8, #275fc0);
+  border-color: rgba(0, 0, 0, 0.16);
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.26);
+  
 }
 
 html.sk-skin .db-btn.success {
-  background: linear-gradient(180deg, #7ed09f 0%, #2fae76 48%, #22a06b 54%, #178a5a 100%);
+  background: linear-gradient(135deg, #2fae76, #178a5a);
   border-color: #147a4e;
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.24);
+  
 }
 
 html.sk-skin .db-btn.warning {
-  background: linear-gradient(180deg, #f7c164 0%, #efa52b 48%, #e39413 54%, #c77f08 100%);
+  background: linear-gradient(135deg, #efa52b, #c77f08);
   border-color: #a96c06;
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+  
 }
 
 html.sk-skin .db-btn.danger {
-  background: linear-gradient(180deg, #f0858a 0%, #e5484d 48%, #d83c41 54%, #b93136 100%);
+  background: linear-gradient(135deg, #e5484d, #b93136);
   border-color: #9e2a2f;
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.24);
+  
 }
 
 /* Botões de ação circulares (tabelas) */
@@ -619,7 +619,7 @@ html.sk-skin .action-btn {
   border: 1px solid var(--sk-edge);
   border-radius: 10px;
   color: var(--muted);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.15), 0 4px 8px -4px rgba(24, 33, 52, 0.3);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.15), 0 4px 8px -4px rgba(24, 33, 52, 0.3);
   transition: filter 0.15s ease, transform 0.08s ease;
 }
 
@@ -655,7 +655,7 @@ html.sk-skin .filter-btn {
   border-radius: 10px;
   font-weight: 700;
   text-shadow: var(--sk-engrave);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.15), 0 4px 8px -4px rgba(24, 33, 52, 0.3);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.15), 0 4px 8px -4px rgba(24, 33, 52, 0.3);
   transition: filter 0.15s ease, transform 0.08s ease;
 }
 
@@ -678,10 +678,10 @@ html.sk-skin .filter-btn:active {
 
 html.sk-skin .filter-btn.active,
 html.sk-skin .preset-btn.active {
-  background: linear-gradient(180deg, #6ea2f2 0%, #3b7ce4 48%, #2f6fdb 52%, #275fc0 100%);
-  border-color: #2a5cae;
+  background: linear-gradient(135deg, #4a86e8, #275fc0);
+  border-color: rgba(0, 0, 0, 0.16);
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  
 }
 
 /* Voltar ao painel */
@@ -692,7 +692,7 @@ html.sk-skin .back-to-dashboard-btn {
   border-radius: 12px;
   font-weight: 700;
   text-shadow: var(--sk-engrave);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 2px rgba(24, 33, 52, 0.16), 0 6px 12px -6px rgba(24, 33, 52, 0.35);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.16), 0 6px 12px -6px rgba(24, 33, 52, 0.35);
   transition: filter 0.15s ease, transform 0.08s ease;
 }
 
@@ -715,14 +715,14 @@ html.sk-skin .datacom-tab-content {
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 20px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 3px rgba(24, 33, 52, 0.1), 0 16px 30px -16px rgba(24, 33, 52, 0.35);
+  box-shadow: 0 2px 3px rgba(24, 33, 52, 0.1), 0 16px 30px -16px rgba(24, 33, 52, 0.35);
 }
 
 html.sk-skin[data-theme="dark"] .tab-content,
 html.sk-skin[data-theme="dark"] .calc-tab-content,
 html.sk-skin[data-theme="dark"] .carimbo-tab-content,
 html.sk-skin[data-theme="dark"] .datacom-tab-content {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 3px rgba(0, 0, 0, 0.4), 0 16px 30px -16px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4), 0 16px 30px -16px rgba(0, 0, 0, 0.6);
 }
 
 html.sk-skin .stats-container .stat-card,
@@ -730,7 +730,7 @@ html.sk-skin .stat-card {
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 16px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 2px rgba(24, 33, 52, 0.12), 0 10px 20px -10px rgba(24, 33, 52, 0.35);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.12), 0 10px 20px -10px rgba(24, 33, 52, 0.35);
 }
 
 html.sk-skin .stat-card i {
@@ -745,7 +745,7 @@ html.sk-skin .details-card {
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 18px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 3px rgba(24, 33, 52, 0.1), 0 14px 26px -14px rgba(24, 33, 52, 0.32);
+  box-shadow: 0 2px 3px rgba(24, 33, 52, 0.1), 0 14px 26px -14px rgba(24, 33, 52, 0.32);
 }
 
 html.sk-skin .db-header h2,
@@ -763,14 +763,14 @@ html.sk-skin .section {
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 16px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.1), 0 10px 20px -12px rgba(24, 33, 52, 0.32);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.1), 0 10px 20px -12px rgba(24, 33, 52, 0.32);
   overflow: hidden;
 }
 
 html.sk-skin .section-head {
   background: var(--sk-chrome-grad);
   border-bottom: 1px solid var(--sk-edge-soft);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: none;
 }
 
 html.sk-skin .section-head h3,
@@ -780,13 +780,13 @@ html.sk-skin .section-head h4 {
 }
 
 html.sk-skin .sec-num {
-  background: radial-gradient(circle at 32% 28%, #7fb2f7 0%, #3b7ce4 55%, #2a63c8 100%);
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
   color: #fff;
-  border: 1px solid #27568f;
+  border: none;
   border-radius: 50%;
   font-weight: 800;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 4px -1px rgba(30, 80, 170, 0.5);
+  
+  box-shadow: 0 2px 4px -1px rgba(30, 80, 170, 0.5);
 }
 
 html.sk-skin .sec-notice {
@@ -794,7 +794,7 @@ html.sk-skin .sec-notice {
   border: 1px solid #e8cf92;
   border-radius: 12px;
   color: #6b5312;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px -2px rgba(107, 83, 18, 0.25);
+  box-shadow: 0 2px 4px -2px rgba(107, 83, 18, 0.25);
 }
 
 html.sk-skin[data-theme="dark"] .sec-notice {
@@ -808,7 +808,7 @@ html.sk-skin .sensitive-warn {
   border: 1px solid #e0a6a6;
   border-radius: 12px;
   color: #8c2f2f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 2px 4px -2px rgba(140, 47, 47, 0.25);
+  box-shadow: 0 2px 4px -2px rgba(140, 47, 47, 0.25);
 }
 
 html.sk-skin[data-theme="dark"] .sensitive-warn {
@@ -822,7 +822,7 @@ html.sk-skin .restore-banner {
   border: 1px solid #a9c6e6;
   border-radius: 12px;
   color: #1f4f86;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px -2px rgba(31, 79, 134, 0.25);
+  box-shadow: 0 2px 4px -2px rgba(31, 79, 134, 0.25);
 }
 
 html.sk-skin[data-theme="dark"] .restore-banner {
@@ -836,7 +836,7 @@ html.sk-skin .nsap-row {
   background: var(--sk-well-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 12px;
-  box-shadow: inset 0 2px 4px rgba(24, 33, 52, 0.12), inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin .nsap-key {
@@ -876,7 +876,7 @@ html.sk-skin .info-item {
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 12px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.1);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.1);
 }
 
 html.sk-skin .info-item .label,
@@ -889,7 +889,7 @@ html.sk-skin .backup-card {
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 16px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.1), 0 10px 20px -12px rgba(24, 33, 52, 0.3);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.1), 0 10px 20px -12px rgba(24, 33, 52, 0.3);
 }
 
 html.sk-skin .backup-info {
@@ -902,7 +902,7 @@ html.sk-skin .client-card-body {
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 16px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 3px rgba(24, 33, 52, 0.1), 0 12px 24px -12px rgba(24, 33, 52, 0.3);
+  box-shadow: 0 2px 3px rgba(24, 33, 52, 0.1), 0 12px 24px -12px rgba(24, 33, 52, 0.3);
 }
 
 html.sk-skin .client-card-header,
@@ -958,7 +958,7 @@ html.sk-skin .table-container {
   background: var(--card);
   border: 1px solid var(--sk-edge-soft);
   border-radius: 14px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 2px 4px rgba(24, 33, 52, 0.1), 0 12px 24px -14px rgba(24, 33, 52, 0.32);
+  box-shadow: 0 2px 4px rgba(24, 33, 52, 0.1), 0 12px 24px -14px rgba(24, 33, 52, 0.32);
   overflow: auto;
 }
 
@@ -997,8 +997,8 @@ html.sk-skin .ta-pill {
   font-weight: 800;
   letter-spacing: 0.03em;
   border: 1px solid;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 1px 2px rgba(24, 33, 52, 0.18);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.18);
+  
 }
 
 html.sk-skin .status-badge.status-aberto,
@@ -1067,11 +1067,11 @@ html.sk-skin .modal-content {
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge);
   border-radius: 20px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 4px 8px rgba(10, 16, 26, 0.2), 0 30px 60px -20px rgba(10, 16, 26, 0.6);
+  box-shadow: 0 4px 8px rgba(10, 16, 26, 0.2), 0 30px 60px -20px rgba(10, 16, 26, 0.6);
 }
 
 html.sk-skin[data-theme="dark"] .modal-content {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 4px 8px rgba(0, 0, 0, 0.5), 0 30px 60px -20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 30px 60px -20px rgba(0, 0, 0, 0.8);
 }
 
 html.sk-skin .modal-content h3 {
@@ -1085,7 +1085,7 @@ html.sk-skin .close-modal {
   border: 1px solid var(--sk-edge);
   border-radius: 50%;
   color: #c62f3f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.16);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.16);
 }
 
 html.sk-skin .close-modal:active {
@@ -1107,25 +1107,25 @@ html.sk-skin .sk-toast {
   font-size: 13.5px;
   color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.25);
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 3px 6px rgba(10, 16, 26, 0.3), 0 14px 30px -10px rgba(10, 16, 26, 0.5);
+  
+  box-shadow: 0 3px 6px rgba(10, 16, 26, 0.3), 0 14px 30px -10px rgba(10, 16, 26, 0.5);
   animation: skToastIn 0.28s ease;
 }
 
 html.sk-skin .sk-toast--success {
-  background: linear-gradient(180deg, #5ec98e, #22a06b 55%, #178a5a);
+  background: linear-gradient(135deg, #22a06b, #178a5a);
 }
 
 html.sk-skin .sk-toast--error {
-  background: linear-gradient(180deg, #f0858a, #e5484d 55%, #c93a3f);
+  background: linear-gradient(135deg, #e5484d, #c93a3f);
 }
 
 html.sk-skin .sk-toast--warning {
-  background: linear-gradient(180deg, #f7c164, #f0a01f 55%, #d98a12);
+  background: linear-gradient(135deg, #f0a01f, #d98a12);
 }
 
 html.sk-skin .sk-toast--info {
-  background: linear-gradient(180deg, #6ea2f2, #3b7ce4 55%, #2a63c8);
+  background: linear-gradient(135deg, #3b7ce4, #2a63c8);
 }
 
 @keyframes skToastIn {
@@ -1170,20 +1170,20 @@ html.sk-skin .sk-led {
   display: inline-block;
   width: 9px;
   height: 9px;
+  min-width: 9px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.35);
-  background: radial-gradient(circle at 32% 28%, #9df0c0 0%, #2fae76 60%, #178a5a 100%);
-  box-shadow: 0 0 6px rgba(47, 174, 118, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: #2fae76;
+  box-shadow: 0 0 8px rgba(47, 174, 118, 0.55);
 }
 
 html.sk-skin .sk-led.off {
-  background: radial-gradient(circle at 32% 28%, #d9dee6 0%, #9aa7b8 60%, #7d8a9d 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: #9aa7b8;
+  box-shadow: none;
 }
 
 html.sk-skin .sk-led.warn {
-  background: radial-gradient(circle at 32% 28%, #ffe2a6 0%, #f0a01f 60%, #d98a12 100%);
-  box-shadow: 0 0 6px rgba(240, 160, 31, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: #f0a01f;
+  box-shadow: 0 0 8px rgba(240, 160, 31, 0.55);
 }
 
 /* ======================= 13. NAVEGAÇÃO INFERIOR (MOBILE) + GAVETA ======================= */
@@ -1209,7 +1209,7 @@ html.sk-skin .sk-sheet {
   border: 1px solid var(--sk-edge);
   border-bottom: none;
   border-radius: 22px 22px 0 0;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 -14px 44px rgba(10, 16, 26, 0.45);
+  box-shadow: 0 -14px 44px rgba(10, 16, 26, 0.45);
   padding: 16px 14px calc(18px + env(safe-area-inset-bottom));
   animation: skSheetUp 0.26s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
@@ -1249,7 +1249,7 @@ html.sk-skin .sk-sheet-item {
   border-radius: 14px;
   background: var(--sk-panel-grad);
   border: 1px solid var(--sk-edge-soft);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.14), 0 6px 12px -6px rgba(24, 33, 52, 0.3);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.14), 0 6px 12px -6px rgba(24, 33, 52, 0.3);
   color: var(--fg);
   font-weight: 700;
   font-size: 13px;
@@ -1273,14 +1273,14 @@ html.sk-skin .sk-sheet-item i {
   justify-content: center;
   color: #fff;
   font-size: 15px;
-  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.5), transparent 45%), var(--tool-color, var(--accent));
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 2px 4px -1px rgba(10, 16, 26, 0.4);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--tool-color, var(--accent)) 85%, #fff 15%), var(--tool-color, var(--accent)));
+  border: none;
+  box-shadow: 0 2px 4px -1px rgba(10, 16, 26, 0.4);
 }
 
 html.sk-skin .sk-sheet-item.active {
   border-color: var(--accent);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 0 0 2px rgba(var(--accent-rgb), 0.22), 0 6px 12px -6px rgba(24, 33, 52, 0.3);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.22), 0 6px 12px -6px rgba(24, 33, 52, 0.3);
 }
 
 @keyframes skSheetUp {
@@ -3172,12 +3172,12 @@ html.sk-skin .mobile-tab-btn {
   color: var(--muted);
   border-radius: 10px;
   font-weight: 700;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(24, 33, 52, 0.14);
+  box-shadow: 0 1px 2px rgba(24, 33, 52, 0.14);
 }
 
 html.sk-skin .mobile-tab-btn.active {
   color: var(--accent);
-  box-shadow: inset 0 2px 5px rgba(24, 33, 52, 0.2), inset 0 -1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: var(--nm-inset);
 }
 
 /* ======================= 18. LAYOUT DASHBOARD (DESKTOP/TABLET) ======================= */
@@ -3206,7 +3206,7 @@ html.sk-skin .mobile-tab-btn.active {
     border-radius: 14px;
     padding: 8px;
     margin-bottom: var(--gap);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 2px 3px rgba(24, 33, 52, 0.14), 0 14px 28px -14px rgba(24, 33, 52, 0.4);
+    box-shadow: 0 2px 3px rgba(24, 33, 52, 0.14), 0 14px 28px -14px rgba(24, 33, 52, 0.4);
     animation: skFade 0.25s ease;
   }
 
@@ -3215,7 +3215,7 @@ html.sk-skin .mobile-tab-btn.active {
   }
 
   html.sk-skin[data-theme="dark"] .app-container.sk-dash .sk-dash-sidebar {
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 3px rgba(0, 0, 0, 0.4), 0 16px 30px -14px rgba(0, 0, 0, 0.65);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4), 0 16px 30px -14px rgba(0, 0, 0, 0.65);
   }
 
   html.sk-skin .app-container.sk-dash .sk-dash-brand,
@@ -3259,12 +3259,12 @@ html.sk-skin .mobile-tab-btn.active {
     border: 1px solid var(--sk-edge);
     border-radius: 18px;
     padding: 14px 12px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 2px 3px rgba(24, 33, 52, 0.14), 0 14px 28px -14px rgba(24, 33, 52, 0.4);
+    box-shadow: 0 2px 3px rgba(24, 33, 52, 0.14), 0 14px 28px -14px rgba(24, 33, 52, 0.4);
     animation: skFade 0.25s ease;
   }
 
   html.sk-skin[data-theme="dark"] .app-container.sk-dash .sk-dash-sidebar {
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 3px rgba(0, 0, 0, 0.4), 0 16px 30px -14px rgba(0, 0, 0, 0.65);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4), 0 16px 30px -14px rgba(0, 0, 0, 0.65);
   }
 
   html.sk-skin .app-container.sk-dash .sk-dash-content {
@@ -3353,8 +3353,8 @@ html.sk-skin .mobile-tab-btn.active {
   color: #fff;
   font-size: 17px;
   background: radial-gradient(circle at 32% 28%, #8cb9f9 0%, #4b86e6 55%, #2a63c8 100%);
-  border: 1px solid #27568f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 3px 6px -2px rgba(30, 80, 170, 0.55);
+  border: none;
+  box-shadow: 0 3px 6px -2px rgba(30, 80, 170, 0.55);
 }
 
 .sk-dash-brand-title {
@@ -3427,11 +3427,11 @@ html.sk-skin .mobile-tab-btn.active {
   background: var(--sk-btn-grad);
   border-color: var(--sk-edge);
   color: var(--accent);
-  box-shadow: inset 0 2px 5px rgba(24, 33, 52, 0.2), inset 0 -1px 0 rgba(255, 255, 255, 0.85);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin[data-theme="dark"] .sk-dash-nav-item.active {
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--nm-inset);
 }
 
 /* Rodapé da barra lateral */
@@ -3452,22 +3452,22 @@ html.sk-skin[data-theme="dark"] .sk-dash-nav-item.active {
   margin-left: auto;
   padding: 2px 8px;
   border-radius: 7px;
-  background: linear-gradient(180deg, #f8e3a3 0%, #e8b83e 45%, #c99a1e 100%);
-  border: 1px solid #a97f12;
-  color: #4d3a05;
+  background: rgba(var(--accent-rgb), 0.16);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  color: var(--accent);
   font-size: 10.5px;
   font-weight: 800;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 1px 2px rgba(101, 74, 8, 0.4);
+  
+  box-shadow: 0 1px 2px rgba(101, 74, 8, 0.4);
 }
 
 /* Botão de alternância do layout dashboard (cabeçalho) */
 html.sk-skin .dash-layout-toggle-btn.active {
-  background: linear-gradient(180deg, #6ea2f2 0%, #3b7ce4 48%, #2f6fdb 52%, #275fc0 100%);
-  border-color: #2a5cae;
+  background: linear-gradient(135deg, #4a86e8, #275fc0);
+  border-color: rgba(0, 0, 0, 0.16);
   color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.28);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 2px 5px rgba(30, 80, 170, 0.45);
+  
+  box-shadow: 0 2px 5px rgba(30, 80, 170, 0.45);
 }
 
 /* Abaixo de 1000px o modo dashboard não tem barra lateral fixa — esconde o botão */
@@ -3501,11 +3501,11 @@ html.sk-skin .dash-layout-toggle-btn.active {
   /* Copiar / baixar */
   html.sk-skin .copy-btn:hover,
   html.sk-skin .dl-btn:hover {
-    background: linear-gradient(135deg, #6f9fee 0%, #2965dc 55%, #1e4fb8 100%);
+    background: linear-gradient(135deg, #3b7ce4, #2965dc);
     border-color: var(--sk-edge);
     color: #fff;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.26);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    
+    box-shadow: 
                 0 2px 5px rgba(24, 33, 52, 0.3);
     filter: brightness(1.05);
   }
@@ -3525,15 +3525,11 @@ html.sk-skin .dash-layout-toggle-btn.active {
   html.sk-skin .close:hover {
     color: #d84a3f;
     transform: scale(1.12);
-    box-shadow: inset 0 2px 5px rgba(24, 33, 52, 0.28),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.7);
   }
 
   html.sk-skin[data-theme="dark"] .close-modal:hover,
   html.sk-skin[data-theme="dark"] .close:hover {
     color: #e0736a;
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.55),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.05);
   }
 
   html.sk-skin .close-modal:active,
@@ -3549,13 +3545,13 @@ html.sk-skin .dash-layout-toggle-btn.active {
 
   html.sk-skin .btn-sm:hover:not(:disabled):not(.active) {
     filter: brightness(1.05);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    box-shadow: 
                 0 2px 5px rgba(24, 33, 52, 0.22),
                 0 5px 10px -4px rgba(24, 33, 52, 0.35);
   }
 
   html.sk-skin[data-theme="dark"] .btn-sm:hover:not(:disabled):not(.active) {
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    box-shadow: 
                 0 2px 6px rgba(0, 0, 0, 0.5);
   }
 
@@ -3579,4 +3575,188 @@ html.sk-skin .dash-layout-toggle-btn.active {
   .otdr-root .mobile-import-card:active {
     transform: translateY(0);
   }
+}
+
+/* ==========================================================================
+   19. CAMADA GLASS (vidro + neumorfismo â€” sem skeuomorfismo)
+   ========================================================================== */
+html.sk-skin .app-title,
+html.sk-skin .tab-content,
+html.sk-skin .calc-tab-content,
+html.sk-skin .carimbo-tab-content,
+html.sk-skin .datacom-tab-content,
+html.sk-skin .stat-card,
+html.sk-skin .database-container,
+html.sk-skin .nsap-container,
+html.sk-skin .filters-container,
+html.sk-skin .details-card,
+html.sk-skin .section,
+html.sk-skin .info-item,
+html.sk-skin .backup-card,
+html.sk-skin .client-mobile-card,
+html.sk-skin .client-card-body,
+html.sk-skin .table-container,
+html.sk-skin .modal-content,
+html.sk-skin .sk-sheet,
+html.sk-skin .dashboard-card {
+  background: var(--sk-panel-grad);
+  border: 1px solid var(--sk-edge);
+  -webkit-backdrop-filter: blur(16px) saturate(1.35);
+  backdrop-filter: blur(16px) saturate(1.35);
+  box-shadow: var(--sk-out);
+}
+
+html.sk-skin .app-container.sk-dash .sk-dash-sidebar,
+html.sk-skin .app-container.sk-dash .sk-dash-nav-item.active {
+  -webkit-backdrop-filter: blur(16px) saturate(1.35);
+  backdrop-filter: blur(16px) saturate(1.35);
+}
+
+html.sk-skin .sk-toast {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Foco visÃ­vel consistente (acessibilidade) */
+html.sk-skin a:focus-visible,
+html.sk-skin button:focus-visible,
+html.sk-skin input:focus-visible,
+html.sk-skin select:focus-visible,
+html.sk-skin textarea:focus-visible,
+html.sk-skin [tabindex]:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb), 0.75);
+  outline-offset: 2px;
+}
+
+/* Respeita preferÃªncia de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  html.sk-skin *,
+  html.sk-skin *::before,
+  html.sk-skin *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   20. WIDGETS DO PAINEL VIVO (linha "continuar de onde parou" + favoritos)
+   ========================================================================== */
+.dash-live-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--gap);
+  margin-bottom: 22px;
+}
+
+.dash-live-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--sk-panel-grad);
+  border: 1px solid var(--sk-edge);
+  box-shadow: var(--nm-flat-sm);
+  -webkit-backdrop-filter: blur(14px) saturate(1.35);
+  backdrop-filter: blur(14px) saturate(1.35);
+  color: var(--fg);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+
+.dash-live-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--nm-flat);
+}
+
+.dash-live-card:active {
+  transform: translateY(0);
+  box-shadow: var(--nm-inset);
+}
+
+.dash-live-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 17px;
+  box-shadow: 0 6px 14px -6px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.dash-live-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.dash-live-copy b {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--fg-heading);
+}
+
+.dash-live-copy span {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-live-go {
+  color: var(--accent);
+  font-size: 15px;
+}
+
+/* Estrela de favorito sobre os cards */
+.dash-fav-btn {
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+
+.dash-fav-btn:hover {
+  background: rgba(var(--accent-rgb), 0.18);
+  color: var(--accent);
+  transform: scale(1.08);
+}
+
+.dash-fav-btn .fas { color: #f0a01f; }
+
+.dash-fav-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.dash-fav-meta i { color: var(--accent); }
+
+@media (max-width: 640px) {
+  .dash-live-row { gap: 10px; }
+  .dash-live-copy span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; }
 }

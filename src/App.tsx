@@ -1,29 +1,58 @@
-import React, { useEffect, useState } from 'react';
-import CarimboTab from './components/CarimboTab';
-import CalculadoraTab from './components/CalculadoraTab';
-import TabelaTab from './components/TabelaTab';
-import NsapTab from './components/NsapTab';
-import ClientesTab from './components/ClientesTab';
-import DatacomTab from './components/DatacomTab';
-import TaTab from './components/TaTab';
-import RotasHl4Tab from './components/RotasHl4Tab';
-import EquipamentosTab from './components/EquipamentosTab';
-import KmlMapTab from './components/KmlMapTab';
-import OtdrModule from './otdr/OtdrModule';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import AuthScreen from './components/AuthScreen';
 import AdminTab from './components/AdminTab';
+import ErrorBoundary from './components/ErrorBoundary';
+import ConfirmDialog from './components/ConfirmDialog';
+import CommandPalette from './components/CommandPalette';
 import * as api from './lib/api';
 import type { AuthUser } from './lib/api';
+import type { ToolDef } from './types';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
+import pkg from '../package.json';
 
-interface ToolDef {
-  id: string;
-  name: string;
-  short: string;
-  desc: string;
-  icon: string;
-  color: string;
-  colorRgb: string;
+declare const __BUILD_TIME__: string;
+const APP_VERSION = (pkg as { version: string }).version;
+const BUILD_TIME: string =
+  typeof __BUILD_TIME__ === 'string' ? __BUILD_TIME__ : new Date().toISOString();
+
+// Code splitting: cada ferramenta entra no bundle só quando é aberta.
+// Leaflet, Firebase, Dexie e demais módulos pesados acompanham sua aba.
+const OtdrModule = lazy(() => import('./otdr/OtdrModule'));
+const CarimboTab = lazy(() => import('./components/CarimboTab'));
+const CalculadoraTab = lazy(() => import('./components/CalculadoraTab'));
+const TabelaTab = lazy(() => import('./components/TabelaTab'));
+const NsapTab = lazy(() => import('./components/NsapTab'));
+const ClientesTab = lazy(() => import('./components/ClientesTab'));
+const DatacomTab = lazy(() => import('./components/DatacomTab'));
+const TaTab = lazy(() => import('./components/TaTab'));
+const RotasHl4Tab = lazy(() => import('./components/RotasHl4Tab'));
+const EquipamentosTab = lazy(() => import('./components/EquipamentosTab'));
+const KmlMapTab = lazy(() => import('./components/KmlMapTab'));
+
+const TabFallback = () => (
+  <div
+    aria-busy="true"
+    style={{
+      background: 'var(--card, #eef2f7)',
+      border: '1px solid var(--border, #b4bec9)',
+      borderRadius: 20,
+      minHeight: 320,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'var(--muted, #5d6b80)',
+      fontWeight: 600,
+      fontSize: 14,
+      gap: 10,
+    }}
+  >
+    <i className="fas fa-circle-notch fa-spin" style={{ color: 'var(--accent)' }} /> Carregando ferramenta…
+  </div>
+);
+
+interface UsageInfo {
+  count: number;
+  last: number;
 }
 
 const TOOLS: ToolDef[] = [
@@ -130,12 +159,149 @@ const TOOLS: ToolDef[] = [
 
 const VALID_TABS = ['dashboard', ...TOOLS.map((t) => t.id), 'admin'];
 
+/**
+ * Linha "viva" do painel: atalho para continuar de onde parou
+ * + métricas locais (traços OTDR salvos neste dispositivo e registros de campo).
+ */
+function DashboardLiveRow(props: {
+  lastUsedTool: ToolDef | null;
+  usage: Record<string, { count: number; last: number }>;
+  onGo: (tabId: string) => void;
+}) {
+  const { lastUsedTool, onGo } = props;
+
+  const otdrHistory = readLocalJson<unknown[]>('otdrLocalHistory', []);
+  const registros = readLocalJson<unknown[]>('clientesEquipamentosDB', []);
+  const lastOtdr = readLastOtdr();
+
+  const fmtDate = (iso: string) => {
+    const d = new Date(iso);
+    return isNaN(d.getTime()) ? '' : ` · ${d.toLocaleDateString('pt-BR')}`;
+  };
+
+  return (
+    <div className="dash-live-row">
+      {lastUsedTool && (
+        <button
+          className="dash-live-card dash-live-card--accent"
+          onClick={() => onGo(lastUsedTool.id)}
+          title={`Abrir ${lastUsedTool.name}`}
+        >
+          <span className="dash-live-icon" style={{ background: `var(--tool-color, var(--accent))` }}>
+            <i className={`fas ${lastUsedTool.icon}`}></i>
+          </span>
+          <span className="dash-live-copy">
+            <b>Continuar de onde parou</b>
+            <span>{lastUsedTool.name}</span>
+          </span>
+          <i className="fas fa-angles-right dash-live-go"></i>
+        </button>
+      )}
+
+      <button
+        className="dash-live-card"
+        onClick={() => onGo(lastUsedTool?.id === 'otdr' ? 'otdr' : 'otdr')}
+        title="Abrir o Leitor OTDR"
+      >
+        <span className="dash-live-icon" style={{ background: '#5B5FEF' }}>
+          <i className="fas fa-wave-square"></i>
+        </span>
+        <span className="dash-live-copy">
+          <b>
+            {otdrHistory.length === 0
+              ? 'Nenhum traço OTDR local'
+              : `${otdrHistory.length} traço(s) OTDR local(is)`}
+          </b>
+          <span>
+            {lastOtdr && otdrHistory.length > 0
+              ? `${lastOtdr.fileName}${fmtDate(lastOtdr.testDate)} — ${lastOtdr.fiberLengthKm.toFixed(2)} km, ${lastOtdr.totalLossDb.toFixed(2)} dB, ${lastOtdr.eventCount} evento(s)`
+              : 'Salve o primeiro laudo .SOR para vê-lo aqui'}
+          </span>
+        </span>
+      </button>
+
+      <button
+        className="dash-live-card"
+        onClick={() => onGo('clientes')}
+        title="Abrir Registros de Campo"
+      >
+        <span className="dash-live-icon" style={{ background: '#EC4899' }}>
+          <i className="fas fa-clipboard-list"></i>
+        </span>
+        <span className="dash-live-copy">
+          <b>
+            {registros.length === 0
+              ? 'Nenhum registro local'
+              : `${registros.length} registro(s) de campo`}
+          </b>
+          <span>{registros.length === 0 ? 'Registre o primeiro chamado/vistoria' : 'Salvos neste dispositivo + nuvem'}</span>
+        </span>
+      </button>
+    </div>
+  );
+}
+
+/** Helpers de leitura segura do localStorage (dados locais do painel) */
+function readLocalJson<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw) as unknown;
+    return (parsed ?? fallback) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+const readUsage = (): Record<string, UsageInfo> => {
+  const u = readLocalJson<Record<string, UsageInfo>>('toolUsage', {});
+  const clean: Record<string, UsageInfo> = {};
+  for (const t of TOOLS) {
+    if (u[t.id] && typeof u[t.id].count === 'number') clean[t.id] = u[t.id];
+  }
+  return clean;
+};
+
+const readFavorites = (): string[] => {
+  const f = readLocalJson<unknown>('favTools', []);
+  return Array.isArray(f) ? f.filter((x): x is string => typeof x === 'string' && VALID_TABS.includes(x)) : [];
+};
+
+const readLastOtdr = (): UsageInfoLastOtdr | null => {
+  const hist = readLocalJson<unknown[]>('otdrLocalHistory', []);
+  if (!hist.length) return null;
+  const t = hist[0] as Record<string, unknown>;
+  if (!t || typeof t !== 'object') return null;
+  const events = Array.isArray(t.events) ? t.events : [];
+  return {
+    fileName: typeof t.fileName === 'string' ? t.fileName : 'traço.sor',
+    testDate: typeof t.testDate === 'string' ? t.testDate : '',
+    fiberLengthKm: typeof t.fiberLengthKm === 'number' ? t.fiberLengthKm : 0,
+    totalLossDb: typeof t.totalLossDb === 'number' ? t.totalLossDb : 0,
+    eventCount: events.length,
+  };
+};
+
+interface UsageInfoLastOtdr {
+  fileName: string;
+  testDate: string;
+  fiberLengthKm: number;
+  totalLossDb: number;
+  eventCount: number;
+}
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isSkeuo, setIsSkeuo] = useState<boolean>(true);
   const [dashLayout, setDashLayout] = useState<boolean>(true);
   const isOnline = useOnlineStatus();
+
+  // Painel vivo: uso por ferramenta + favoritos + paleta de comandos + dialog de confirmação
+  const [usage, setUsage] = useState<Record<string, UsageInfo>>(readUsage);
+  const [favorites, setFavorites] = useState<string[]>(readFavorites);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [confirmResetOpen, setConfirmResetOpen] = useState(false);
 
   // Conta autenticada no backend próprio (sessão por cookie HttpOnly)
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -261,7 +427,69 @@ export default function App() {
     if (pushToHistory) {
       window.history.pushState({ tab: tabId }, '', '#' + tabId);
     }
+    // Contadores de uso (ferramentas reais) → ordenação "mais usadas" do painel
+    if (VALID_TABS.includes(tabId) && tabId !== 'dashboard' && tabId !== 'admin') {
+      setUsage((prev) => {
+        const next = { ...prev, [tabId]: { count: (prev[tabId]?.count || 0) + 1, last: Date.now() } };
+        localStorage.setItem('toolUsage', JSON.stringify(next));
+        return next;
+      });
+    }
   };
+
+  // Favoritar/desfavoritar ferramenta (pino fixado no topo do painel)
+  const toggleFavorite = (toolId: string) => {
+    setFavorites((prev) => {
+      const next = prev.includes(toolId)
+        ? prev.filter((id) => id !== toolId)
+        : [...prev, toolId];
+      localStorage.setItem('favTools', JSON.stringify(next));
+      showToast(
+        next.includes(toolId)
+          ? `“${TOOLS.find((t) => t.id === toolId)?.short}” fixado nas primeiras posições.`
+          : `“${TOOLS.find((t) => t.id === toolId)?.short}” desafixado.`,
+        'info'
+      );
+      return next;
+    });
+  };
+
+  // Atalho global: Ctrl/Cmd + K abre a busca global
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Ordem do painel: favoritos primeiro, depois mais usados, depois ordem padrão
+  const orderedTools = [...TOOLS].sort((a, b) => {
+    const fa = favorites.includes(a.id) ? 0 : 1;
+    const fb = favorites.includes(b.id) ? 0 : 1;
+    if (fa !== fb) return fa - fb;
+    const ca = usage[a.id]?.count ?? 0;
+    const cb = usage[b.id]?.count ?? 0;
+    if (ca !== cb) return cb - ca;
+    return TOOLS.indexOf(a) - TOOLS.indexOf(b);
+  });
+
+  // "Continuar de onde parou": ferramenta aberta mais recentemente
+  const lastUsedTool = (() => {
+    let best: ToolDef | null = null;
+    let bestTs = 0;
+    for (const t of TOOLS) {
+      const last = usage[t.id]?.last || 0;
+      if (last > bestTs) {
+        bestTs = last;
+        best = t;
+      }
+    }
+    return best && bestTs > 0 ? best : null;
+  })();
 
   // Native back handler for back-to-dashboard button
   const handleBackNavigation = () => {
@@ -297,13 +525,16 @@ export default function App() {
 
   // Global actions
   const handleResetAll = () => {
-    if (confirm('Tem certeza que deseja resetar todas as ferramentas? Isso limpará todos os dados não salvos e o histórico de clientes do banco local.')) {
-      localStorage.clear();
-      showToast('Todas as configurações e registros locais foram resetados.', 'success');
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-    }
+    setConfirmResetOpen(true);
+  };
+
+  const doResetAll = () => {
+    setConfirmResetOpen(false);
+    localStorage.clear();
+    showToast('Todas as configurações e registros locais foram resetados.', 'success');
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
 
   const handleExportAll = () => {
@@ -358,7 +589,7 @@ export default function App() {
           </div>
           <div className="sk-dash-brand-text">
             <div className="sk-dash-brand-title">Central de Campo</div>
-            <div className="sk-dash-brand-sub">Rede &amp; OTDR · v4.0</div>
+            <div className="sk-dash-brand-sub">Rede &amp; OTDR</div>
           </div>
         </div>
 
@@ -405,7 +636,7 @@ export default function App() {
         <div className="sk-dash-sidebar-footer">
           <span className={`sk-led ${isOnline ? '' : 'off'}`}></span>
           <span>{isOnline ? 'Online' : 'Offline'}</span>
-          <span className="sk-dash-sidebar-version">v4.0</span>
+          <span className="sk-dash-sidebar-version">v{APP_VERSION}</span>
         </div>
       </aside>
 
@@ -414,11 +645,19 @@ export default function App() {
         <div className="app-header">
           <div className="app-title">
             <i className="fas fa-network-wired"></i> Central de Campo — Rede &amp; OTDR
-            <div className="version-badge">v4.0</div>
+            <div className="version-badge">v{APP_VERSION}</div>
           </div>
 
           {/* Controls Bar */}
           <div className="controls-bar">
+            <button
+              className="theme-toggle"
+              onClick={() => setPaletteOpen(true)}
+              title="Busca global (Ctrl+K)"
+              aria-label="Abrir busca global"
+            >
+              <i className="fas fa-magnifying-glass"></i>
+            </button>
             <button className="theme-toggle" onClick={handleToggleTheme} aria-label="Alternar tema claro/escuro">
               <i className={theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'}></i>
             </button>
@@ -432,9 +671,9 @@ export default function App() {
             <button
               className={`sk-skin-toggle-btn ${isSkeuo ? 'active' : ''}`}
               onClick={handleToggleSkeuo}
-              title="Alternar acabamento realista (skeuomorfismo)"
+              title="Alternar acabamento em vidro (neumorfismo + glassmorphism)"
             >
-              <i className="fas fa-layer-group"></i> {isSkeuo ? 'Realista ON' : 'Realista'}
+              <i className="fas fa-layer-group"></i> {isSkeuo ? 'Glass ON' : 'Glass'}
             </button>
             <button className="export-btn" onClick={handleExportAll} aria-label="Exportar todos os dados">
               <i className="fas fa-file-export"></i> Exportar
@@ -525,13 +764,24 @@ export default function App() {
               <p>Selecione um dos utilitários integrados para iniciar suas operações e gerenciar as atividades de campo.</p>
             </div>
 
-            <div className="dashboard-grid">
-              {TOOLS.map((tool) => (
+            {/* Linha viva: continuar de onde parou + status local */}
+            <DashboardLiveRow
+              lastUsedTool={lastUsedTool}
+              usage={usage}
+              onGo={handleTabChange}
+            />
+
+            <div className="dashboard-grid" role="list" aria-label="Ferramentas disponíveis">
+              {orderedTools.map((tool) => (
                 <div
                   key={tool.id}
                   className="dashboard-card"
                   style={{ '--tool-color': tool.color, '--tool-color-rgb': tool.colorRgb } as React.CSSProperties}
                   onClick={() => handleTabChange(tool.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTabChange(tool.id); } }}
+                  role="listitem"
+                  aria-label={`${tool.name}. ${tool.desc}`}
+                  tabIndex={0}
                 >
                   <div className="dashboard-card-glow"></div>
                   <div className="dashboard-card-top">
@@ -539,9 +789,23 @@ export default function App() {
                       <div className="dashboard-card-icon">
                         <i className={`fas ${tool.icon}`}></i>
                       </div>
+                      <button
+                        className="dash-fav-btn"
+                        onClick={(e) => { e.stopPropagation(); toggleFavorite(tool.id); }}
+                        title={favorites.includes(tool.id) ? 'Remover dos favoritos' : 'Fixar nas primeiras posições'}
+                        aria-label={favorites.includes(tool.id) ? `Remover ${tool.name} dos favoritos` : `Fixar ${tool.name} nos favoritos`}
+                      >
+                        <i className={favorites.includes(tool.id) ? 'fas fa-star' : 'far fa-star'}></i>
+                      </button>
                     </div>
                     <div className="dashboard-card-title">{tool.name}</div>
                     <div className="dashboard-card-desc">{tool.desc}</div>
+                    {(favorites.includes(tool.id) || (usage[tool.id]?.count ?? 0) > 0) && (
+                      <div className="dash-fav-meta">
+                        {favorites.includes(tool.id) && <span><i className="fas fa-star"></i> Fixada</span>}
+                        {(usage[tool.id]?.count ?? 0) > 0 && <span><i className="fas fa-clock-rotate-left"></i> {usage[tool.id].count} uso(s)</span>}
+                      </div>
+                    )}
                   </div>
                   <div className="dashboard-card-footer">
                     Acessar <i className="fas fa-arrow-right"></i>
@@ -589,17 +853,22 @@ export default function App() {
 
             {/* Active Panel View */}
             <div className="tab-panels">
-              {activeTab === 'otdr' && <OtdrModule user={user} />}              {activeTab === 'carimbo' && <CarimboTab showToast={showToast} />}
-              {activeTab === 'calculadora' && <CalculadoraTab showToast={showToast} />}
-              {activeTab === 'tabela' && <TabelaTab />}
-              {activeTab === 'nsap' && <NsapTab showToast={showToast} />}
-              {activeTab === 'datacom' && <DatacomTab showToast={showToast} />}
-              {activeTab === 'clientes' && <ClientesTab showToast={showToast} />}
-              {activeTab === 'ta' && <TaTab showToast={showToast} />}
-              {activeTab === 'rotas_hl4' && <RotasHl4Tab showToast={showToast} />}
-              {activeTab === 'equipamentos' && <EquipamentosTab showToast={showToast} />}
-              {activeTab === 'kml' && <KmlMapTab showToast={showToast} />}
-              {activeTab === 'admin' && user?.role === 'admin' && <AdminTab showToast={showToast} />}
+              <Suspense fallback={<TabFallback />}>
+                <ErrorBoundary toolName={getTabName(activeTab) || 'Ferramenta'}>
+                  {activeTab === 'otdr' && <OtdrModule user={user} />}
+                  {activeTab === 'carimbo' && <CarimboTab showToast={showToast} />}
+                  {activeTab === 'calculadora' && <CalculadoraTab showToast={showToast} />}
+                  {activeTab === 'tabela' && <TabelaTab />}
+                  {activeTab === 'nsap' && <NsapTab showToast={showToast} />}
+                  {activeTab === 'datacom' && <DatacomTab showToast={showToast} />}
+                  {activeTab === 'clientes' && <ClientesTab showToast={showToast} />}
+                  {activeTab === 'ta' && <TaTab showToast={showToast} />}
+                  {activeTab === 'rotas_hl4' && <RotasHl4Tab showToast={showToast} />}
+                  {activeTab === 'equipamentos' && <EquipamentosTab showToast={showToast} />}
+                  {activeTab === 'kml' && <KmlMapTab showToast={showToast} />}
+                  {activeTab === 'admin' && user?.role === 'admin' && <AdminTab showToast={showToast} />}
+                </ErrorBoundary>
+              </Suspense>
             </div>
           </>
         )}
@@ -608,13 +877,37 @@ export default function App() {
         <div className="app-footer">
           <p>
             <span className={`sk-led ${isOnline ? '' : 'off'}`}></span>
-            Central de Campo — Rede &amp; OTDR v4.0 by Tony Campos
-            <span style={{ opacity: 0.65 }}>|</span> {isOnline ? 'Online' : 'Offline'} — modo local ativo
-            <span style={{ opacity: 0.65 }}>|</span> Última atualização: {new Date().toLocaleDateString('pt-BR')}
+            Central de Campo — Rede &amp; OTDR v{APP_VERSION} by Tony Campos
+            <span style={{ opacity: 0.65 }}>|</span> {isOnline ? 'Online' : 'Offline — modo local ativo'}
+            <span style={{ opacity: 0.65 }}>|</span> Build: {new Date(BUILD_TIME).toLocaleString('pt-BR')}
           </p>
         </div>
       </div>
       {/* ===== fim do conteúdo ===== */}
+
+      {/* Paleta de comandos (Ctrl+K) */}
+      <CommandPalette
+        open={paletteOpen}
+        tools={TOOLS}
+        extras={
+          user?.role === 'admin'
+            ? [{ id: 'admin', name: 'Painel do Administrador', icon: 'fa-user-shield' }]
+            : []
+        }
+        onClose={() => setPaletteOpen(false)}
+        onGo={handleTabChange}
+      />
+
+      {/* Confirmação centralizada (substitui confirm() nativo) */}
+      <ConfirmDialog
+        open={confirmResetOpen}
+        danger
+        title="Resetar todas as ferramentas?"
+        message="Isso apaga configurações, favoritos e todo o histórico local do dispositivo (os dados já salvos na nuvem, quando logado, permanecem no servidor). Esta ação não pode ser desfeita."
+        confirmLabel="Resetar tudo"
+        onConfirm={doResetAll}
+        onCancel={() => setConfirmResetOpen(false)}
+      />
 
       {/* Toast Notification element */}
       {toast && (

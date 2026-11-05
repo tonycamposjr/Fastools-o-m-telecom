@@ -68,3 +68,13 @@ export interface EquipamentoItem {
   searchNormalized?: string;
 }
 
+export interface ToolDef {
+  id: string;
+  name: string;
+  short: string;
+  desc: string;
+  icon: string;
+  color: string;
+  colorRgb: string;
+}
+
