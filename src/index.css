@@ -88,6 +88,7 @@ body {
     min-height: 100vh;
     min-height: 100dvh;
     padding: clamp(8px, 2vw, 20px);
+    padding-block: clamp(4px, 1vw, 10px);
 }
 
 img, svg, video, canvas, iframe {
@@ -1699,8 +1700,8 @@ td[colspan] {
 /* ========== FOOTER ========== */
 .app-footer {
     text-align: center;
-    margin-top: 18px;
-    padding: 14px 25px 18px;
+    margin-top: 12px;
+    padding: 8px 25px 10px;
     border-top: 2px solid var(--border);
     color: var(--muted);
     font-size: 14px;

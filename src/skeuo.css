@@ -29,7 +29,8 @@ body {
   max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--page-pad);
-  padding-block: var(--page-pad);
+  padding-top: var(--page-pad);
+  padding-bottom: clamp(6px, 0.8vw, 12px);
   box-sizing: border-box;
 }
 
@@ -1149,8 +1150,8 @@ html.sk-skin .app-footer {
   color: #55627a;
   text-shadow: var(--sk-engrave);
   border-top: 1px solid var(--sk-edge-soft);
-  margin-top: 26px;
-  padding-top: 14px;
+  margin-top: 12px;
+  padding-top: 10px;
 }
 
 html.sk-skin[data-theme="dark"] .app-footer {
