@@ -158,6 +158,32 @@ img, svg, video, canvas, iframe {
 }
 
 /* ========== CONTROLES (NEUMORPHIC PILLS & BUTTONS) ========== */
+/* Breadcrumb embutido na barra de controles: fica à esquerda, botões à direita,
+   tudo em uma única linha horizontal (margin-right:auto empurra o resto) */
+.back-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+}
+
+.back-inline .crumb-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.back-inline .crumb-sep {
+    font-size: 11px;
+    color: var(--border);
+    display: inline-flex;
+}
+
+.back-inline .back-to-dashboard-btn {
+    white-space: nowrap;
+}
+
 .controls-bar {
     display: flex;
     justify-content: flex-end;
@@ -2106,6 +2132,12 @@ td[colspan] {
         gap: 5px !important;
         margin-bottom: 6px !important;
         flex-wrap: wrap !important;
+    }
+
+    .back-inline {
+        margin-right: 0 !important;
+        width: 100% !important;
+        justify-content: center !important;
     }
 
     .theme-toggle,

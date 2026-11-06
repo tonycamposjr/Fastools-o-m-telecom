@@ -660,6 +660,16 @@ export default function App() {
 
           {/* Controls Bar */}
           <div className="controls-bar">
+            {/* Breadcrumb na mesma linha da barra de controles (tudo alinhado horizontalmente) */}
+            {activeTab !== 'dashboard' && (
+              <div className="back-inline">
+                <button className="back-to-dashboard-btn" onClick={handleBackNavigation}>
+                  <i className="fas fa-arrow-left"></i> Voltar ao Painel
+                </button>
+                <span className="crumb-sep"><i className="fas fa-chevron-right"></i></span>
+                <span className="crumb-name">{getTabName(activeTab)}</span>
+              </div>
+            )}
             <button
               className="theme-toggle"
               onClick={() => setPaletteOpen(true)}
@@ -850,17 +860,6 @@ export default function App() {
           </div>
         ) : (
           <>
-            {/* Breadcrumb & Navigation */}
-            <div className="back-to-dashboard-container">
-              <button className="back-to-dashboard-btn" onClick={handleBackNavigation}>
-                <i className="fas fa-arrow-left"></i> Voltar ao Painel
-              </button>
-              <div style={{ marginLeft: '12px', fontSize: '14px', color: 'var(--muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <i className="fas fa-chevron-right" style={{ fontSize: '11px', color: 'var(--border)' }}></i>
-                <span>{getTabName(activeTab)}</span>
-              </div>
-            </div>
-
             {/* Active Panel View */}
             <div className="tab-panels">
               <Suspense fallback={<TabFallback />}>
