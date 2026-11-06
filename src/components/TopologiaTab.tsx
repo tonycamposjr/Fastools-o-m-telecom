@@ -126,10 +126,8 @@ const projetoVazio = (): Projeto => ({
   rotas: [],
 });
 
-/**
- * Exemplo conforme a imagem de referência — diagnostico BORACEIA.
- */
-const exemploBORACEIA = (): Projeto => ({
+/** Exemplo conforme a imagem de referência — diagnostico BORACEIA. */
+export const exemploBORACEIA = (): Projeto => ({
   titulo: 'I-BR-SP-SST-S2B-HL4-01  BORACEIA',
   routers: [
     { id: uid(), nome: 'I-BR-SP-SST-S2B-HL4-01' },
@@ -644,6 +642,227 @@ function projetoTemDados(p: Projeto): boolean {
   );
 }
 
+/* ========================= CSV (exportar/importar — ida e volta exata) =========================
+   Formato de uma linha por registro (Tudo em uma planilha, separador ";" para Excel pt-BR):
+     PROJETO  → título do diagrama
+     ROTEADOR → 1 linha por roteador/switch (ordem define a posição na coluna lateral)
+     ROTA     → 1 linha por rota (nome, origem, destino, seta, e os campos da caixa)
+     EQUIP    → 1 linha por equipamento de transmissão (ordem dentro da rota)
+   Quebras de linha nos campos de texto viram o marcador literal "\n" (e "\" vir "\\"),
+   então o arquivo é sempre uma linha por registro — parsing determinístico.
+   Redesenho: o layout é função pura dos dados ⇒ importar o CSV recria o mapa idêntico.
+   ============================================================================================== */
+
+const CSV_SEP = ';';
+const CSV_HEADER = [
+  'TIPO',
+  'TITULO_PROJETO',
+  'ORDEM_ROTEADOR',
+  'ORDEM_ROTA',
+  'NOME_ROTA',
+  'ORIGEM',
+  'DESTINO',
+  'SETA',
+  'ORDEM_EQ',
+  'SITE',
+  'FABRICANTE',
+  'OBS',
+  'CAIXA_ON',
+  'TITULO_CAIXA',
+  'DESC_CAIXA',
+  'DETALHES_CAIXA',
+];
+
+/** Escapo barra invertida e converto quebras de linha reais no marcador "\n" (texto). */
+const encCell = (s: string) =>
+  String(s ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\r\n?/g, '\n')
+    .replace(/\n/g, '\\n');
+
+/** Volta: marcador "\n" → quebra real; "\\" → "\". */
+const decCell = (s: string) => {
+  const tmp = '\u0001';
+  return String(s ?? '')
+    .replace(/\\\\/g, tmp)
+    .replace(/\\n/g, '\n')
+    .replace(tmp, '\\');
+};
+
+/** Célula CSV: entre aspas se contém separador/àspas (RFC 4180). */
+const csvCell = (v: string) =>
+  v.includes(CSV_SEP) || v.includes('"')
+    ? '"' + v.replace(/"/g, '""') + '"'
+    : v;
+
+/** Lê uma linha CSV respeitando aspas. */
+function parseCsvLine(line: string): string[] {
+  const out: string[] = [];
+  let cur = '';
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (inQ) {
+      if (c === '"') {
+        if (line[i + 1] === '"') { cur += '"'; i++; }
+        else inQ = false;
+      } else cur += c;
+    } else if (c === '"') inQ = true;
+    else if (c === CSV_SEP) { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out;
+}
+
+const boolCell = (s: string) => /^(1|true|sim|ok|x)$/i.test(String(s ?? '').trim());
+
+/** Gera o CSV completo do projeto (uma linha por registro). Exportado p/ teste de round-trip. */
+export function buildCsv(p: Projeto): string {
+  const rows: string[][] = [];
+  const newRow = () => {
+    const r = new Array<string>(CSV_HEADER.length).fill('');
+    rows.push(r);
+    return r;
+  };
+  // escreve por NOME de coluna — impossível desalinhar com o header
+  const put = (r: string[], name: string, v: string | number | boolean) => {
+    r[CSV_HEADER.indexOf(name)] = typeof v === 'boolean' ? v ? '1' : '0' : encCell(String(v ?? ''));
+  };
+
+  const projRow = newRow();
+  put(projRow, 'TIPO', 'PROJETO');
+  put(projRow, 'TITULO_PROJETO', p.titulo);
+
+  p.routers.forEach((r, i) => {
+    if (!r.nome.trim()) return;
+    const row = newRow();
+    put(row, 'TIPO', 'ROTEADOR');
+    put(row, 'ORDEM_ROTEADOR', i + 1);
+    put(row, 'NOME_ROTA', r.nome);
+  });
+
+  p.rotas.forEach((rota, i) => {
+    const temCadeia = rota.equipamentos.some((e) => e.site.trim() || e.fabricante.trim());
+    if (!temCadeia && !rota.nome.trim()) return;
+    const ordem = i + 1;
+
+    const rRow = newRow();
+    put(rRow, 'TIPO', 'ROTA');
+    put(rRow, 'ORDEM_ROTA', ordem);
+    put(rRow, 'NOME_ROTA', rota.nome);
+    put(rRow, 'ORIGEM', rota.origem);
+    put(rRow, 'DESTINO', rota.destino);
+    put(rRow, 'SETA', rota.setaUltimoLink);
+    put(rRow, 'CAIXA_ON', rota.caixa.enabled);
+    put(rRow, 'TITULO_CAIXA', rota.caixa.titulo);
+    put(rRow, 'DESC_CAIXA', rota.caixa.desc);
+    put(rRow, 'DETALHES_CAIXA', rota.caixa.detalhes);
+
+    rota.equipamentos
+      .filter((e) => e.site.trim() || e.fabricante.trim())
+      .forEach((e, k) => {
+        const eRow = newRow();
+        put(eRow, 'TIPO', 'EQUIP');
+        put(eRow, 'ORDEM_ROTA', ordem);
+        put(eRow, 'ORDEM_EQ', k + 1);
+        put(eRow, 'SITE', e.site);
+        put(eRow, 'FABRICANTE', e.fabricante);
+        put(eRow, 'OBS', e.obs);
+      });
+  });
+
+  return rows.map((r) => r.map(csvCell).join(CSV_SEP)).join('\r\n');
+}
+
+interface ParseCsvResult {
+  ok: boolean;
+  error?: string;
+  projeto?: Projeto;
+}
+
+/** Reconstrói o projeto a partir do CSV gerado por buildCsv (ida e volta exata). Exportado p/ teste. */
+export function parseCsv(text: string): ParseCsvResult {
+  const clean = String(text ?? '').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+  const lines = clean.split('\n').filter((l) => l.trim().length > 0);
+  if (!lines.length) return { ok: false, error: 'Arquivo CSV vazio.' };
+
+  const header = parseCsvLine(lines[0]).map((h) => h.trim().toUpperCase());
+  const hasHeader = header[0] === 'TIPO';
+  const dataLines = hasHeader ? lines.slice(1) : lines;
+  // índices das colunas: usa o header quando presente; senão assume o formato canônico
+  const idx: Record<string, number> = hasHeader
+    ? Object.fromEntries(CSV_HEADER.map((h, i) => [h, header.indexOf(h)]))
+    : Object.fromEntries(CSV_HEADER.map((h, i) => [h, i]));
+  if (idx.TIPO < 0) return { ok: false, error: 'CSV sem a coluna TIPO — use o arquivo exportado por esta ferramenta.' };
+
+  const projeto: Projeto = { titulo: '', routers: [], rotas: [] };
+  const rotasMap = new Map<number, Rota>();
+
+  for (let li = 0; li < dataLines.length; li++) {
+    const cells = parseCsvLine(dataLines[li]);
+    const at = (name: string) => decCell(cells[idx[name]] ?? '');
+    const tipo = at('TIPO').trim().toUpperCase();
+
+    if (tipo === 'PROJETO') {
+      projeto.titulo = at('TITULO_PROJETO');
+    } else if (tipo === 'ROTEADOR') {
+      const ordem = parseInt(at('ORDEM_ROTEADOR').trim(), 10);
+      const item: RouterItem = { id: uid(), nome: at('NOME_ROTA') };
+      if (Number.isFinite(ordem)) (item as RouterItem & { ordem?: number }).ordem = ordem;
+      projeto.routers.push(item);
+    } else if (tipo === 'ROTA') {
+      const ordem = parseInt(at('ORDEM_ROTA').trim(), 10);
+      if (!Number.isFinite(ordem)) continue;
+      const rota: Rota = {
+        id: uid(),
+        nome: at('NOME_ROTA'),
+        origem: at('ORIGEM'),
+        destino: at('DESTINO'),
+        equipamentos: [],
+        setaUltimoLink: boolCell(at('SETA')),
+        caixa: {
+          enabled: boolCell(at('CAIXA_ON')),
+          titulo: at('TITULO_CAIXA'),
+          desc: at('DESC_CAIXA'),
+          detalhes: at('DETALHES_CAIXA'),
+        },
+      };
+      rotasMap.set(ordem, rota);
+    } else if (tipo === 'EQUIP') {
+      const ordem = parseInt(at('ORDEM_ROTA').trim(), 10);
+      const ordemEq = parseInt(at('ORDEM_EQ').trim(), 10);
+      const rota = rotasMap.get(ordem);
+      if (!rota) continue; // linha de equip antes da rota → resolvida depois
+      const eq: TranspEquip = { site: at('SITE'), fabricante: at('FABRICANTE'), obs: at('OBS') };
+      (rota as Rota & { _pend?: Array<{ ordemEq: number; eq: TranspEquip }> })._pend =
+        (rota as Rota & { _pend?: Array<{ ordemEq: number; eq: TranspEquip }> })._pend ?? [];
+      (rota as Rota & { _pend?: Array<{ ordemEq: number; eq: TranspEquip }> })._pend!.push({ ordemEq, eq });
+    } else {
+      continue; // linha desconhecida — ignora sem quebrar o resto
+    }
+  }
+
+  if (!rotasMap.size) return { ok: false, error: 'CSV sem registros de ROTA — use o arquivo exportado por esta ferramenta.' };
+
+  // ordena rotas por ORDEM_ROTA e equipamentos por ORDEM_EQ
+  const rotas = [...rotasMap.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([, r]) => {
+      const pend = (r as Rota & { _pend?: Array<{ ordemEq: number; eq: TranspEquip }> })._pend ?? [];
+      pend.sort((a, b) => a.ordemEq - b.ordemEq);
+      return { id: r.id, nome: r.nome, origem: r.origem, destino: r.destino, equipamentos: pend.map((x) => x.eq), setaUltimoLink: r.setaUltimoLink, caixa: r.caixa };
+    });
+
+  // ordena roteadores por ORDEM_ROTEADOR quando disponível
+  const routersSorted = projeto.routers
+    .map((r) => ({ r, o: (r as RouterItem & { ordem?: number }).ordem ?? Number.MAX_SAFE_INTEGER }))
+    .sort((a, b) => a.o - b.o)
+    .map(({ r }) => ({ id: r.id, nome: r.nome }));
+
+  return { ok: true, projeto: { titulo: projeto.titulo, routers: routersSorted.length ? routersSorted : projeto.routers, rotas } };
+}
+
 /** Carimbo de data (ISO) para comparações nuvem ↔ local. */
 const nowIso = () => new Date().toISOString();
 
@@ -865,6 +1084,33 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
         showToast('Projeto importado com sucesso.', 'success');
       } catch {
         showToast('Arquivo inválido: selecione um .json exportado por esta ferramenta.', 'error');
+      }
+    };
+    rd.readAsText(f);
+    e.target.value = '';
+  };
+
+  /* export/import CSV — planilha com roteadores, rotas, equipamentos e caixas;
+     ao importar, o CSV reconstrói o projeto e o layout redesenha 1:1 (função pura dos dados) */
+  const exportCsv = () => {
+    const csv = '\uFEFF' + buildCsv(proj); // BOM p/ Excel abrir como UTF-8
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    download(url, `topologia_${slug(proj.titulo)}.csv`, true);
+    showToast('CSV exportado (roteadores, rotas, equipamentos e caixas).', 'success');
+  };
+
+  const importCsv = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      const res = parseCsv(String(rd.result));
+      if (!res.ok || !res.projeto) {
+        showToast(res.error || 'Falha ao ler o CSV.', 'error');
+      } else {
+        archiveProj(proj, 'importar-csv'); // o projeto atual vira histórico no banco
+        setProj(res.projeto);
+        showToast(`CSV importado: ${res.projeto.rotas.length} rota(s) restaurada(s) — mapa redesenhado 1:1.`, 'success');
       }
     };
     rd.readAsText(f);
@@ -1211,6 +1457,15 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
               <label className="btn btn-sm topo-inline-btn">
                 <i className="fas fa-file-import" /> Importar projeto
                 <input type="file" accept=".json,application/json" style={{ display: 'none' }} onChange={importJson} />
+              </label>
+            </div>
+            <div className="topo-actions">
+              <button className="btn btn-sm" onClick={exportCsv} title="Planilha com todos os roteadores, rotas, equipamentos e caixas — pode ser editada no Excel e reimportada">
+                <i className="fas fa-file-csv" /> Exportar CSV
+              </button>
+              <label className="btn btn-sm topo-inline-btn" title="Reconstrói o mapa a partir de um CSV exportado por esta ferramenta (redesenho 1:1)">
+                <i className="fas fa-file-arrow-up" /> Importar CSV
+                <input type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={importCsv} />
               </label>
             </div>
             <div className="topo-actions">
