@@ -1468,7 +1468,7 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
                 <input type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={importCsv} />
               </label>
             </div>
-            <div className="topo-actions">
+            <div className="topo-actions topo-actions-dl">
               <button className="btn btn-primary btn-sm" onClick={baixarPng}><i className="fas fa-image" /> Baixar PNG</button>
               <button className="btn btn-secondary btn-sm" onClick={baixarSvg}><i className="fas fa-bezier-curve" /> Baixar SVG</button>
               <button className="btn btn-secondary btn-sm" onClick={baixarPdf}><i className="fas fa-file-pdf" /> Baixar PDF</button>

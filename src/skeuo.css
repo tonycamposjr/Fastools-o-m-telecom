@@ -3895,12 +3895,28 @@ html.sk-skin [tabindex]:focus-visible {
   padding-top: 8px;
 }
 
+/* ações organizadas em 2 fileiras simétricas (sobrescreve .btn global, que tem min-width:160px) */
 .topo-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 8px;
 }
+
+.topo-actions .btn,
+.topo-actions .topo-inline-btn {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  justify-content: center;
+}
+
+/* downloads: PNG | SVG na primeira fileira, PDF ocupando a segunda inteira */
+.topo-actions-dl .btn:last-child { grid-column: 1 / -1; }
 
 /* status de persistência (nuvem/local) */
 .topo-cloud-row {
