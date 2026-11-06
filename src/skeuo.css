@@ -3279,7 +3279,7 @@ html.sk-skin .mobile-tab-btn.active {
   }
 
   html.sk-skin .app-container.sk-dash .app-header {
-    margin-bottom: clamp(12px, 2.5vw, 20px);
+    margin-bottom: clamp(8px, 1.2vw, 12px);
   }
 
   html.sk-skin .app-container.sk-dash .controls-bar {
@@ -3788,7 +3788,7 @@ html.sk-skin [tabindex]:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: calc(100vh - 150px);
+  max-height: calc(100vh - 110px);
   overflow-y: auto;
   padding-right: 4px;
 }

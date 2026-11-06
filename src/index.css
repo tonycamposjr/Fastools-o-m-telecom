@@ -110,7 +110,7 @@ img, svg, video, canvas, iframe {
 /* ========== HEADER (NEUMORPHIC ELEVATION) ========== */
 .app-header {
     text-align: center;
-    margin-bottom: clamp(14px, 3vw, 30px);
+    margin-bottom: clamp(8px, 1.2vw, 12px);
     position: relative;
     width: 100%;
 }
@@ -121,9 +121,9 @@ img, svg, video, canvas, iframe {
     font-size: clamp(17px, 4vw, 26px);
     font-weight: 700;
     text-align: center;
-    padding: clamp(14px, 3vw, 24px);
+    padding: clamp(10px, 1.8vw, 16px);
     border-radius: clamp(14px, 3vw, 20px);
-    margin-bottom: clamp(12px, 2.5vw, 25px);
+    margin-bottom: clamp(8px, 1.2vw, 12px);
     box-shadow: var(--nm-flat);
     border: 1px solid var(--border);
     position: relative;
@@ -162,7 +162,7 @@ img, svg, video, canvas, iframe {
     justify-content: flex-end;
     align-items: center;
     gap: clamp(6px, 1.5vw, 14px);
-    margin-bottom: clamp(12px, 2vw, 20px);
+    margin-bottom: clamp(6px, 1vw, 10px);
     flex-wrap: wrap;
     width: 100%;
 }
@@ -276,7 +276,7 @@ img, svg, video, canvas, iframe {
     padding: 35px;
     box-shadow: var(--nm-flat);
     border: 1px solid var(--border);
-    margin-bottom: 40px;
+    margin-bottom: 22px;
     animation: slideUp 0.3s ease;
 }
 
@@ -1699,8 +1699,8 @@ td[colspan] {
 /* ========== FOOTER ========== */
 .app-footer {
     text-align: center;
-    margin-top: 50px;
-    padding: 25px;
+    margin-top: 18px;
+    padding: 14px 25px 18px;
     border-top: 2px solid var(--border);
     color: var(--muted);
     font-size: 14px;
@@ -2726,7 +2726,7 @@ td[colspan] {
 .back-to-dashboard-container {
     display: flex;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     animation: fadeIn 0.3s ease;
 }
 
