@@ -3919,6 +3919,28 @@ html.sk-skin [tabindex]:focus-visible {
 /* downloads: PNG | SVG na primeira fileira, PDF ocupando a segunda inteira */
 .topo-actions-dl .btn:last-child { grid-column: 1 / -1; }
 
+/* formulários e botões na MESMA proporção (mesmo padding, fonte e altura ~40px) */
+.topo-form input[type="text"],
+.topo-form input[type="number"],
+.topo-form select,
+.topo-form textarea {
+  padding: 10px 12px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  border-radius: 10px;
+}
+
+.topo-form .btn,
+.topo-form .topo-inline-btn {
+  padding: 10px 12px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  min-width: 0;
+}
+
+.topo-form .form-group { margin-bottom: 12px; }
+.topo-form .form-group label { margin-bottom: 5px; font-size: 12.5px; }
+
 /* status de persistência (nuvem/local) */
 .topo-cloud-row {
   display: flex;
