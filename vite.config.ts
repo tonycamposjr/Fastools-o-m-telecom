@@ -55,6 +55,11 @@ export default defineConfig(() => {
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,jpg,jpeg}'],
           maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+          // Ativa o novo SW imediatamente e assume as abas abertas;
+          // limpa caches de versões antigas (evita servir CSS/JS velhos).
+          skipWaiting: true,
+          clientsClaim: true,
+          cleanupOutdatedCaches: true,
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/cdnjs\.cloudflare\.com\/.*/i,
@@ -86,8 +91,7 @@ export default defineConfig(() => {
           ],
         },
         devOptions: {
-          enabled: true,
-          type: 'module',
+          enabled: false,
         },
       }),
     ],
