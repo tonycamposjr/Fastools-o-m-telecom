@@ -587,6 +587,8 @@ export default function App() {
               <p>Selecione um dos utilitários integrados para iniciar suas operações e gerenciar as atividades de campo.</p>
             </div>
 
+            <div className="metro-group-label">ferramentas</div>
+
             <div className="dashboard-grid" role="list" aria-label="Ferramentas disponíveis">
               {orderedTools.map((tool) => (
                 <div

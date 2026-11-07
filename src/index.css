@@ -80,7 +80,7 @@ html, body {
 }
 
 body {
-    background: var(--bg);
+    background: #1d1d1d;
     font-family: 'Inter', 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: var(--fg);
     line-height: 1.6;
@@ -89,21 +89,6 @@ body {
     min-height: 100dvh;
     padding: clamp(8px, 2vw, 20px);
     padding-block: clamp(4px, 1vw, 10px);
-}
-
-/* ========== FUNDO VIVO (cena vetorial embutida, offline) ========== */
-/* camada fixa atrás de todo o app: celular com o logo Vivo sobre o palco roxo.
-   O véu escuro mantiene a leitura nas duas temperaturas (claro/escuro);
-   os cartões do app continuam opacos com var(--card). */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background:
-        linear-gradient(rgba(7, 3, 13, 0.35), rgba(7, 3, 13, 0.5)),
-        url('./assets/bg-vivo.svg') center / cover no-repeat;
-    pointer-events: none;
 }
 
 img, svg, video, canvas, iframe {
@@ -3404,3 +3389,123 @@ html.skeuomorphic-mode[data-theme="dark"] {
 
 
 
+
+/* ========== SKIN METRO — inspirado na tela Iniciar do Windows 8 ========== */
+/* Fundo: cinza-chumbo chapado (#1d1d1d no body). Sem imagem de fundo.
+   Tiles: cantos retos, cor chapada da ferramenta, lacuna de 4px,
+   hover = brilho + contorno branco fino (nunca "levantar" o tile). */
+
+/* Manchete/controles sobre o chumbo: branco fino, como "Start" */
+.app-title {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: #f2f2f2 !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.3px;
+}
+.app-title i { color: #2d89ef !important; filter: none !important; }
+.version-badge {
+    background: rgba(255,255,255,.14) !important;
+    color: #fff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+.back-inline .crumb-name { color: rgba(255,255,255,.75) !important; }
+.back-inline .crumb-sep { color: rgba(255,255,255,.35) !important; }
+.app-footer, .app-footer p { color: rgba(255,255,255,.72) !important; }
+
+/* Botões da barra: quadrados */
+.controls-bar button,
+.controls-bar .export-btn,
+.back-inline .back-to-dashboard-btn {
+    border-radius: 0 !important;
+}
+
+/* Manchete estilo "Start" — peso 300, grande, a esquerda */
+.dashboard-intro { text-align: left !important; margin-bottom: 22px !important; }
+.dashboard-intro h2 {
+    font-family: 'Segoe UI Light', 'Segoe UI', 'Outfit', sans-serif !important;
+    font-weight: 300 !important;
+    font-size: clamp(34px, 5.5vw, 52px) !important;
+    color: #f2f2f2 !important;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 6px !important;
+}
+.dashboard-intro p {
+    color: rgba(255,255,255,.72) !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+/* Rotulo de grupo (como "essential"/"internet" na Tela Iniciar) */
+.metro-group-label {
+    font-family: 'Segoe UI Light', 'Segoe UI', 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: #f2f2f2;
+    margin: 14px 0 6px;
+    letter-spacing: 0.2px;
+}
+
+/* Grade de tiles: lacuna de 4px */
+.dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)) !important;
+    gap: 4px !important;
+    margin-top: 4px !important;
+}
+
+/* Tile: chapado, quadrado, cor da ferramenta */
+.dashboard-card {
+    background: var(--tool-color, #2d89ef) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    min-height: 150px !important;
+    padding: 16px !important;
+    text-align: left;
+    transition: filter 0.15s ease !important;
+}
+.dashboard-card-glow { display: none !important; }
+.dashboard-card-icon {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    color: #fff !important;
+}
+.dashboard-card:hover .dashboard-card-icon {
+    background: transparent !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+.dashboard-card-title {
+    color: #fff !important;
+    font-family: 'Segoe UI', 'Outfit', sans-serif !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.2px;
+}
+.dashboard-card:hover .dashboard-card-title { color: #fff !important; }
+.dashboard-card-desc { color: rgba(255,255,255,.82) !important; }
+.dashboard-card-footer { color: #fff !important; }
+
+/* Hover: brilho + contorno branco fino; ativo: escurece */
+.dashboard-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    filter: brightness(1.15);
+    outline: 1px solid rgba(255,255,255,.85);
+    outline-offset: -1px;
+}
+.dashboard-card:active {
+    filter: brightness(.92);
+    box-shadow: none !important;
+}
+
+/* Teles: tiles um pouco menores, mas ainda em grade (2 colunas na maioria) */
+@media (max-width: 640px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+    }
+}
