@@ -91,6 +91,21 @@ body {
     padding-block: clamp(4px, 1vw, 10px);
 }
 
+/* ========== FUNDO VIVO (cena vetorial embutida, offline) ========== */
+/* camada fixa atrás de todo o app: celular com o logo Vivo sobre o palco roxo.
+   O véu escuro mantiene a leitura nas duas temperaturas (claro/escuro);
+   os cartões do app continuam opacos com var(--card). */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(rgba(7, 3, 13, 0.35), rgba(7, 3, 13, 0.5)),
+        url('./assets/bg-vivo.svg') center / cover no-repeat;
+    pointer-events: none;
+}
+
 img, svg, video, canvas, iframe {
     max-width: 100%;
     height: auto;
