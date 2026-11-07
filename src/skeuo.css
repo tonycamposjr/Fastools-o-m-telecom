@@ -3973,23 +3973,24 @@ html.sk-skin [tabindex]:focus-visible {
 
 .topo-logo-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 8px; /* mesmo espaçamento do grid de Ações */
+  flex-wrap: wrap;
 }
 
-/* botões do logotipo compactos p/ caberem na MESMA linha do logo */
+/* botões com a MESMA altura/padding/fonte do "Novo projeto" (topo-actions) */
 .topo-logo-row .btn {
-  padding: 4px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
+  flex: 1 1 0;
   min-width: 0;
-  gap: 6px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .topo-logo-preview {
-  height: 34px;
+  height: 40px;
   max-width: 64px;
   object-fit: contain;
   background: #fff;
@@ -3997,6 +3998,7 @@ html.sk-skin [tabindex]:focus-visible {
   border-radius: 8px;
   padding: 2px 5px;
   flex-shrink: 0;
+  align-self: center;
 }
 
 .topo-logo-empty {
