@@ -3509,3 +3509,18 @@ html.skeuomorphic-mode[data-theme="dark"] {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
     }
 }
+
+/* Paleta METRO fixa nos tiles (cor chapada da Tela Iniciar do Windows 8),
+   sobrepondo a cor antiga de cada ferramenta (!important vence o style inline). */
+.dashboard-grid .dashboard-card:nth-child(12n+1)  { --tool-color: #2E7EEF !important; } /* azul */
+.dashboard-grid .dashboard-card:nth-child(12n+2)  { --tool-color: #C30052 !important; } /* vinho */
+.dashboard-grid .dashboard-card:nth-child(12n+3)  { --tool-color: #008A00 !important; } /* verde */
+.dashboard-grid .dashboard-card:nth-child(12n+4)  { --tool-color: #6B2FA0 !important; } /* roxo */
+.dashboard-grid .dashboard-card:nth-child(12n+5)  { --tool-color: #97CE14 !important; } /* lima */
+.dashboard-grid .dashboard-card:nth-child(12n+6)  { --tool-color: #A85CBF !important; } /* lils */
+.dashboard-grid .dashboard-card:nth-child(12n+7)  { --tool-color: #1D63D1 !important; } /* azul escuro */
+.dashboard-grid .dashboard-card:nth-child(12n+8)  { --tool-color: #E05C1D !important; } /* laranja */
+.dashboard-grid .dashboard-card:nth-child(12n+9)  { --tool-color: #00C8F4 !important; } /* ciano */
+.dashboard-grid .dashboard-card:nth-child(12n+10) { --tool-color: #C42B4D !important; } /* rubi */
+.dashboard-grid .dashboard-card:nth-child(12n+11) { --tool-color: #3A4048 !important; } /* ardósia */
+.dashboard-grid .dashboard-card:nth-child(12n+12) { --tool-color: #F26E0F !important; } /* laranja claro */
