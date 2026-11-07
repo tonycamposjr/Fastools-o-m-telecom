@@ -3551,3 +3551,18 @@ html[data-theme="light"] .back-inline .crumb-name { color: rgba(23, 24, 28, .78)
 html[data-theme="light"] .back-inline .crumb-sep { color: rgba(23, 24, 28, .4) !important; }
 html[data-theme="light"] .app-footer,
 html[data-theme="light"] .app-footer p { color: rgba(23, 24, 28, .72) !important; }
+
+/* Tiles em mesma quantidade em cima e embaixo: numero de colunas sempre
+   divisor de 12 ferramentas — 6 em telas largas, 4, 3 ou 2 nas menores. */
+@media (min-width: 1400px) {
+    .dashboard-grid { grid-template-columns: repeat(6, 1fr) !important; }
+}
+@media (min-width: 1001px) and (max-width: 1399px) {
+    .dashboard-grid { grid-template-columns: repeat(4, 1fr) !important; }
+}
+@media (min-width: 641px) and (max-width: 1000px) {
+    .dashboard-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (max-width: 640px) {
+    .dashboard-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
