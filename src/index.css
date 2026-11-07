@@ -3524,3 +3524,11 @@ html.skeuomorphic-mode[data-theme="dark"] {
 .dashboard-grid .dashboard-card:nth-child(12n+10) { --tool-color: #C42B4D !important; } /* rubi */
 .dashboard-grid .dashboard-card:nth-child(12n+11) { --tool-color: #3A4048 !important; } /* ardósia */
 .dashboard-grid .dashboard-card:nth-child(12n+12) { --tool-color: #F26E0F !important; } /* laranja claro */
+
+/* Metro: no tema claro o fundo fica claro — as letras da manchete, da legenda
+   e do rotulo de grupo mudam para preto para continuarem legiveis. */
+html[data-theme="light"] .dashboard-intro h2,
+html[data-theme="light"] .dashboard-intro p,
+html[data-theme="light"] .metro-group-label {
+    color: #17181c !important;
+}
