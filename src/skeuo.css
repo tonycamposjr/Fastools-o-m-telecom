@@ -3972,33 +3972,38 @@ html.sk-skin [tabindex]:focus-visible {
 .topo-inline-btn { cursor: pointer; }
 
 .topo-logo-row {
-  display: flex;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1fr);
   gap: 8px; /* mesmo espaçamento do grid de Ações */
-  flex-wrap: wrap;
+  align-items: center;
 }
 
-/* botões com a MESMA altura/padding/fonte do "Novo projeto" (topo-actions) */
+/* MESMA altura do "Novo projeto" (40px), mesmos cantos e respiros do grid de Ações */
 .topo-logo-row .btn {
-  flex: 1 1 0;
+  height: 40px;
   min-width: 0;
-  padding: 10px 12px;
-  font-size: 13.5px;
-  line-height: 1.45;
+  padding: 10px 8px;
+  font-size: 12.5px;
+  line-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .topo-logo-preview {
   height: 40px;
   max-width: 64px;
+  width: 100%;
   object-fit: contain;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 2px 5px;
-  flex-shrink: 0;
-  align-self: center;
+  box-sizing: border-box;
 }
 
 .topo-logo-empty {
