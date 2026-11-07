@@ -1270,12 +1270,12 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
                 ) : (
                   <span className="topo-logo-preview topo-logo-empty">—</span>
                 )}
-                <label className="btn btn-sm topo-inline-btn">
-                  <i className="fas fa-upload" /> Enviar outro
+                <label className="btn btn-sm topo-inline-btn" title="Enviar outro logotipo (imagem salva neste dispositivo)">
+                  <i className="fas fa-upload" /> Enviar
                   <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onLogoUpload} />
                 </label>
-                <button className="btn btn-sm" onClick={restaurarLogo} title="Volta a usar o arquivo public/logo-vivo.svg">
-                  <i className="fas fa-rotate-left" /> Restaurar padrão Vivo
+                <button className="btn btn-sm" onClick={restaurarLogo} title="Restaurar o padrão Vivo (src/assets/logo-vivo.svg)">
+                  <i className="fas fa-rotate-left" /> Restaurar Vivo
                 </button>
               </div>
               <p className="topo-hint">
