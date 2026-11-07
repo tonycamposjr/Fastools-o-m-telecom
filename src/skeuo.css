@@ -3782,7 +3782,7 @@ html.sk-skin [tabindex]:focus-visible {
   display: grid;
   grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
   gap: 16px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .topo-form {
@@ -4003,6 +4003,7 @@ html.sk-skin [tabindex]:focus-visible {
   flex-direction: column;
   gap: 8px;
   min-width: 0;
+  min-height: 0;
 }
 
 .topo-zoombar {
@@ -4043,6 +4044,8 @@ html.sk-skin [tabindex]:focus-visible {
     repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(127, 127, 140, 0.08) 23px, rgba(127, 127, 140, 0.08) 24px),
     var(--bg);
   max-height: calc(100vh - 190px);
+  flex: 1;
+  min-height: 340px;
 }
 
 .topo-svg {
