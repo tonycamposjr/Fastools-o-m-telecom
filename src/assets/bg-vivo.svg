@@ -24,15 +24,6 @@
       <stop offset="0.6" stop-color="#eef0f6"/>
       <stop offset="1" stop-color="#dfe3ec"/>
     </linearGradient>
-    <filter id="blurL" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="26"/>
-    </filter>
-    <filter id="blurXL" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="55"/>
-    </filter>
-    <filter id="blurS" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="10"/>
-    </filter>
   </defs>
 
   <!-- base escura + palco roxo -->
@@ -40,21 +31,21 @@
   <rect width="1920" height="1080" fill="url(#palco)"/>
   <rect width="1920" height="1080" fill="url(#palco2)"/>
 
-  <!-- faixa "browser" difusao no topo (pagina roxa desfocada) -->
-  <g filter="url(#blurXL)" opacity="0.85">
-    <rect x="1100" y="-40" width="900" height="300" rx="60" fill="#7b2fd0" opacity="0.5"/>
-    <rect x="330" y="60" width="980" height="180" rx="40" fill="#6c24b8" opacity="0.55"/>
-    <circle cx="1560" cy="330" r="120" fill="#b57ef5" opacity="0.4"/>
+  <!-- faixa "browser" no topo (pagina roxa, nitida) -->
+  <g opacity="0.85">
+    <rect x="1100" y="-40" width="900" height="300" rx="60" fill="#7b2fd0" opacity="0.45"/>
+    <rect x="330" y="60" width="980" height="180" rx="40" fill="#6c24b8" opacity="0.5"/>
+    <circle cx="1560" cy="330" r="110" fill="#b57ef5" opacity="0.32"/>
   </g>
 
-  <!-- txt fantasma "Contrale" -->
-  <g filter="url(#blurS)" transform="translate(1360 240) rotate(-4)">
-    <text x="0" y="70" font-family="'Segoe UI','Inter',sans-serif" font-size="92" font-weight="700" fill="#ecd9ff" opacity="0.3">✱ Contrale</text>
-    <text x="8" y="180" font-family="'Segoe UI','Inter',sans-serif" font-size="58" font-weight="600" fill="#d8bff2" opacity="0.22">Mapa de fibra — Vivo</text>
+  <!-- texto fantasma "Contrale" -->
+  <g transform="translate(1360 240) rotate(-4)">
+    <text x="0" y="70" font-family="'Segoe UI','Inter',sans-serif" font-size="92" font-weight="700" fill="#ecd9ff" opacity="0.24">✱ Contrale</text>
+    <text x="8" y="180" font-family="'Segoe UI','Inter',sans-serif" font-size="58" font-weight="600" fill="#d8bff2" opacity="0.16">Mapa de fibra — Vivo</text>
   </g>
 
-  <!-- fileira de "amplas" embaixo a direita (desfocada) -->
-  <g filter="url(#blurS)" opacity="0.6">
+  <!-- fileira de miniature embaixo a direita (nitida) -->
+  <g opacity="0.6">
     <rect x="1290" y="700" width="150" height="86" rx="12" fill="#3b2a55"/>
     <rect x="1462" y="700" width="150" height="86" rx="12" fill="#52406e"/>
     <rect x="1634" y="700" width="150" height="86" rx="12" fill="#442f61"/>
@@ -62,11 +53,11 @@
     <rect x="1290" y="820" width="640" height="14" rx="7" fill="#c9a6f2" opacity="0.5"/>
   </g>
 
-  <!-- neon: caminhos de fibra ondulados -->
-  <g filter="url(#blurL)" opacity="0.8" fill="none" stroke-linecap="round">
-    <path d="M1120 640 C 1240 560, 1330 660, 1420 590 S 1620 470, 1760 520 S 1900 560, 1980 470" stroke="#d7a9ff" stroke-width="26" opacity="0.55"/>
-    <path d="M1140 240 C 1280 180, 1380 300, 1530 240 S 1780 170, 1900 260" stroke="#9a5cf0" stroke-width="34" opacity="0.45"/>
-    <path d="M1180 760 C 1300 700, 1420 790, 1540 720 S 1740 660, 1880 720" stroke="#efdcff" stroke-width="14" opacity="0.5"/>
+  <!-- neon: caminhos de fibra ondulados (nitidos) -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M1120 640 C 1240 560, 1330 660, 1420 590 S 1620 470, 1760 520 S 1900 560, 1980 470" stroke="#d7a9ff" stroke-width="9" opacity="0.5"/>
+    <path d="M1140 240 C 1280 180, 1380 300, 1530 240 S 1780 170, 1900 260" stroke="#9a5cf0" stroke-width="11" opacity="0.42"/>
+    <path d="M1180 760 C 1300 700, 1420 790, 1540 720 S 1740 660, 1880 720" stroke="#efdcff" stroke-width="5" opacity="0.5"/>
   </g>
 
   <!-- celular inclinado, tela clara com o logo Vivo -->
