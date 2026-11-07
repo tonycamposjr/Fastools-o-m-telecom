@@ -173,83 +173,6 @@ const VALID_TABS = ['dashboard', ...TOOLS.map((t) => t.id), 'admin'];
  * Linha "viva" do painel: atalho para continuar de onde parou
  * + métricas locais (traços OTDR salvos neste dispositivo e registros de campo).
  */
-function DashboardLiveRow(props: {
-  lastUsedTool: ToolDef | null;
-  usage: Record<string, { count: number; last: number }>;
-  onGo: (tabId: string) => void;
-}) {
-  const { lastUsedTool, onGo } = props;
-
-  const otdrHistory = readLocalJson<unknown[]>('otdrLocalHistory', []);
-  const registros = readLocalJson<unknown[]>('clientesEquipamentosDB', []);
-  const lastOtdr = readLastOtdr();
-
-  const fmtDate = (iso: string) => {
-    const d = new Date(iso);
-    return isNaN(d.getTime()) ? '' : ` · ${d.toLocaleDateString('pt-BR')}`;
-  };
-
-  return (
-    <div className="dash-live-row">
-      {lastUsedTool && (
-        <button
-          className="dash-live-card dash-live-card--accent"
-          onClick={() => onGo(lastUsedTool.id)}
-          title={`Abrir ${lastUsedTool.name}`}
-        >
-          <span className="dash-live-icon" style={{ background: `var(--tool-color, var(--accent))` }}>
-            <i className={`fas ${lastUsedTool.icon}`}></i>
-          </span>
-          <span className="dash-live-copy">
-            <b>Continuar de onde parou</b>
-            <span>{lastUsedTool.name}</span>
-          </span>
-          <i className="fas fa-angles-right dash-live-go"></i>
-        </button>
-      )}
-
-      <button
-        className="dash-live-card"
-        onClick={() => onGo(lastUsedTool?.id === 'otdr' ? 'otdr' : 'otdr')}
-        title="Abrir o Leitor OTDR"
-      >
-        <span className="dash-live-icon" style={{ background: '#5B5FEF' }}>
-          <i className="fas fa-wave-square"></i>
-        </span>
-        <span className="dash-live-copy">
-          <b>
-            {otdrHistory.length === 0
-              ? 'Nenhum traço OTDR local'
-              : `${otdrHistory.length} traço(s) OTDR local(is)`}
-          </b>
-          <span>
-            {lastOtdr && otdrHistory.length > 0
-              ? `${lastOtdr.fileName}${fmtDate(lastOtdr.testDate)} — ${lastOtdr.fiberLengthKm.toFixed(2)} km, ${lastOtdr.totalLossDb.toFixed(2)} dB, ${lastOtdr.eventCount} evento(s)`
-              : 'Salve o primeiro laudo .SOR para vê-lo aqui'}
-          </span>
-        </span>
-      </button>
-
-      <button
-        className="dash-live-card"
-        onClick={() => onGo('clientes')}
-        title="Abrir Registros de Campo"
-      >
-        <span className="dash-live-icon" style={{ background: '#EC4899' }}>
-          <i className="fas fa-clipboard-list"></i>
-        </span>
-        <span className="dash-live-copy">
-          <b>
-            {registros.length === 0
-              ? 'Nenhum registro local'
-              : `${registros.length} registro(s) de campo`}
-          </b>
-          <span>{registros.length === 0 ? 'Registre o primeiro chamado/vistoria' : 'Salvos neste dispositivo + nuvem'}</span>
-        </span>
-      </button>
-    </div>
-  );
-}
 
 /** Helpers de leitura segura do localStorage (dados locais do painel) */
 function readLocalJson<T>(key: string, fallback: T): T {
@@ -277,34 +200,10 @@ const readFavorites = (): string[] => {
   return Array.isArray(f) ? f.filter((x): x is string => typeof x === 'string' && VALID_TABS.includes(x)) : [];
 };
 
-const readLastOtdr = (): UsageInfoLastOtdr | null => {
-  const hist = readLocalJson<unknown[]>('otdrLocalHistory', []);
-  if (!hist.length) return null;
-  const t = hist[0] as Record<string, unknown>;
-  if (!t || typeof t !== 'object') return null;
-  const events = Array.isArray(t.events) ? t.events : [];
-  return {
-    fileName: typeof t.fileName === 'string' ? t.fileName : 'traço.sor',
-    testDate: typeof t.testDate === 'string' ? t.testDate : '',
-    fiberLengthKm: typeof t.fiberLengthKm === 'number' ? t.fiberLengthKm : 0,
-    totalLossDb: typeof t.totalLossDb === 'number' ? t.totalLossDb : 0,
-    eventCount: events.length,
-  };
-};
-
-interface UsageInfoLastOtdr {
-  fileName: string;
-  testDate: string;
-  fiberLengthKm: number;
-  totalLossDb: number;
-  eventCount: number;
-}
-
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isSkeuo, setIsSkeuo] = useState<boolean>(true);
-  const [dashLayout, setDashLayout] = useState<boolean>(true);
   const isOnline = useOnlineStatus();
 
   // Painel vivo: uso por ferramenta + favoritos + paleta de comandos + dialog de confirmação
@@ -366,9 +265,6 @@ export default function App() {
     setIsSkeuo(savedSkeuo);
     document.documentElement.classList.toggle('sk-skin', savedSkeuo);
 
-    const savedDash = localStorage.getItem('dashLayout') !== 'false';
-    setDashLayout(savedDash);
-
     const hashTab = window.location.hash.replace('#', '');
     const initialTab = VALID_TABS.includes(hashTab)
       ? hashTab
@@ -414,18 +310,6 @@ export default function App() {
       showToast('Acabamento realista (skeuomorfismo) ativado!', 'success');
     } else {
       showToast('Acabamento realista desativado (modo plano).', 'info');
-    }
-  };
-
-  // Toggle dashboard layout (menu lateral de ferramentas no desktop)
-  const handleToggleDashLayout = () => {
-    const nextVal = !dashLayout;
-    setDashLayout(nextVal);
-    localStorage.setItem('dashLayout', String(nextVal));
-    if (nextVal) {
-      showToast('Layout dashboard ativado — menu lateral de ferramentas no desktop.', 'success');
-    } else {
-      showToast('Layout clássico ativado.', 'info');
     }
   };
 
@@ -487,20 +371,6 @@ export default function App() {
     return TOOLS.indexOf(a) - TOOLS.indexOf(b);
   });
 
-  // "Continuar de onde parou": ferramenta aberta mais recentemente
-  const lastUsedTool = (() => {
-    let best: ToolDef | null = null;
-    let bestTs = 0;
-    for (const t of TOOLS) {
-      const last = usage[t.id]?.last || 0;
-      if (last > bestTs) {
-        bestTs = last;
-        best = t;
-      }
-    }
-    return best && bestTs > 0 ? best : null;
-  })();
-
   // Native back handler for back-to-dashboard button
   const handleBackNavigation = () => {
     if (window.history.state && window.history.length > 1) {
@@ -556,7 +426,6 @@ export default function App() {
       calculadoraConfig: calcConfig ? JSON.parse(calcConfig) : null,
       theme: theme,
       acabamentoRealista: isSkeuo,
-      layoutDashboard: dashLayout,
       exportDate: new Date().toISOString(),
       version: '4.0',
     };
@@ -590,67 +459,8 @@ export default function App() {
   }
 
   return (
-    <div className={`app-container page-shell ${activeTab === 'kml' ? 'kml-mode-active' : ''} ${dashLayout ? 'sk-dash' : ''}`}>
-      {/* ===== Barra lateral de ferramentas (modo dashboard — desktop) ===== */}
-      <aside className="sk-dash-sidebar">
-        <div className="sk-dash-brand">
-          <div className="sk-dash-brand-icon">
-            <i className="fas fa-network-wired"></i>
-          </div>
-          <div className="sk-dash-brand-text">
-            <div className="sk-dash-brand-title">Central de Campo</div>
-            <div className="sk-dash-brand-sub">Rede &amp; OTDR</div>
-          </div>
-        </div>
-
-        <nav className="sk-dash-nav">
-          <button
-            className={`sk-dash-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-            onClick={() => handleTabChange('dashboard')}
-            title="Painel de ferramentas"
-          >
-            <i className="fas fa-th-large"></i>
-            Painel
-          </button>
-
-          <div className="sk-dash-nav-label">Ferramentas</div>
-
-          {TOOLS.map((tool) => (
-            <button
-              key={tool.id}
-              className={`sk-dash-nav-item ${activeTab === tool.id ? 'active' : ''}`}
-              style={{ '--tool-color': tool.color } as React.CSSProperties}
-              onClick={() => handleTabChange(tool.id)}
-              title={tool.name}
-            >
-              <i className={`fas ${tool.icon}`}></i>
-              {tool.short}
-            </button>
-          ))}
-
-          {user?.role === 'admin' && (
-            <>
-              <div className="sk-dash-nav-label">Administração</div>
-              <button
-                className={`sk-dash-nav-item ${activeTab === 'admin' ? 'active' : ''}`}
-                onClick={() => handleTabChange('admin')}
-                title="Painel do Administrador"
-              >
-                <i className="fas fa-user-shield"></i>
-                Admin
-              </button>
-            </>
-          )}
-        </nav>
-
-        <div className="sk-dash-sidebar-footer">
-          <span className={`sk-led ${isOnline ? '' : 'off'}`}></span>
-          <span>{isOnline ? 'Online' : 'Offline'}</span>
-          <span className="sk-dash-sidebar-version">v{APP_VERSION}</span>
-        </div>
-      </aside>
-
-      <div className="sk-dash-content">
+    <div className={`app-container page-shell ${activeTab === 'kml' ? 'kml-mode-active' : ''}`}>
+      <div className="app-content">
         {/* Header */}
         <div className="app-header">
           <div className="app-title">
@@ -680,13 +490,6 @@ export default function App() {
             </button>
             <button className="theme-toggle" onClick={handleToggleTheme} aria-label="Alternar tema claro/escuro">
               <i className={theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'}></i>
-            </button>
-            <button
-              className={`dash-layout-toggle-btn ${dashLayout ? 'active' : ''}`}
-              onClick={handleToggleDashLayout}
-              title="Alternar layout dashboard com menu lateral (desktop)"
-            >
-              <i className="fas fa-table-columns"></i> {dashLayout ? 'Dashboard ON' : 'Dashboard'}
             </button>
             <button
               className={`sk-skin-toggle-btn ${isSkeuo ? 'active' : ''}`}
@@ -783,13 +586,6 @@ export default function App() {
               <h2>Painel de Ferramentas de Campo</h2>
               <p>Selecione um dos utilitários integrados para iniciar suas operações e gerenciar as atividades de campo.</p>
             </div>
-
-            {/* Linha viva: continuar de onde parou + status local */}
-            <DashboardLiveRow
-              lastUsedTool={lastUsedTool}
-              usage={usage}
-              onGo={handleTabChange}
-            />
 
             <div className="dashboard-grid" role="list" aria-label="Ferramentas disponíveis">
               {orderedTools.map((tool) => (
