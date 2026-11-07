@@ -1132,23 +1132,32 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
   /* layout memoizado (função pura → só recalcula quando o projeto muda) */
   const layout = useMemo(() => computeLayout(proj), [proj]);
 
-  /* zoom / prévia */
+  /* zoom / prévia — o mapa encaixa automaticamente na área (largura E altura),
+     sem rolagem; reencaixa quando o mapa ou a janela mudam de tamanho */
   const [zoom, setZoom] = useState(1);
   const viewRef = useRef<HTMLDivElement>(null);
   const fitToScreen = () => {
     const el = viewRef.current;
-    if (!el) return;
-    const scale = Math.max(0.05, Math.min(3, (el.clientWidth - 24) / layout.W));
-    setZoom(Number(scale.toFixed(2)));
+    if (!el || layout.W <= 0 || layout.H <= 0) return;
+    const s = Math.max(0.05, Math.min(3, Math.min(
+      (el.clientWidth - 24) / layout.W,
+      (el.clientHeight - 24) / layout.H,
+    )));
+    setZoom(Number(s.toFixed(2)));
   };
-  const didFit = useRef(false);
   useEffect(() => {
-    if (!didFit.current && layout.W > 0) {
-      didFit.current = true;
-      fitToScreen();
-    }
+    const el = viewRef.current;
+    if (!el || layout.W <= 0 || layout.H <= 0) return;
+    fitToScreen();
+    const ro = new ResizeObserver(() => fitToScreen());
+    ro.observe(el);
+    window.addEventListener('resize', fitToScreen);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', fitToScreen);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layout.W]);
+  }, [layout.W, layout.H]);
 
   /* exportação PNG / SVG / PDF */
   const svgRef = useRef<SVGSVGElement>(null);
@@ -1491,7 +1500,7 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
             <span className="topo-size">{layout.W} × {layout.H} px</span>
           </div>
           <div className="topo-viewport" ref={viewRef}>
-            <div style={{ width: layout.W * zoom, height: layout.H * zoom }}>
+            <div style={{ width: layout.W * zoom, height: layout.H * zoom, margin: '0 auto' }}>
               <div style={{ transform: `scale(${zoom})`, transformOrigin: '0 0', width: layout.W, height: layout.H }}>
                 <TopoSvg layout={layout} logo={logoDataUri} svgRef={svgRef} />
               </div>

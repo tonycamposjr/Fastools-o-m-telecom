@@ -4042,7 +4042,7 @@ html.sk-skin [tabindex]:focus-visible {
     repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(127, 127, 140, 0.08) 23px, rgba(127, 127, 140, 0.08) 24px),
     repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(127, 127, 140, 0.08) 23px, rgba(127, 127, 140, 0.08) 24px),
     var(--bg);
-  max-height: calc(100vh - 165px);
+  max-height: calc(100vh - 190px);
 }
 
 .topo-svg {
