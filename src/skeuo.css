@@ -282,8 +282,8 @@ html.sk-skin .reset-btn:active {
 
 html.sk-skin .theme-toggle {
   border-radius: 50%;
-  width: 42px;
-  height: 42px;
+  width: 28px;
+  height: 28px;
   color: var(--accent);
 }
 

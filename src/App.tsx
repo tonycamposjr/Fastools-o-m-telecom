@@ -709,14 +709,14 @@ export default function App() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '5px 8px 5px 12px',
+                  padding: '2px 6px 2px 10px',
                   borderRadius: '12px',
                   border: '1px solid var(--border, rgba(90,105,135,0.3))',
                   background: 'var(--panel, rgba(255,255,255,0.5))',
                 }}
               >
                 <i className={user.role === 'admin' ? 'fas fa-user-shield' : 'fas fa-user-circle'} style={{ color: 'var(--accent, #2f5fdb)' }}></i>
-                <span style={{ fontSize: '13px', fontWeight: 700 }}>
+                <span style={{ fontSize: '11px', fontWeight: 700 }}>
                   {user.name || user.username}
                   {user.role === 'admin' && <span style={{ fontSize: '10px', opacity: 0.7 }}> · admin</span>}
                 </span>
@@ -729,8 +729,8 @@ export default function App() {
                     background: 'rgba(200,60,60,0.08)',
                     color: '#a32626',
                     borderRadius: '9px',
-                    padding: '4px 10px',
-                    fontSize: '12px',
+                    padding: '2px 6px',
+                    fontSize: '10.5px',
                     fontWeight: 700,
                     cursor: 'pointer',
                     fontFamily: 'inherit',
@@ -745,7 +745,7 @@ export default function App() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '5px 8px 5px 12px',
+                  padding: '2px 6px 2px 10px',
                   borderRadius: '12px',
                   border: '1px solid rgba(249,152,31,0.5)',
                   background: 'rgba(249,152,31,0.10)',
@@ -753,7 +753,7 @@ export default function App() {
                 title="Sem conexão com o servidor: histórico e dados ficam neste dispositivo. A sincronização volta quando o servidor estiver no ar."
               >
                 <i className="fas fa-plug" style={{ color: '#f97316' }}></i>
-                <span style={{ fontSize: '13px', fontWeight: 700 }}>Modo Local (sem servidor)</span>
+                <span style={{ fontSize: '11px', fontWeight: 700 }}>Modo Local (sem servidor)</span>
                 <button
                   onClick={() => setLocalMode(false)}
                   title="Tentar acessar o servidor"
@@ -762,8 +762,8 @@ export default function App() {
                     background: 'rgba(47,111,219,0.10)',
                     color: 'var(--accent, #2f5fdb)',
                     borderRadius: '9px',
-                    padding: '4px 10px',
-                    fontSize: '12px',
+                    padding: '2px 6px',
+                    fontSize: '10.5px',
                     fontWeight: 700,
                     cursor: 'pointer',
                     fontFamily: 'inherit',
