@@ -260,12 +260,19 @@ app.whenReady().then(async () => {
     /* Smoke test (CI/terminal): FASTOOLS_SMOKE=1 valida o carregamento do
        Fastools e da view nativa do SIGITM, imprime o resultado e encerra. */
     if (process.env.FASTOOLS_SMOKE === '1') {
+      const smokeLog = (message) => {
+        console.log(message);
+        if (process.env.FASTOOLS_SMOKE_LOG) {
+          try { fs.appendFileSync(process.env.FASTOOLS_SMOKE_LOG, message + '\r\n'); } catch { /* opcional */ }
+        }
+      };
+
       win.webContents.once('did-finish-load', () => {
-        console.log('SMOKE fastools ok');
+        smokeLog('SMOKE fastools ok');
         showSigitm({ x: 40, y: 120, width: 900, height: 600 });
         const wc = sigitmView.webContents;
         const done = (message) => {
-          console.log(message);
+          smokeLog(message);
           setTimeout(() => app.quit(), 300);
         };
         wc.once('did-finish-load', () => done(`SMOKE sigitm ok: ${wc.getURL()}`));
@@ -273,7 +280,7 @@ app.whenReady().then(async () => {
         setTimeout(() => done('SMOKE sigitm timeout'), 20000);
       });
       win.webContents.once('did-fail-load', (_event, code, desc) => {
-        console.log(`SMOKE fastools fail ${code} ${desc}`);
+        smokeLog(`SMOKE fastools fail ${code} ${desc}`);
         app.quit();
       });
     }
