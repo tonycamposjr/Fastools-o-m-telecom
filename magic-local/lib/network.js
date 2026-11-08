@@ -88,8 +88,20 @@ async function detectGateway() {
   return '';
 }
 
-async function getOverview() {
-  const interfaces = [];
+function pickPrimary(candidates, gateway) {
+  if (!candidates.length) return null;
+  if (gateway) {
+    const match = candidates.find(({ item }) => (
+      item.private
+      && !item.virtual
+      && networkBase(item.address, item.netmask) === networkBase(gateway, item.netmask)
+    ));
+    if (match) return match.item;
+  }
+  return candidates[0].item;
+}
+
+async function getOverview() {  const interfaces = [];
   const candidates = [];
 
   for (const [name, addresses] of Object.entries(os.networkInterfaces())) {
@@ -117,9 +129,10 @@ async function getOverview() {
   }
 
   candidates.sort((a, b) => b.score - a.score);
-  const primary = candidates.length ? candidates[0].item : null;
 
   let gateway = await detectGateway();
+  const primary = pickPrimary(candidates, gateway);
+
   if (!gateway && primary) {
     const base = networkBase(primary.address, primary.netmask);
     gateway = `${base.split('.').slice(0, 3).join('.')}.1`;
@@ -404,4 +417,5 @@ module.exports = {
   networkBase,
   usableHosts,
   normalizeMac,
+  pickPrimary,
 };

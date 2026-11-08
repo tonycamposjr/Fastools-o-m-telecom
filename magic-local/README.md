@@ -62,7 +62,7 @@ npm start
 ## Testes
 
 ```powershell
-npm test          # 12 testes: perfis, parsing, laudo e SSH com servidor simulado
+npm test          # 13 testes: perfis, parsing, laudo, rede e SSH com servidor simulado
 npm run smoke     # abre o Electron, percorre as 5 abas e salva screenshots
 ```
 

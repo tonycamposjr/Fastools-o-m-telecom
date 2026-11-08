@@ -157,7 +157,7 @@ direta no HGU, inventário, terminal e laudo de campo.
 - Laudo em JSON/TXT e impressão; varredura local por ping + tabela ARP.
 - Executável portátil: `npm run dist` em `magic-local/` gera
   `magic-local/release/Magic Local 1.0.0.exe`.
-- Testes: `npm test` (12 testes, incluindo servidor SSH simulado) e `npm run smoke`.
+- Testes: `npm test` (13 testes, incluindo servidor SSH simulado) e `npm run smoke`.
 
 Documentação completa: [`magic-local/README.md`](magic-local/README.md).
 

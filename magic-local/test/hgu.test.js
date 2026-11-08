@@ -23,7 +23,7 @@ const {
   textReport,
   normalizeMac,
 } = require('../lib/parser');
-const { networkBase, usableHosts } = require('../lib/network');
+const { networkBase, usableHosts, pickPrimary } = require('../lib/network');
 
 const tests = [];
 function test(name, fn) {
@@ -278,6 +278,16 @@ test('helpers de rede calculam base e hosts /24', () => {
   assert.equal(hosts.length, 254);
   assert.equal(hosts[0], '192.168.15.1');
   assert.equal(hosts[253], '192.168.15.254');
+});
+
+test('pickPrimary prioriza a interface na sub-rede do gateway', () => {
+  const candidates = [
+    { score: 30, item: { name: 'Ethernet 2', address: '192.168.56.1', netmask: '255.255.255.0', private: true, virtual: false } },
+    { score: 30, item: { name: 'Wi-Fi', address: '192.168.1.178', netmask: '255.255.255.0', private: true, virtual: false } },
+  ];
+  assert.equal(pickPrimary(candidates, '192.168.1.254').name, 'Wi-Fi');
+  assert.equal(pickPrimary(candidates, '10.0.0.1').name, 'Ethernet 2');
+  assert.equal(pickPrimary([], '192.168.1.254'), null);
 });
 
 test('HguSession conecta, executa comando e limpa saida', async () => {
