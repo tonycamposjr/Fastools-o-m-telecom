@@ -1,0 +1,38 @@
+{
+  "name": "fastools-desktop",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Fastools - Central de Campo (Rede & OTDR) em janela unica com o SIGITM embutido em view nativa",
+  "main": "main.js",
+  "scripts": {
+    "start": "npm --prefix .. run build:desktop && electron .",
+    "start:only": "electron .",
+    "dist": "npm --prefix .. run build:desktop && npx electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0"
+  },
+  "build": {
+    "appId": "com.tonycamposjr.fastools",
+    "productName": "Fastools Central de Campo",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../dist",
+        "to": "dist"
+      }
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}

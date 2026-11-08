@@ -3581,3 +3581,28 @@ html[data-theme="light"] .app-footer p { color: rgba(23, 24, 28, .72) !important
         grid-template-columns: 1fr;
     }
 }
+
+/* SIGITM embutido (Fastools Desktop): area reservada para a view nativa do
+   Electron. No site, mostra apenas o aviso de como abrir. */
+.sigitm-host {
+    min-height: min(72vh, 760px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: var(--card);
+    border: 1px dashed var(--border);
+}
+.sigitm-host-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 24px;
+}
+.sigitm-host-card i { font-size: 26px; color: var(--accent); }
+.sigitm-host-card b { font-size: 18px; color: var(--fg-heading); }
+.sigitm-host-card small { max-width: 440px; opacity: .8; line-height: 1.5; }

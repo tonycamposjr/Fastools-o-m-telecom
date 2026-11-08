@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import AuthScreen from './components/AuthScreen';
 import AdminTab from './components/AdminTab';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -167,7 +167,7 @@ const TOOLS: ToolDef[] = [
   },
 ];
 
-const VALID_TABS = ['dashboard', ...TOOLS.map((t) => t.id), 'admin'];
+const VALID_TABS = ['dashboard', ...TOOLS.map((t) => t.id), 'admin', 'sigitm'];
 
 /**
  * Linha "viva" do painel: atalho para continuar de onde parou
@@ -199,6 +199,58 @@ const readFavorites = (): string[] => {
   const f = readLocalJson<unknown>('favTools', []);
   return Array.isArray(f) ? f.filter((x): x is string => typeof x === 'string' && VALID_TABS.includes(x)) : [];
 };
+
+/* SIGITM no app desktop: reserva a area onde a view nativa e encaixada.
+   O React apenas informa o retangulo; quem desenha o site e o processo
+   principal do Electron (WebContentsView), sem iframe. */
+function SigitmHost() {
+  const hostRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = hostRef.current;
+    const bridge = window.fastoolsDesktop;
+    if (!el || !bridge?.isDesktop) return;
+
+    const lerRetangulo = () => {
+      const r = el.getBoundingClientRect();
+      return {
+        x: Math.round(r.left),
+        y: Math.round(r.top),
+        width: Math.round(r.width),
+        height: Math.round(r.height),
+      };
+    };
+
+    bridge.openSigitm(lerRetangulo());
+
+    const atualizar = () => bridge.updateSigitmBounds(lerRetangulo());
+    const ro = new ResizeObserver(atualizar);
+    ro.observe(el);
+    window.addEventListener('resize', atualizar);
+    window.addEventListener('scroll', atualizar, true);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', atualizar);
+      window.removeEventListener('scroll', atualizar, true);
+      bridge.closeSigitm();
+    };
+  }, []);
+
+  return (
+    <div className="sigitm-host" ref={hostRef}>
+      <div className="sigitm-host-card">
+        <i className="fas fa-briefcase" aria-hidden="true"></i>
+        <b>SIGITM</b>
+        <span>Carregando o sistema na camada nativa do aplicativo…</span>
+        <small>
+          No Fastools Desktop o SIGITM roda embutido nesta área, sem iframe e sem
+          navegador externo. No site, o card abre em janela dedicada.
+        </small>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -307,7 +359,7 @@ export default function App() {
       window.history.pushState({ tab: tabId }, '', '#' + tabId);
     }
     // Contadores de uso (ferramentas reais) → ordenação "mais usadas" do painel
-    if (VALID_TABS.includes(tabId) && tabId !== 'dashboard' && tabId !== 'admin') {
+    if (VALID_TABS.includes(tabId) && tabId !== 'dashboard' && tabId !== 'admin' && tabId !== 'sigitm') {
       setUsage((prev) => {
         const next = { ...prev, [tabId]: { count: (prev[tabId]?.count || 0) + 1, last: Date.now() } };
         localStorage.setItem('toolUsage', JSON.stringify(next));
@@ -356,10 +408,14 @@ export default function App() {
     return TOOLS.indexOf(a) - TOOLS.indexOf(b);
   });
 
-  // SIGITM: abre o sistema da Vivo em janela dedicada
-  // (o servidor do SIGITM envia X-Frame-Options: SAMEORIGIN + Cloudflare,
-  //  então iframe é bloqueado pelo navegador; a janela é a alternativa suportada)
+  // SIGITM: no app desktop roda embutido em view nativa (sem iframe);
+  // no site, abre em janela dedicada (o servidor bloqueia iframe).
   const openSigitm = () => {
+    if (window.fastoolsDesktop?.isDesktop) {
+      handleTabChange('sigitm');
+      return;
+    }
+
     const w = 1280;
     const h = 860;
     const left = Math.max(0, Math.round((window.screen.width - w) / 2));
@@ -390,6 +446,7 @@ export default function App() {
   const getTabName = (tabId: string) => {
     if (tabId === 'otdr') return 'Leitor OTDR (.SOR)';
     if (tabId === 'admin') return 'Painel do Administrador';
+    if (tabId === 'sigitm') return 'SIGITM';
     const tool = TOOLS.find((t) => t.id === tabId);
     return tool ? tool.name : '';
   };
@@ -704,6 +761,7 @@ export default function App() {
                   {activeTab === 'kml' && <KmlMapTab showToast={showToast} />}
                   {activeTab === 'topologia' && <TopologiaTab showToast={showToast} />}
                   {activeTab === 'admin' && user?.role === 'admin' && <AdminTab showToast={showToast} />}
+                  {activeTab === 'sigitm' && <SigitmHost />}
                 </ErrorBoundary>
               </Suspense>
             </div>

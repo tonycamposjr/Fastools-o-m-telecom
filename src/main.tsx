@@ -7,7 +7,7 @@ import './skeuo.css';
 /* PWA: quando um novo deploy assume o controle, recarrega a página sozinho
    (fim do "precisa limpar o cache"); procura atualizações a cada minuto e ao
    voltar para a aba. Em dev fica inativo (sem service worker atrapalhando o HMR). */
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+if (import.meta.env.PROD && 'serviceWorker' in navigator && location.protocol.startsWith('http')) {
   const recarregarNaTroca = () => window.location.reload();
   navigator.serviceWorker.addEventListener('controllerchange', recarregarNaTroca);
 
