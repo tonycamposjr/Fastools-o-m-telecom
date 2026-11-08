@@ -3566,3 +3566,18 @@ html[data-theme="light"] .app-footer p { color: rgba(23, 24, 28, .72) !important
 @media (max-width: 640px) {
     .dashboard-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
+
+/* Atalhos externos (grupo "sistemas"): fora da grade de ferramentas para
+   preservar as fileiras pareadas de 12 tiles. */
+.metro-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 280px));
+    gap: 4px;
+    margin-top: 4px;
+    justify-content: start;
+}
+@media (max-width: 640px) {
+    .metro-shortcuts {
+        grid-template-columns: 1fr;
+    }
+}

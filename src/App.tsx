@@ -356,6 +356,27 @@ export default function App() {
     return TOOLS.indexOf(a) - TOOLS.indexOf(b);
   });
 
+  // SIGITM: abre o sistema da Vivo em janela dedicada
+  // (o servidor do SIGITM envia X-Frame-Options: SAMEORIGIN + Cloudflare,
+  //  então iframe é bloqueado pelo navegador; a janela é a alternativa suportada)
+  const openSigitm = () => {
+    const w = 1280;
+    const h = 860;
+    const left = Math.max(0, Math.round((window.screen.width - w) / 2));
+    const top = Math.max(0, Math.round((window.screen.height - h) / 2));
+    const win = window.open(
+      'https://sigitm.vivo.com.br/app/app.jsp',
+      'sigitm',
+      `popup=yes,width=${w},height=${h},left=${left},top=${top}`
+    );
+    if (!win) {
+      showToast('O navegador bloqueou a janela do SIGITM. Permita pop-ups para este site.', 'error');
+    } else {
+      win.focus();
+      showToast('SIGITM aberto em janela dedicada.', 'success');
+    }
+  };
+
   // Native back handler for back-to-dashboard button
   const handleBackNavigation = () => {
     if (window.history.state && window.history.length > 1) {
@@ -632,6 +653,36 @@ export default function App() {
                   </div>
                 </div>
               )}
+            </div>
+
+            <div className="metro-group-label">sistemas</div>
+
+            <div className="metro-shortcuts">
+              <div
+                className="dashboard-card metro-shortcut-tile"
+                style={{ '--tool-color': '#6B2FA0', '--tool-color-rgb': '107, 47, 160' } as React.CSSProperties}
+                onClick={openSigitm}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSigitm(); } }}
+                role="listitem"
+                aria-label="SIGITM — Sistema de Gestão de TI Vivo. Abre em janela dedicada."
+                tabIndex={0}
+              >
+                <div className="dashboard-card-glow"></div>
+                <div className="dashboard-card-top">
+                  <div className="dashboard-card-header">
+                    <div className="dashboard-card-icon">
+                      <i className="fas fa-briefcase"></i>
+                    </div>
+                  </div>
+                  <div className="dashboard-card-title">SIGITM</div>
+                  <div className="dashboard-card-desc">
+                    Sistema de gestão de TI da Vivo — abre em janela dedicada em um clique.
+                  </div>
+                </div>
+                <div className="dashboard-card-footer">
+                  Abrir <i className="fas fa-arrow-up-right-from-square"></i>
+                </div>
+              </div>
             </div>
           </div>
         ) : (
