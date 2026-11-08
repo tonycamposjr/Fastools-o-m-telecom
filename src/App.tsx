@@ -203,7 +203,6 @@ const readFavorites = (): string[] => {
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [isSkeuo, setIsSkeuo] = useState<boolean>(true);
   const isOnline = useOnlineStatus();
 
   // Painel vivo: uso por ferramenta + favoritos + paleta de comandos + dialog de confirmação
@@ -261,9 +260,8 @@ export default function App() {
     setTheme(initialTheme);
     document.documentElement.setAttribute('data-theme', initialTheme);
 
-    const savedSkeuo = localStorage.getItem('skSkin') !== 'false';
-    setIsSkeuo(savedSkeuo);
-    document.documentElement.classList.toggle('sk-skin', savedSkeuo);
+    // Glass (acabamento em vidro) agora é permanente — não há mais alternância
+    document.documentElement.classList.add('sk-skin');
 
     const hashTab = window.location.hash.replace('#', '');
     const initialTab = VALID_TABS.includes(hashTab)
@@ -298,19 +296,6 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
     showToast(`Tema alterado para ${newTheme === 'dark' ? 'escuro' : 'claro'}`, 'success');
-  };
-
-  // Toggle skeuomorphic finish (Acabamento Realista)
-  const handleToggleSkeuo = () => {
-    const nextVal = !isSkeuo;
-    setIsSkeuo(nextVal);
-    localStorage.setItem('skSkin', String(nextVal));
-    document.documentElement.classList.toggle('sk-skin', nextVal);
-    if (nextVal) {
-      showToast('Acabamento realista (skeuomorfismo) ativado!', 'success');
-    } else {
-      showToast('Acabamento realista desativado (modo plano).', 'info');
-    }
   };
 
   // Update active tab, persist and push to native history for device back navigation
@@ -425,7 +410,7 @@ export default function App() {
       clientesEquipamentos: dbRecords ? JSON.parse(dbRecords) : [],
       calculadoraConfig: calcConfig ? JSON.parse(calcConfig) : null,
       theme: theme,
-      acabamentoRealista: isSkeuo,
+      acabamentoRealista: true,
       exportDate: new Date().toISOString(),
       version: '4.0',
     };
@@ -490,13 +475,6 @@ export default function App() {
             </button>
             <button className="theme-toggle" onClick={handleToggleTheme} aria-label="Alternar tema claro/escuro">
               <i className={theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'}></i>
-            </button>
-            <button
-              className={`sk-skin-toggle-btn ${isSkeuo ? 'active' : ''}`}
-              onClick={handleToggleSkeuo}
-              title="Alternar acabamento em vidro (neumorfismo + glassmorphism)"
-            >
-              <i className="fas fa-layer-group"></i> {isSkeuo ? 'Glass ON' : 'Glass'}
             </button>
             <button className="export-btn" onClick={handleExportAll} aria-label="Exportar todos os dados">
               <i className="fas fa-file-export"></i> Exportar
