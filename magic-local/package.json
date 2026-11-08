@@ -1,0 +1,47 @@
+{
+  "name": "magic-local",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Magic Local - diagnóstico de campo para HGU e rede local, sem login e sem backend",
+  "main": "main.js",
+  "author": "Tony Campos",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/hgu.test.js",
+    "smoke": "node test/smoke.js",
+    "dist": "electron-builder --win portable"
+  },
+  "dependencies": {
+    "ssh2": "^1.16.0"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "com.tonycamposjr.magiclocal",
+    "productName": "Magic Local",
+    "artifactName": "Magic Local ${version}.${ext}",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "portable": {
+      "artifactName": "Magic Local ${version}.${ext}"
+    }
+  }
+}

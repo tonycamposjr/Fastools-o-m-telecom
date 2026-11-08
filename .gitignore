@@ -10,5 +10,10 @@ dev-dist/
 backend/data/
 backend/uploads/
 backend/.env
+backend/node_modules
+backend/release
 desktop/node_modules
 desktop/release
+magic-local/node_modules
+magic-local/release
+magic-local/test/artifacts

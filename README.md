@@ -144,6 +144,23 @@ sincronização volta sozinha quando houver rede).
 - **Firebase** (mantido): banco **"rede"** → Registros de Campo, Controle de TA, Rotas HL4.
 - O aviso de status no rodapé (LED verde/cinza) indica Online/Offline.
 
+## Magic Local (app de campo independente)
+
+A pasta `magic-local/` contém um **app Electron separado**, inspirado nas funções
+locais do Magic Tool (`br.com.vivo.magictool`): diagnóstico da rede, conexão SSH
+direta no HGU, inventário, terminal e laudo de campo.
+
+- **Sem login, sem backend, sem telemetria** e sem chamadas aos servidores da Vivo.
+- A senha do HGU fica **apenas em memória**; o app não lê nem reutiliza tokens do APK.
+- Inventário automático somente de leitura, com perfis para Askey/Mitra (Broadcom,
+  ECNT, Wi-Fi 6 e Wi-Fi 7).
+- Laudo em JSON/TXT e impressão; varredura local por ping + tabela ARP.
+- Executável portátil: `npm run dist` em `magic-local/` gera
+  `magic-local/release/Magic Local 1.0.0.exe`.
+- Testes: `npm test` (12 testes, incluindo servidor SSH simulado) e `npm run smoke`.
+
+Documentação completa: [`magic-local/README.md`](magic-local/README.md).
+
 ## Estrutura do projeto
 
 ```
@@ -151,6 +168,8 @@ backend/             # BACKEND de contas/isolamento/admin (Node+Express+SQLite)
   src/               #   db, auth (bcrypt+lockout), csrf, guards, otdr, files, admin
   tests/             #   isolation.test.mjs (20 testes, incl. isolamento entre usuários)
   .env.example       #   modelo de variáveis (copie para .env)
+magic-local/         # app Electron independente de campo (HGU/rede, sem login)
+desktop/             # Fastools Desktop com SIGITM em WebContentsView nativa
 src/
   App.tsx            # Shell: painel, abas, tema, navegação + gate de autenticação
   index.css          # Base de layout herdada do sistema de rede (estrutura, grids, mídia queries)

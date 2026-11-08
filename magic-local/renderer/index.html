@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; connect-src 'none';" />
+  <title>Magic Local - Diagnóstico de Campo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">ML</div>
+        <div class="brand-text">
+          <h1>MAGIC LOCAL</h1>
+          <p>Diagnóstico de campo &middot; sem login &middot; sem servidor</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="conn-pill" id="connPill" data-state="off">
+          <span class="dot"></span>
+          <span id="connPillText">HGU desconectado</span>
+        </div>
+        <button class="icon-btn" id="themeBtn" type="button" title="Alternar tema claro/escuro" aria-label="Alternar tema">
+          <span id="themeIcon">&#9788;</span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Navegação principal">
+      <button class="tab active" data-view="dashboard" type="button">Painel</button>
+      <button class="tab" data-view="hgu" type="button">HGU</button>
+      <button class="tab" data-view="terminal" type="button">Terminal</button>
+      <button class="tab" data-view="network" type="button">Rede local</button>
+      <button class="tab" data-view="report" type="button">Laudo</button>
+    </nav>
+
+    <main class="content">
+      <!-- ============================== PAINEL ============================== -->
+      <section class="view active" id="view-dashboard">
+        <section class="hero">
+          <div>
+            <span class="eyebrow">FERRAMENTA LOCAL DE CAMPO</span>
+            <h2>O HGU na sua mão.<br />Sem depender de login corporativo.</h2>
+            <p>
+              Diagnóstico a rede, conecta por SSH no HGU, le inventário, executa comandos
+              e gera laudo. Todo o processamento fica nesta máquina.
+            </p>
+          </div>
+          <div class="hero-badge">
+            <span>100%</span>
+            <small>local e offline</small>
+          </div>
+        </section>
+
+        <section class="stat-grid" id="statGrid">
+          <article class="stat-tile tile-blue">
+            <span class="stat-label">INTERFACE</span>
+            <strong id="statIface">detectando...</strong>
+            <small id="statIfaceDetail">-</small>
+          </article>
+          <article class="stat-tile tile-green">
+            <span class="stat-label">GATEWAY</span>
+            <strong id="statGateway">-</strong>
+            <small id="statGatewayDetail">rota padrão</small>
+          </article>
+          <article class="stat-tile tile-purple">
+            <span class="stat-label">INTERNET</span>
+            <strong id="statInternet">não testado</strong>
+            <small id="statInternetDetail">ping 1.1.1.1</small>
+          </article>
+          <article class="stat-tile tile-orange">
+            <span class="stat-label">HGU</span>
+            <strong id="statHgu">desconectado</strong>
+            <small id="statHguDetail">SSH porta 22</small>
+          </article>
+        </section>
+
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <span class="eyebrow">REDE LOCAL</span>
+                <h3>Interface ativa</h3>
+              </div>
+              <button class="btn ghost small" id="refreshNetBtn" type="button">Atualizar</button>
+            </div>
+            <dl class="kv" id="netKv">
+              <dt>Host</dt><dd id="netHost">-</dd>
+              <dt>IPv4</dt><dd id="netIp">-</dd>
+              <dt>Máscara</dt><dd id="netMask">-</dd>
+              <dt>MAC</dt><dd id="netMac">-</dd>
+              <dt>Gateway</dt><dd id="netGateway">-</dd>
+              <dt>DNS</dt><dd id="netDns">-</dd>
+              <dt>Sistema</dt><dd id="netOs">-</dd>
+            </dl>
+            <p class="hint">A interface com rota padrão é priorizada. VPNs e adaptadores virtuais ficam por último.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <span class="eyebrow">TESTE RÁPIDO</span>
+                <h3>Conectividade</h3>
+              </div>
+            </div>
+            <div class="inline-form">
+              <label class="field grow">
+                <span>Host</span>
+                <input id="quickHost" type="text" placeholder="192.168.15.1" autocomplete="off" />
+              </label>
+              <button class="btn primary" id="quickPingBtn" type="button">Pingar</button>
+              <button class="btn ghost" id="quickPortsBtn" type="button">Portas</button>
+            </div>
+            <div class="result-box" id="quickResult">
+              <span class="muted">Informe o gateway ou um IP para testar.</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <span class="eyebrow">CONEXÃO DIRETA</span>
+                <h3>HGU via SSH</h3>
+              </div>
+              <span class="chip" id="hguChip">offline</span>
+            </div>
+            <p class="hint">
+              Usuário padrão <code>support</code>. A senha não é salva em disco.
+              Após 3 erros a HGU pode bloquear novas tentativas por 5 minutos.
+            </p>
+            <button class="btn primary wide" id="goConnectBtn" type="button">Abrir conexão</button>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <span class="eyebrow">ÚLTIMA COLETA</span>
+                <h3>Resumo do HGU</h3>
+              </div>
+            </div>
+            <div id="dashboardSummary" class="summary-lines">
+              <span class="muted">Nenhum inventário coletado nesta sessão.</span>
+            </div>
+            <button class="btn ghost wide" id="goInventoryBtn" type="button">Coletar agora</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================================ HGU ============================== -->
+      <section class="view" id="view-hgu">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">SESSÃO SSH</span>
+            <h2>Conexão com o HGU</h2>
+            <p class="muted">Conexão direta na porta 22, sem intermediarios.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn ghost" id="disconnectBtn" type="button" disabled>Desconectar</button>
+            <button class="btn primary" id="inventoryBtn" type="button" disabled>Coletar inventário</button>
+          </div>
+        </div>
+
+        <article class="card">
+          <form id="connectForm" class="connect-grid" autocomplete="off">
+            <label class="field">
+              <span>IP do HGU</span>
+              <input id="hguHost" name="host" type="text" placeholder="192.168.15.1" required />
+            </label>
+            <label class="field">
+              <span>Porta</span>
+              <input id="hguPort" name="port" type="number" min="1" max="65535" value="22" required />
+            </label>
+            <label class="field">
+              <span>Usuário</span>
+              <input id="hguUser" name="username" type="text" value="support" required />
+            </label>
+            <label class="field">
+              <span>Senha SSH</span>
+              <input id="hguPassword" name="password" type="password" placeholder="senha do HGU" required />
+            </label>
+            <div class="connect-action">
+              <button class="btn primary wide" id="connectBtn" type="submit">Conectar</button>
+              <small class="hint">A senha fica apenas em memória.</small>
+            </div>
+          </form>
+          <div class="status-line" id="sshStatusLine">
+            <span class="muted">Preencha os dados e conecte. O IP e o gateway são preenchidos automaticamente.</span>
+          </div>
+        </article>
+
+        <div class="progress-wrap" id="inventoryProgressWrap" hidden>
+          <div class="progress-head">
+            <span id="inventoryProgressLabel">Coletando inventário...</span>
+            <strong id="inventoryProgressCount"></strong>
+          </div>
+          <div class="progress-track"><div class="progress-bar" id="inventoryProgressBar"></div></div>
+          <small class="muted" id="inventoryProgressCommand"></small>
+        </div>
+
+        <section id="hguSummarySection" hidden>
+          <div class="section-head compact">
+            <div>
+              <span class="eyebrow">INVENTÁRIO</span>
+              <h3 id="inventoryTitle">Resumo do HGU</h3>
+            </div>
+            <span class="chip" id="inventoryProfile">-</span>
+          </div>
+
+          <div class="stat-grid six" id="hguStats"></div>
+
+          <div class="grid-2">
+            <article class="card">
+              <div class="card-head">
+                <div><span class="eyebrow">WAN / GPON</span><h3>Conexão externa</h3></div>
+              </div>
+              <dl class="kv" id="wanKv">
+                <dt>Status</dt><dd id="wanStatus">-</dd>
+                <dt>IP WAN</dt><dd id="wanIp">-</dd>
+                <dt>Gateway</dt><dd id="wanGateway">-</dd>
+                <dt>DNS</dt><dd id="wanDns">-</dd>
+                <dt>Rx óptico</dt><dd id="optRx">-</dd>
+                <dt>Tx óptico</dt><dd id="optTx">-</dd>
+                <dt>Temperatura</dt><dd id="optTemp">-</dd>
+              </dl>
+            </article>
+
+            <article class="card">
+              <div class="card-head">
+                <div><span class="eyebrow">DISPOSITIVOS</span><h3>Clientes vistos pelo HGU</h3></div>
+                <span class="chip" id="deviceCount">0</span>
+              </div>
+              <div class="table-wrap compact-table">
+                <table>
+                  <thead><tr><th>IP</th><th>MAC</th><th>Tipo</th><th>Descrição</th></tr></thead>
+                  <tbody id="deviceTableBody">
+                    <tr><td colspan="4" class="muted">Nenhum dispositivo identificado.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+
+          <article class="card">
+            <div class="card-head">
+              <div><span class="eyebrow">EVIDENCIAS</span><h3>Saídas dos comandos</h3></div>
+              <button class="btn ghost small" id="copyInventoryBtn" type="button">Copiar tudo</button>
+            </div>
+            <div class="command-list" id="commandList"></div>
+          </article>
+        </section>
+      </section>
+
+      <!-- ============================= TERMINAL ============================ -->
+      <section class="view" id="view-terminal">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">SHELL INTERATIVO</span>
+            <h2>Terminal do HGU</h2>
+            <p class="muted">Comandos vao direto para a sessão SSH. Use com responsabilidade.</p>
+          </div>
+          <span class="chip" id="terminalChip">desconectado</span>
+        </div>
+
+        <div class="quick-commands" id="quickCommands">
+          <button class="btn ghost small" data-cmd="show device_model" type="button">show device_model</button>
+          <button class="btn ghost small" data-cmd="version" type="button">version</button>
+          <button class="btn ghost small" data-cmd="show ont optics" type="button">show ont optics</button>
+          <button class="btn ghost small" data-cmd="show primary_diagnosis" type="button">show primary_diagnosis</button>
+          <button class="btn ghost small" data-cmd="show map_info dhcp_table" type="button">show map_info dhcp_table</button>
+          <button class="btn ghost small" data-cmd="show wifi_plus all" type="button">show wifi_plus all</button>
+          <button class="btn ghost small" data-cmd="help" type="button">help</button>
+        </div>
+
+        <div class="terminal" id="terminal">
+          <div class="terminal-output" id="terminalOutput" tabindex="0">
+            <div class="term-line muted">Terminal pronto. Conecte ao HGU para comecar.</div>
+          </div>
+          <form class="terminal-input-row" id="terminalForm">
+            <span class="terminal-prompt" id="terminalPrompt">local&gt;</span>
+            <input id="terminalInput" type="text" placeholder="Conecte ao HGU para enviar comandos" autocomplete="off" spellcheck="false" disabled />
+            <button class="btn primary small" id="terminalSend" type="submit" disabled>Enviar</button>
+          </form>
+        </div>
+        <div class="terminal-footer">
+          <span class="muted">Setas ↑/↓ recuperam o histórico. Ctrl+L limpa a tela.</span>
+          <button class="btn ghost small" id="clearTerminalBtn" type="button">Limpar</button>
+        </div>
+      </section>
+
+      <!-- ============================ REDE LOCAL ========================== -->
+      <section class="view" id="view-network">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">DIAGNÓSTICO</span>
+            <h2>Rede local</h2>
+            <p class="muted">Ping, portas e descoberta de dispositivos na mesma sub-rede.</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-head"><div><span class="eyebrow">PING</span><h3>Alcance do host</h3></div></div>
+            <div class="inline-form">
+              <label class="field grow"><span>Host / IP</span><input id="pingHostInput" type="text" placeholder="192.168.15.1" /></label>
+              <label class="field narrow"><span>Pacotes</span><input id="pingCount" type="number" min="1" max="10" value="4" /></label>
+              <button class="btn primary" id="pingBtn" type="button">Executar</button>
+            </div>
+            <div class="result-grid" id="pingResult">
+              <span class="muted">Sem resultado ainda.</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head"><div><span class="eyebrow">PORTAS TCP</span><h3>Serviços abertos</h3></div></div>
+            <div class="inline-form">
+              <label class="field grow"><span>Host / IP</span><input id="portsHostInput" type="text" placeholder="192.168.15.1" /></label>
+              <button class="btn primary" id="portsBtn" type="button">Verificar</button>
+            </div>
+            <p class="hint">Portas testadas: 22 (SSH), 53 (DNS), 80 (HTTP), 443 (HTTPS), 7547 (TR-069).</p>
+            <div class="port-grid" id="portsResult"><span class="muted">Sem resultado ainda.</span></div>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">DESCOBERTA</span>
+              <h3>Dispositivos na rede</h3>
+            </div>
+            <div class="inline-form tight">
+              <label class="field">
+                <span>Faixa</span>
+                <input id="scanRange" type="text" placeholder="detectar automaticamente" />
+              </label>
+              <button class="btn primary" id="scanBtn" type="button">Varrer rede</button>
+            </div>
+          </div>
+          <p class="hint">Faz ping em cada endereço da /24 e cruza com a tabela ARP do Windows. Pode levar de 20 a 60 segundos.</p>
+          <div class="progress-wrap slim" id="scanProgressWrap" hidden>
+            <div class="progress-head"><span id="scanProgressLabel">Varrendo...</span><strong id="scanProgressCount"></strong></div>
+            <div class="progress-track"><div class="progress-bar" id="scanProgressBar"></div></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>IP</th><th>MAC</th><th>Hostname</th><th>Marcador</th></tr></thead>
+              <tbody id="scanTableBody"><tr><td colspan="4" class="muted">Nenhuma varredura executada.</td></tr></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============================== LAUDO ============================== -->
+      <section class="view" id="view-report">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">DOCUMENTAÇÃO</span>
+            <h2>Laudo de campo</h2>
+            <p class="muted">Consolida rede, HGU, dispositivos e saídas dos comandos.</p>
+          </div>
+          <div class="section-actions">
+            <button class="btn ghost" id="printBtn" type="button">Imprimir</button>
+            <button class="btn ghost" id="saveJsonBtn" type="button">Salvar JSON</button>
+            <button class="btn primary" id="saveTxtBtn" type="button">Salvar TXT</button>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-head"><div><span class="eyebrow">IDENTIFICAÇÃO</span><h3>Dados do atendimento</h3></div></div>
+            <div class="form-stack">
+              <label class="field"><span>Operador / técnico</span><input id="operatorName" type="text" placeholder="Seu nome" /></label>
+              <label class="field"><span>OS, designador ou referência</span><input id="workOrder" type="text" placeholder="Opcional" /></label>
+              <label class="field"><span>Observações</span><textarea id="reportNotes" rows="6" placeholder="Anotações do atendimento, condições da instalação, anomalias..."></textarea></label>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head"><div><span class="eyebrow">CONTEÚDO</span><h3>O que entra no laudo</h3></div></div>
+            <ul class="check-list" id="reportChecklist">
+              <li><span class="check" id="checkNetwork">!</span> Dados da interface e gateway</li>
+              <li><span class="check" id="checkHgu">!</span> Inventário e diagnósticos do HGU</li>
+              <li><span class="check" id="checkScan">!</span> Varredura da rede local</li>
+              <li><span class="check" id="checkCommands">!</span> Saídas completas dos comandos</li>
+            </ul>
+            <div class="report-preview" id="reportPreview">
+              <span class="muted">O resumo aparece aqui depois da primeira coleta.</span>
+            </div>
+            <div class="report-actions">
+              <button class="btn ghost wide" id="refreshReportBtn" type="button">Atualizar resumo</button>
+            </div>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="card-head"><div><span class="eyebrow">RESUMO EXECUTIVO</span><h3>Última coleta</h3></div></div>
+          <div id="reportSummary" class="summary-lines"><span class="muted">Nenhuma coleta realizada.</span></div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Magic Local 1.0 &middot; reimplementação local inspirada no Magic Tool</span>
+      <span id="appInfo">Electron</span>
+    </footer>
+  </div>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <div id="printArea" class="print-area"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
