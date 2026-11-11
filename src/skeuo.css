@@ -834,15 +834,18 @@ html.sk-skin[data-theme="dark"] .restore-banner {
 
 /* NSAP */
 html.sk-skin .nsap-row {
-  background: var(--sk-well-grad);
-  border: 1px solid var(--sk-edge-soft);
-  border-radius: 12px;
-  box-shadow: var(--nm-inset);
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 html.sk-skin .nsap-key {
   color: var(--muted);
   font-weight: 700;
+  background: var(--sk-well-grad);
+  border: 1px solid var(--sk-edge-soft);
+  box-shadow: var(--nm-inset);
 }
 
 html.sk-skin .nsap-value {

@@ -858,28 +858,39 @@ td[colspan] {
 
 .nsap-row {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 15px;
-    align-items: center;
-    margin-bottom: 15px;
+    grid-template-columns: minmax(0, 136px) minmax(0, 1fr);
+    gap: 10px;
+    align-items: stretch;
+    margin-bottom: 10px;
 }
 
 .nsap-key {
-    color: var(--accent);
-    font-size: 15px;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--muted);
+    background: rgba(var(--accent-rgb), 0.07);
+    border: 1px solid rgba(var(--accent-rgb), 0.18);
+    border-radius: 10px;
+    overflow-wrap: break-word;
 }
 
 .nsap-value {
     font-family: 'Courier New', monospace;
-    font-size: 16px;
+    font-size: 14px;
     background: var(--card);
     border: 2px solid var(--border);
-    padding: 12px 16px;
+    padding: 9px 46px 9px 14px;
     border-radius: 10px;
     color: var(--fg);
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    min-height: 40px;
 }
 
 .copy-btn {
