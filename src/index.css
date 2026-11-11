@@ -1032,9 +1032,10 @@ td[colspan] {
     font-size: 13px;
 }
 
-.nsap-eq-search {
+/* Especificidade maior que a regra global `input[type="text"]` (0-1-1) */
+.nsap-eq-searchbox .nsap-eq-search {
     width: 100%;
-    padding: 10px 38px 10px 38px;
+    padding: 10px 38px;
     border-radius: 10px;
     border: 2px solid var(--border);
     background: var(--card);
@@ -1044,13 +1045,13 @@ td[colspan] {
     transition: all 0.3s ease;
 }
 
-.nsap-eq-search:focus {
+.nsap-eq-searchbox .nsap-eq-search:focus {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
 }
 
-.nsap-eq-search::placeholder {
+.nsap-eq-searchbox .nsap-eq-search::placeholder {
     font-family: system-ui, -apple-system, sans-serif;
     color: var(--muted);
 }
