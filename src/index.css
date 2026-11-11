@@ -953,6 +953,170 @@ td[colspan] {
     border-radius: 4px;
 }
 
+/* ===== NSAP: base de equipamentos (upload CSV + busca por hostname) ===== */
+.nsap-eq-panel {
+    border-top: 2px solid var(--border);
+    margin: 0 25px;
+    padding-top: 20px;
+}
+
+.nsap-eq-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.nsap-eq-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.nsap-eq-file {
+    font-size: 12px;
+    color: var(--muted);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nsap-eq-searchbox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.nsap-eq-searchbox > i {
+    position: absolute;
+    left: 16px;
+    color: var(--muted);
+    pointer-events: none;
+}
+
+.nsap-eq-search {
+    width: 100%;
+    padding: 12px 42px 12px 42px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--fg);
+    font-size: 15px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.nsap-eq-search:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+}
+
+.nsap-eq-clear {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 15px;
+    padding: 6px;
+}
+
+.nsap-eq-clear:hover {
+    color: var(--fg);
+}
+
+.nsap-eq-selected {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 2px solid rgba(var(--accent-rgb), 0.25);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+}
+
+.nsap-eq-selected > i {
+    color: var(--accent);
+}
+
+.nsap-eq-selected .nsap-eq-id {
+    margin-left: auto;
+}
+
+.nsap-eq-list {
+    margin-top: 12px;
+    max-height: 280px;
+    overflow-y: auto;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+}
+
+.nsap-eq-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.nsap-eq-item:last-child {
+    border-bottom: none;
+}
+
+.nsap-eq-item:hover {
+    background: rgba(var(--accent-rgb), 0.06);
+}
+
+.nsap-eq-item.selected {
+    background: rgba(var(--accent-rgb), 0.12);
+}
+
+.nsap-eq-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.nsap-eq-host {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--fg);
+}
+
+.nsap-eq-meta {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.nsap-eq-id {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.nsap-eq-empty {
+    padding: 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
 /* ========== CONVERSOR DE IMAGEM ========== */
 .image-preview {
     max-width: 300px;

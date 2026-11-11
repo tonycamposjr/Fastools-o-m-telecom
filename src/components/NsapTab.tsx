@@ -1,7 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface NsapTabProps {
   showToast: (msg: string, type: 'success' | 'error' | 'info') => void;
+}
+
+interface EquipamentoNsap {
+  hostname: string;
+  regiaoSigla: string;
+  siteSigla: string;
+  tipo: string;
+  sequencia: string;
+  modelo: string;
+  versao: string;
+  idHex: string;
+}
+
+const NSAP_EQ_DB_KEY = 'nsap_equipamentos_v1';
+const NSAP_EQ_FILE_KEY = 'nsap_equipamentos_file_v1';
+const NSAP_EQ_MAX_RENDER = 100;
+
+/**
+ * Faz o parse do CSV de equipamentos (colunas: hostname, regiao_sigla,
+ * site_sigla, tipo, sequencia, modelo, versao, id_hex).
+ * Detecta separador (vírgula ou ponto-e-vírgula) e aceita campos entre aspas.
+ */
+function parseEquipamentosCsv(text: string): EquipamentoNsap[] {
+  const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).filter((l) => l.trim());
+  if (lines.length < 2) return [];
+
+  const detectDelim = (line: string): string => {
+    const semis = (line.match(/;/g) || []).length;
+    const commas = (line.match(/,/g) || []).length;
+    return semis > commas ? ';' : ',';
+  };
+
+  const splitLine = (line: string, delim: string): string[] =>
+    line.split(delim).map((c) => c.trim().replace(/^"|"$/g, ''));
+
+  const delim = detectDelim(lines[0]);
+  const headers = splitLine(lines[0], delim).map((h) => h.toLowerCase().trim());
+  const idx = (name: string) => headers.indexOf(name);
+
+  const iHost = idx('hostname');
+  const iRegiao = idx('regiao_sigla');
+  const iSite = idx('site_sigla');
+  const iTipo = idx('tipo');
+  const iSeq = idx('sequencia');
+  const iModelo = idx('modelo');
+  const iVersao = idx('versao');
+  const iId = idx('id_hex');
+
+  if (iHost === -1 || iId === -1) return [];
+
+  const out: EquipamentoNsap[] = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = splitLine(lines[i], delim);
+    const hostname = (cols[iHost] || '').toUpperCase().trim();
+    const idHex = (cols[iId] || '').toUpperCase().replace(/[^0-9A-F]/g, '');
+    if (!hostname || !idHex) continue;
+    out.push({
+      hostname,
+      regiaoSigla: iRegiao >= 0 ? (cols[iRegiao] || '').toUpperCase() : '',
+      siteSigla: iSite >= 0 ? (cols[iSite] || '').toUpperCase() : '',
+      tipo: iTipo >= 0 ? (cols[iTipo] || '').toUpperCase() : '',
+      sequencia: iSeq >= 0 ? (cols[iSeq] || '') : '',
+      modelo: iModelo >= 0 ? (cols[iModelo] || '').toLowerCase() : '',
+      versao: iVersao >= 0 ? (cols[iVersao] || '') : '',
+      idHex,
+    });
+  }
+  return out;
 }
 
 export default function NsapTab({ showToast }: NsapTabProps) {
@@ -18,6 +86,94 @@ export default function NsapTab({ showToast }: NsapTabProps) {
   const [area, setArea] = useState('–');
   const [sys, setSys] = useState('–');
   const [sel, setSel] = useState('–');
+
+  // ===== Base de equipamentos (upload CSV + busca por hostname) =====
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [equipamentos, setEquipamentos] = useState<EquipamentoNsap[]>(() => {
+    try {
+      const raw = localStorage.getItem(NSAP_EQ_DB_KEY);
+      if (raw) return JSON.parse(raw) as EquipamentoNsap[];
+    } catch { /* ignore */ }
+    return [];
+  });
+  const [csvFileName, setCsvFileName] = useState<string>(() => localStorage.getItem(NSAP_EQ_FILE_KEY) || '');
+  const [hostSearch, setHostSearch] = useState('');
+  const [selectedEq, setSelectedEq] = useState<EquipamentoNsap | null>(null);
+  const [csvError, setCsvError] = useState('');
+
+  useEffect(() => {
+    try {
+      if (equipamentos.length) {
+        localStorage.setItem(NSAP_EQ_DB_KEY, JSON.stringify(equipamentos));
+      } else {
+        localStorage.removeItem(NSAP_EQ_DB_KEY);
+      }
+      if (csvFileName) {
+        localStorage.setItem(NSAP_EQ_FILE_KEY, csvFileName);
+      } else {
+        localStorage.removeItem(NSAP_EQ_FILE_KEY);
+      }
+    } catch { /* storage cheio ou indisponível */ }
+  }, [equipamentos, csvFileName]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    if (!/\.csv$/i.test(file.name)) {
+      setCsvError('Selecione um arquivo .csv.');
+      showToast('Selecione um arquivo .csv.', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const list = parseEquipamentosCsv(String(reader.result || ''));
+        if (!list.length) {
+          setCsvError('CSV sem dados válidos. Verifique as colunas "hostname" e "id_hex".');
+          showToast('CSV inválido ou vazio.', 'error');
+          return;
+        }
+        setEquipamentos(list);
+        setCsvFileName(file.name);
+        setSelectedEq(null);
+        setHostSearch('');
+        setCsvError('');
+        showToast(`${list.length} equipamentos importados de ${file.name}!`, 'success');
+      } catch {
+        setCsvError('Falha ao processar o arquivo.');
+        showToast('Falha ao processar o arquivo.', 'error');
+      }
+    };
+    reader.onerror = () => {
+      setCsvError('Falha ao ler o arquivo.');
+      showToast('Falha ao ler o arquivo.', 'error');
+    };
+    reader.readAsText(file, 'utf-8');
+  };
+
+  const handleClearCsv = () => {
+    setEquipamentos([]);
+    setCsvFileName('');
+    setSelectedEq(null);
+    setHostSearch('');
+    setCsvError('');
+    showToast('Base de equipamentos removida.', 'info');
+  };
+
+  const handleSelectEq = (eq: EquipamentoNsap) => {
+    setSelectedEq(eq);
+    setNsapInput(eq.idHex); // o useEffect existente dispara o parse automaticamente
+    showToast(`Equipamento ${eq.hostname} carregado.`, 'success');
+  };
+
+  const query = hostSearch.trim().toUpperCase();
+  const resultados = query
+    ? equipamentos.filter((eq) => eq.hostname.includes(query))
+    : equipamentos;
+  const resultadosVisiveis = resultados.slice(0, NSAP_EQ_MAX_RENDER);
 
   const normalize = (s: string) => {
     return (s || '').toUpperCase().replace(/[^0-9A-F]/g, '');
@@ -239,6 +395,115 @@ NSAP Selector: ${sel}`;
             </div>
           </section>
         </div>
+
+        {/* ===== Base de equipamentos: upload CSV + busca por hostname ===== */}
+        <section className="nsap-panel nsap-eq-panel">
+          <div className="nsap-eq-head">
+            <label className="nsap-label" style={{ marginBottom: 0 }}>
+              <i className="fas fa-network-wired"></i> Equipamentos
+            </label>
+            <div className="nsap-eq-toolbar">
+              <button className="nsap-btn primary" onClick={() => fileInputRef.current?.click()}>
+                <i className="fas fa-file-upload"></i> Upload CSV
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,text/csv"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+              {equipamentos.length > 0 && (
+                <>
+                  <span className="nsap-pill">
+                    <i className="fas fa-database"></i> {equipamentos.length} equipamentos
+                  </span>
+                  <span className="nsap-eq-file" title={csvFileName}>
+                    <i className="fas fa-file-csv"></i> {csvFileName}
+                  </span>
+                  <button className="nsap-btn" onClick={handleClearCsv} title="Remover base carregada">
+                    <i className="fas fa-trash-alt"></i> Remover base
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+
+          {csvError && (
+            <div className="nsap-error" style={{ display: 'flex' }}>
+              <i className="fas fa-exclamation-circle"></i> {csvError}
+            </div>
+          )}
+
+          {equipamentos.length > 0 && (
+            <>
+              <div className="nsap-eq-searchbox">
+                <i className="fas fa-search"></i>
+                <input
+                  className="nsap-eq-search"
+                  type="text"
+                  value={hostSearch}
+                  onChange={(e) => setHostSearch(e.target.value)}
+                  placeholder="Buscar equipamento por hostname (ex.: CGT_AA_AD16_013)"
+                  autoComplete="off"
+                />
+                {hostSearch && (
+                  <button className="nsap-eq-clear" onClick={() => setHostSearch('')} title="Limpar busca">
+                    <i className="fas fa-times"></i>
+                  </button>
+                )}
+              </div>
+
+              {selectedEq && (
+                <div className="nsap-eq-selected">
+                  <i className="fas fa-check-circle"></i>
+                  <span className="nsap-eq-host">{selectedEq.hostname}</span>
+                  <span className="nsap-eq-meta">
+                    {selectedEq.regiaoSigla} / {selectedEq.siteSigla} &bull; {selectedEq.tipo} &bull; {selectedEq.modelo} v{selectedEq.versao}
+                  </span>
+                  <span className="nsap-eq-id">{selectedEq.idHex}</span>
+                </div>
+              )}
+
+              {resultados.length === 0 ? (
+                <div className="nsap-eq-empty">
+                  <i className="fas fa-search-minus"></i> Nenhum equipamento encontrado para "{hostSearch}".
+                </div>
+              ) : (
+                <div className="nsap-eq-list">
+                  {resultadosVisiveis.map((eq) => (
+                    <div
+                      key={eq.hostname}
+                      className={`nsap-eq-item${selectedEq?.hostname === eq.hostname ? ' selected' : ''}`}
+                      onClick={() => handleSelectEq(eq)}
+                    >
+                      <div className="nsap-eq-info">
+                        <span className="nsap-eq-host">{eq.hostname}</span>
+                        <span className="nsap-eq-meta">
+                          {eq.regiaoSigla} / {eq.siteSigla} &bull; {eq.tipo} &bull; {eq.modelo} v{eq.versao}
+                        </span>
+                      </div>
+                      <span className="nsap-eq-id">{eq.idHex}</span>
+                    </div>
+                  ))}
+                  {resultados.length > NSAP_EQ_MAX_RENDER && (
+                    <div className="nsap-eq-empty">
+                      Mostrando {NSAP_EQ_MAX_RENDER} de {resultados.length} resultados — refine a busca.
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+
+          {equipamentos.length === 0 && !csvError && (
+            <p className="nsap-muted">
+              <i className="fas fa-info-circle"></i> Faça o upload de um arquivo .csv com as colunas{' '}
+              <span className="nsap-mono">hostname, regiao_sigla, site_sigla, tipo, sequencia, modelo, versao, id_hex</span>{' '}
+              para buscar equipamentos por hostname e preencher o NSAP automaticamente.
+            </p>
+          )}
+        </section>
 
         <div className="nsap-footer">
           <i className="fas fa-lightbulb"></i> Dica: a string pode ser colada com espaços ou hífens; o sistema normaliza automaticamente.
