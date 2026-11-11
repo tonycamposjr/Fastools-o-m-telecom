@@ -1161,6 +1161,9 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
 
   /* exportação PNG / SVG / PDF */
   const svgRef = useRef<SVGSVGElement>(null);
+  const fileInputLogoRef = useRef<HTMLInputElement>(null);
+  const fileInputJsonRef = useRef<HTMLInputElement>(null);
+  const fileInputCsvRef = useRef<HTMLInputElement>(null);
 
   /** Serializa o SVG da prévia (clone com namespaces explícitos p/ standalone). */
   const serializeSvg = (): string | null => {
@@ -1265,17 +1268,35 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
             <div className="form-group">
               <label>Logotipo — o padrão Vivo aparece sempre, sem reenvio</label>
               <div className="topo-logo-row">
-                {logoDataUri ? (
-                  <img src={logoDataUri} alt="Logotipo atual" className="topo-logo-preview" />
-                ) : (
-                  <span className="topo-logo-preview topo-logo-empty">—</span>
-                )}
-                <label className="btn btn-sm topo-inline-btn" title="Enviar outro logotipo (imagem salva neste dispositivo)">
+                <div className="topo-logo-preview" title={logoDataUri ? 'Logotipo atual (Vivo ou personalizado)' : 'Nenhum logotipo'}>
+                  {logoDataUri ? (
+                    <img src={logoDataUri} alt="Logotipo atual" />
+                  ) : (
+                    <span className="topo-logo-empty">—</span>
+                  )}
+                </div>
+                <input
+                  ref={fileInputLogoRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={onLogoUpload}
+                />
+                <button
+                  type="button"
+                  className="btn btn-sm"
+                  onClick={() => fileInputLogoRef.current?.click()}
+                  title="Enviar outro logotipo (imagem salva neste dispositivo)"
+                >
                   <i className="fas fa-upload" aria-hidden="true" />
                   <span>Enviar</span>
-                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={onLogoUpload} />
-                </label>
-                <button className="btn btn-sm" onClick={restaurarLogo} title="Restaurar o padrão Vivo (src/assets/logo-vivo.svg)">
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-sm"
+                  onClick={restaurarLogo}
+                  title="Restaurar o padrão Vivo (src/assets/logo-vivo.svg)"
+                >
                   <i className="fas fa-rotate-left" aria-hidden="true" />
                   <span>Restaurar Vivo</span>
                 </button>
@@ -1459,30 +1480,68 @@ const TopologiaTab: React.FC<Props> = ({ showToast }) => {
                 {cloudStatus === 'checking' && 'Conectando ao banco…'}
               </span>
             </div>
-            <div className="topo-actions">
-              <button className="btn btn-sm" onClick={carregarExemplo}><i className="fas fa-flask" /> Carregar exemplo</button>
-              <button className="btn btn-sm" onClick={novoProjeto}><i className="fas fa-file" /> Novo projeto</button>
-            </div>
-            <div className="topo-actions">
-              <button className="btn btn-sm" onClick={exportJson}><i className="fas fa-file-export" /> Exportar projeto</button>
-              <label className="btn btn-sm topo-inline-btn">
+            {/* Inputs de arquivo ocultos (acionados via ref pelos botões reais) */}
+            <input
+              ref={fileInputJsonRef}
+              type="file"
+              accept=".json,application/json"
+              style={{ display: 'none' }}
+              onChange={importJson}
+            />
+            <input
+              ref={fileInputCsvRef}
+              type="file"
+              accept=".csv,text/csv"
+              style={{ display: 'none' }}
+              onChange={importCsv}
+            />
+
+            <div className="topo-actions-grid">
+              <button type="button" className="btn btn-sm" onClick={carregarExemplo}>
+                <i className="fas fa-flask" /> Carregar exemplo
+              </button>
+              <button type="button" className="btn btn-sm" onClick={novoProjeto}>
+                <i className="fas fa-file" /> Novo projeto
+              </button>
+
+              <button type="button" className="btn btn-sm" onClick={exportJson}>
+                <i className="fas fa-file-export" /> Exportar projeto
+              </button>
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => fileInputJsonRef.current?.click()}
+                title="Importar projeto a partir de arquivo JSON"
+              >
                 <i className="fas fa-file-import" /> Importar projeto
-                <input type="file" accept=".json,application/json" style={{ display: 'none' }} onChange={importJson} />
-              </label>
-            </div>
-            <div className="topo-actions">
-              <button className="btn btn-sm" onClick={exportCsv} title="Planilha com todos os roteadores, rotas, equipamentos e caixas — pode ser editada no Excel e reimportada">
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={exportCsv}
+                title="Planilha com todos os roteadores, rotas, equipamentos e caixas — pode ser editada no Excel e reimportada"
+              >
                 <i className="fas fa-file-csv" /> Exportar CSV
               </button>
-              <label className="btn btn-sm topo-inline-btn" title="Reconstrói o mapa a partir de um CSV exportado por esta ferramenta (redesenho 1:1)">
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => fileInputCsvRef.current?.click()}
+                title="Reconstrói o mapa a partir de um CSV exportado por esta ferramenta (redesenho 1:1)"
+              >
                 <i className="fas fa-file-arrow-up" /> Importar CSV
-                <input type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={importCsv} />
-              </label>
-            </div>
-            <div className="topo-actions topo-actions-dl">
-              <button className="btn btn-primary btn-sm" onClick={baixarPng}><i className="fas fa-image" /> Baixar PNG</button>
-              <button className="btn btn-secondary btn-sm" onClick={baixarSvg}><i className="fas fa-bezier-curve" /> Baixar SVG</button>
-              <button className="btn btn-secondary btn-sm" onClick={baixarPdf}><i className="fas fa-file-pdf" /> Baixar PDF</button>
+              </button>
+
+              <button type="button" className="btn btn-primary btn-sm" onClick={baixarPng}>
+                <i className="fas fa-image" /> Baixar PNG
+              </button>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={baixarSvg}>
+                <i className="fas fa-bezier-curve" /> Baixar SVG
+              </button>
+              <button type="button" className="btn btn-secondary btn-sm topo-btn-full" onClick={baixarPdf}>
+                <i className="fas fa-file-pdf" /> Baixar PDF
+              </button>
             </div>
             <p className="topo-hint">
               Cada rota criada é salva automaticamente no <b>banco de dados (nuvem)</b> — o carimbo
