@@ -394,10 +394,9 @@ NSAP Selector: ${sel}`;
               </div>
             </div>
           </section>
-        </div>
 
-        {/* ===== Base de equipamentos: upload CSV + busca por hostname ===== */}
-        <section className="nsap-panel nsap-eq-panel">
+          {/* ===== Base de equipamentos: upload CSV + busca por hostname ===== */}
+          <section className="nsap-panel nsap-eq-panel">
           <div className="nsap-eq-head">
             <label className="nsap-label" style={{ marginBottom: 0 }}>
               <i className="fas fa-network-wired"></i> Equipamentos
@@ -503,7 +502,8 @@ NSAP Selector: ${sel}`;
               para buscar equipamentos por hostname e preencher o NSAP automaticamente.
             </p>
           )}
-        </section>
+          </section>
+        </div>
 
         <div className="nsap-footer">
           <i className="fas fa-lightbulb"></i> Dica: a string pode ser colada com espaços ou hífens; o sistema normaliza automaticamente.

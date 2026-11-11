@@ -801,9 +801,31 @@ td[colspan] {
 
 .nsap-main {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     gap: 25px;
     padding: 25px;
+    align-items: start;
+}
+
+/* Coluna esquerda: campo NSAP + base de equipamentos; direita: campos separados */
+.nsap-main > section:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
+.nsap-main > section:nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+@media (max-width: 999px) {
+    .nsap-main > section:nth-child(2),
+    .nsap-main > section:nth-child(3) {
+        grid-column: auto;
+        grid-row: auto;
+    }
+    .nsap-main > section:nth-child(2) { order: 3; }
+    .nsap-main > section:nth-child(3) { order: 2; }
 }
 
 .nsap-panel {
@@ -956,29 +978,40 @@ td[colspan] {
 /* ===== NSAP: base de equipamentos (upload CSV + busca por hostname) ===== */
 .nsap-eq-panel {
     border-top: 2px solid var(--border);
-    margin: 0 25px;
-    padding-top: 20px;
+    padding-top: 18px;
 }
 
 .nsap-eq-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
+    gap: 10px;
     flex-wrap: wrap;
+}
+
+.nsap-eq-head .nsap-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--fg);
 }
 
 .nsap-eq-toolbar {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
+}
+
+.nsap-eq-toolbar .nsap-btn {
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-size: 13px;
 }
 
 .nsap-eq-file {
     font-size: 12px;
     color: var(--muted);
-    max-width: 220px;
+    max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -988,24 +1021,25 @@ td[colspan] {
     position: relative;
     display: flex;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 12px;
 }
 
 .nsap-eq-searchbox > i {
     position: absolute;
-    left: 16px;
+    left: 14px;
     color: var(--muted);
     pointer-events: none;
+    font-size: 13px;
 }
 
 .nsap-eq-search {
     width: 100%;
-    padding: 12px 42px 12px 42px;
-    border-radius: 12px;
+    padding: 10px 38px 10px 38px;
+    border-radius: 10px;
     border: 2px solid var(--border);
     background: var(--card);
     color: var(--fg);
-    font-size: 15px;
+    font-size: 14px;
     font-family: 'Courier New', monospace;
     transition: all 0.3s ease;
 }
@@ -1016,14 +1050,19 @@ td[colspan] {
     box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
 }
 
+.nsap-eq-search::placeholder {
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--muted);
+}
+
 .nsap-eq-clear {
     position: absolute;
-    right: 10px;
+    right: 8px;
     background: none;
     border: none;
     color: var(--muted);
     cursor: pointer;
-    font-size: 15px;
+    font-size: 14px;
     padding: 6px;
 }
 
@@ -1032,7 +1071,7 @@ td[colspan] {
 }
 
 .nsap-eq-selected {
-    margin-top: 12px;
+    margin-top: 10px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1040,8 +1079,8 @@ td[colspan] {
     background: rgba(var(--accent-rgb), 0.08);
     border: 2px solid rgba(var(--accent-rgb), 0.25);
     border-radius: 10px;
-    padding: 10px 16px;
-    font-size: 13px;
+    padding: 8px 14px;
+    font-size: 12px;
 }
 
 .nsap-eq-selected > i {
@@ -1053,20 +1092,20 @@ td[colspan] {
 }
 
 .nsap-eq-list {
-    margin-top: 12px;
-    max-height: 280px;
+    margin-top: 10px;
+    max-height: 300px;
     overflow-y: auto;
     border: 2px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     background: var(--card);
 }
 
 .nsap-eq-item {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 10px 16px;
+    gap: 12px;
+    padding: 8px 14px;
     border-bottom: 1px solid var(--border);
     cursor: pointer;
     transition: background 0.2s ease;
@@ -1082,36 +1121,47 @@ td[colspan] {
 
 .nsap-eq-item.selected {
     background: rgba(var(--accent-rgb), 0.12);
+    box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .nsap-eq-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
     min-width: 0;
 }
 
 .nsap-eq-host {
     font-family: 'Courier New', monospace;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--fg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .nsap-eq-meta {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .nsap-eq-id {
     font-family: 'Courier New', monospace;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
     white-space: nowrap;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
 }
 
 .nsap-eq-empty {
-    padding: 16px;
+    padding: 14px;
     text-align: center;
     color: var(--muted);
     font-size: 13px;
