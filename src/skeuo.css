@@ -4202,3 +4202,352 @@ html.sk-skin [tabindex]:focus-visible {
 }
 
 .topo-actions-dl .btn:last-child { grid-column: 1 / -1 !important; }
+
+
+
+/* ==========================================================================
+   LEITOR OTDR — BAUHAUS
+   Linguagem visual independente: superfícies planas, geometria ortogonal,
+   contornos definidos e paleta primária. Sem neumorfismo, relevo ou gradientes.
+   Escopo restrito ao módulo OTDR.
+   ========================================================================== */
+.otdr-root {
+  --o-bg: #F2EBDD;
+  --o-card: #FFFDF7;
+  --o-text: #171717;
+  --o-dim: #4B4B47;
+  --o-faint: #77756E;
+  --o-accent: #1456B8;
+  --o-accent-soft: #E2EAF7;
+  --o-accent-2: #1456B8;
+  --o-green: #237A48;
+  --o-orange: #E5A900;
+  --o-orange-deep: #A87500;
+  --o-red: #E3342B;
+  --o-red-soft: #FBE5E1;
+  --o-red-deep: #B82019;
+  --o-red-badge: #C92720;
+  --o-red-border: #E7A39D;
+  --o-radius: 0px;
+  --o-radius-sm: 0px;
+  --o-border: #262626;
+  --o-edge: #262626;
+  --o-edge-strong: #262626;
+  --o-hover: #F6E9C9;
+  --o-dash: #1456B8;
+  --o-card-grad: #FFFDF7;
+  --o-soft-grad: #F2EBDD;
+  --o-well-grad: #FFFDF7;
+  --o-side-grad: #F2EBDD;
+  --o-head-grad: #E8E0CF;
+  --o-ok-grad: #E5EEDC;
+  --o-btn-primary-grad: #1456B8;
+  --o-nav-active-grad: #1456B8;
+  --o-shadow-out: none;
+  --o-shadow-soft: none;
+  --o-shadow-in: none;
+  --o-active-shadow: none;
+  --o-accent-halo: 0 0 0 2px #1456B8;
+  --o-overlay: rgba(0,0,0,.58);
+  --o-loadbg: rgba(255,253,247,.94);
+  --o-spin-track: rgba(20,86,184,.25);
+  --o-toast-shadow: none;
+  background: var(--o-bg);
+  color: var(--o-text);
+  gap: 14px;
+}
+
+/* El tema do módulo é deliberadamente independente do tema global. */
+html[data-theme="dark"] .otdr-root {
+  --o-bg: #202124;
+  --o-card: #292A2D;
+  --o-text: #F5F1E7;
+  --o-dim: #D0CCC2;
+  --o-faint: #AAA69D;
+  --o-accent: #4D8DEB;
+  --o-accent-soft: #263A58;
+  --o-accent-2: #4D8DEB;
+  --o-green: #63B77C;
+  --o-orange: #F0BE36;
+  --o-orange-deep: #F0BE36;
+  --o-red: #F05A50;
+  --o-red-soft: #482B29;
+  --o-red-deep: #FF938B;
+  --o-red-badge: #FF8178;
+  --o-red-border: #8E4540;
+  --o-border: #D8D0C2;
+  --o-edge: #D8D0C2;
+  --o-edge-strong: #D8D0C2;
+  --o-hover: #38352F;
+  --o-dash: #4D8DEB;
+  --o-card-grad: #292A2D;
+  --o-soft-grad: #292A2D;
+  --o-well-grad: #202124;
+  --o-side-grad: #242528;
+  --o-head-grad: #343538;
+  --o-ok-grad: #26372B;
+  --o-btn-primary-grad: #1456B8;
+  --o-nav-active-grad: #1456B8;
+  --o-shadow-out: none;
+  --o-shadow-soft: none;
+  --o-shadow-in: none;
+  --o-active-shadow: none;
+  --o-accent-halo: 0 0 0 2px #4D8DEB;
+  --o-overlay: rgba(0,0,0,.72);
+  --o-loadbg: rgba(32,33,36,.96);
+  --o-spin-track: rgba(77,141,235,.3);
+  --o-toast-shadow: none;
+}
+
+/* Neutraliza qualquer relevo herdado do skin anterior. */
+.otdr-root *,
+.otdr-root *::before,
+.otdr-root *::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  background-image: none !important;
+  border-radius: 0 !important;
+}
+
+.otdr-root .sidebar {
+  background: var(--o-side-grad);
+  border: 2px solid var(--o-border);
+  padding: 14px 12px;
+}
+.otdr-root .brand {
+  background: #1456B8;
+  color: #fff;
+  border: 2px solid #171717;
+  padding: 16px 10px;
+  margin-bottom: 10px;
+}
+.otdr-root .brand-icon {
+  background: #FFFDF7;
+  border: 2px solid #171717;
+  color: #1456B8;
+}
+.otdr-root .brand-label { color: inherit; }
+.otdr-root .import-card {
+  background: #F8F2E5;
+  border: 2px dashed #1456B8;
+  padding: 14px 10px;
+}
+.otdr-root .import-card:hover,
+.otdr-root .import-card.dragover {
+  background: #E2EAF7;
+  border-style: solid;
+}
+.otdr-root .nav-item {
+  border: 1px solid transparent;
+  border-left: 4px solid transparent;
+  padding: 11px 10px;
+  color: var(--o-dim);
+  font-weight: 700;
+}
+.otdr-root .nav-item:hover {
+  background: #F6E9C9;
+  border-color: var(--o-border);
+  color: var(--o-text);
+}
+.otdr-root .nav-item.active {
+  background: #1456B8;
+  border: 1px solid #171717;
+  border-left: 4px solid #E3342B;
+  color: #fff;
+}
+.otdr-root .main { gap: 12px; }
+.otdr-root .topbar h1 {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+}
+.otdr-root .topbar .sub {
+  color: var(--o-dim);
+  letter-spacing: .025em;
+}
+.otdr-root .otdr-topbtn,
+.otdr-root .icon-btns button,
+.otdr-root .btn,
+.otdr-root button:not(.nav-item):not(.toggle):not(.history-del-btn) {
+  border: 1.5px solid var(--o-border);
+  background: var(--o-card);
+  color: var(--o-text);
+  font-weight: 700;
+  transition: background .12s ease, color .12s ease;
+}
+.otdr-root .otdr-topbtn:hover,
+.otdr-root .icon-btns button:hover,
+.otdr-root .btn:hover,
+.otdr-root button:not(.nav-item):not(.toggle):not(.history-del-btn):hover {
+  background: #F6E9C9;
+  color: #171717;
+}
+.otdr-root .otdr-topbtn-primary,
+.otdr-root .btn-primary {
+  background: #1456B8 !important;
+  color: #fff !important;
+  border: 1.5px solid #171717 !important;
+}
+.otdr-root .btn-success {
+  background: #E5A900 !important;
+  color: #171717 !important;
+  border: 1.5px solid #171717 !important;
+}
+.otdr-root .otdr-topbtn-danger {
+  color: #C92720;
+}
+.otdr-root .otdr-avatar {
+  border: 1.5px solid var(--o-border);
+}
+.otdr-root .metric-card,
+.otdr-root .card,
+.otdr-root .panel,
+.otdr-root .otdr-modal-card {
+  background: var(--o-card);
+  border: 1.5px solid var(--o-border);
+}
+.otdr-root .metric-card {
+  border-top: 5px solid #1456B8;
+  padding: 12px 14px;
+}
+.otdr-root .metric-card:nth-child(2) { border-top-color: #E3342B; }
+.otdr-root .metric-card:nth-child(3) { border-top-color: #E5A900; }
+.otdr-root .metric-card:nth-child(4) { border-top-color: #171717; }
+.otdr-root .metric-card:nth-child(5) { border-top-color: #237A48; }
+.otdr-root .metric-ic {
+  background: #E2EAF7;
+  border: 1px solid var(--o-border);
+  color: #1456B8;
+}
+.otdr-root .body-grid { gap: 14px; }
+.otdr-root .card-head {
+  background: #1456B8;
+  color: #fff;
+  border-bottom: 1.5px solid var(--o-border);
+  padding: 12px 14px;
+}
+.otdr-root .card-title {
+  color: inherit;
+  font-size: 12px;
+  letter-spacing: .1em;
+}
+.otdr-root .icon-btns button {
+  width: 32px;
+  height: 32px;
+  background: #FFFDF7;
+  color: #171717;
+}
+.otdr-root .chart-wrap { padding: 10px 12px 4px; }
+.otdr-root .chart-wrap canvas,
+.otdr-root #traceCanvas {
+  border: 2px solid #171717;
+  outline: 0;
+}
+.otdr-root .chart-hint { color: var(--o-dim); }
+.otdr-root .panel {
+  padding: 14px;
+  border-left: 5px solid #1456B8;
+}
+.otdr-root .panel:nth-of-type(2n) { border-left-color: #E3342B; }
+.otdr-root .panel-title {
+  color: var(--o-text);
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--o-border);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+.otdr-root .cfg-row,
+.otdr-root .thresh-row,
+.otdr-root .cursor-row {
+  border-bottom: 1px solid var(--o-border);
+}
+.otdr-root .cfg-val {
+  color: var(--o-text);
+  font-weight: 800;
+}
+.otdr-root input:not([type="file"]),
+.otdr-root select,
+.otdr-root textarea {
+  background: var(--o-card);
+  color: var(--o-text);
+  border: 1.5px solid var(--o-border);
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.otdr-root input:focus,
+.otdr-root select:focus,
+.otdr-root textarea:focus {
+  outline: 2px solid #1456B8;
+  outline-offset: 1px;
+}
+.otdr-root .trace-theme {
+  background: var(--o-card);
+  border: 1.5px solid var(--o-border);
+  padding: 8px;
+}
+.otdr-root .trace-theme.active {
+  background: #E2EAF7;
+  border: 2px solid #1456B8;
+}
+.otdr-root .theme-swatch {
+  border: 1.5px solid #171717;
+}
+.otdr-root .events thead th {
+  background: #E8E0CF;
+  color: var(--o-text);
+  border-bottom: 2px solid var(--o-border);
+}
+.otdr-root .events tbody td {
+  color: var(--o-dim);
+  border-bottom: 1px solid var(--o-border);
+}
+.otdr-root .events tbody tr.sel { background: #E2EAF7; }
+.otdr-root .ev-num,
+.otdr-root .ev-dot { border: 1px solid #171717; }
+.otdr-root .loss-badge {
+  border-width: 1.5px;
+}
+.otdr-root .file-row,
+.otdr-root .history-item,
+.otdr-root .compare-file,
+.otdr-root .no-file,
+.otdr-root .empty-state,
+.otdr-root .error-box {
+  border: 1px solid var(--o-border);
+  background: var(--o-card);
+}
+.otdr-root .statusbar {
+  background: #E8E0CF;
+  color: var(--o-text);
+  border-top: 2px solid var(--o-border);
+  padding: 8px 10px;
+}
+.otdr-root .statusbar .ok { color: #237A48; }
+.otdr-root .otdr-modal-overlay { background: var(--o-overlay); }
+.otdr-root .otdr-modal-card {
+  background: var(--o-card);
+  border: 2px solid var(--o-border);
+  padding: 22px;
+}
+.otdr-root .toast,
+.otdr-root .toast-item {
+  border: 1.5px solid var(--o-border);
+  background: var(--o-card);
+}
+.otdr-root button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+@media (max-width: 900px) {
+  .otdr-root { gap: 10px; }
+  .otdr-root .sidebar { width: 190px; }
+  .otdr-root .body-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .otdr-root .sidebar { border-width: 1px; }
+  .otdr-root .topbar h1 { font-size: 23px; }
+  .otdr-root .metric-card { border-top-width: 3px; }
+}

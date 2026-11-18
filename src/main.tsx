@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import './skeuo.css';
+import './skins.css';
 
 /* PWA: quando um novo deploy assume o controle, recarrega a página sozinho
    (fim do "precisa limpar o cache"); procura atualizações a cada minuto e ao

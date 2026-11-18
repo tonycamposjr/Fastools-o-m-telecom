@@ -39,6 +39,14 @@
     <!-- Exportação de relatório OTDR em PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script>
+      /* Evita "flash" de estilo: aplica skin/tema salvos antes da primeira pintura */
+      try {
+        var d = document.documentElement;
+        d.setAttribute('data-skin', localStorage.getItem('skin') === 'bauhaus' ? 'bauhaus' : 'tecnico');
+        d.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

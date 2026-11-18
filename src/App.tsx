@@ -4,6 +4,7 @@ import AdminTab from './components/AdminTab';
 import ErrorBoundary from './components/ErrorBoundary';
 import ConfirmDialog from './components/ConfirmDialog';
 import CommandPalette from './components/CommandPalette';
+import SkinDashboard, { type Skin } from './components/SkinDashboard';
 import * as api from './lib/api';
 import type { AuthUser } from './lib/api';
 import type { ToolDef } from './types';
@@ -255,6 +256,13 @@ function SigitmHost() {
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [skin, setSkin] = useState<Skin>(() => {
+    try {
+      return localStorage.getItem('skin') === 'bauhaus' ? 'bauhaus' : 'tecnico';
+    } catch {
+      return 'tecnico';
+    }
+  });
   const isOnline = useOnlineStatus();
 
   // Painel vivo: uso por ferramenta + favoritos + paleta de comandos + dialog de confirmação
@@ -306,8 +314,8 @@ export default function App() {
   // Initialize and apply theme, finish mode, dashboard layout and active tab
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    const initialTheme = savedTheme ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    // Os dois estilos (Bauhaus / Técnico) foram desenhados para o tema escuro: é o padrão.
+    const initialTheme = savedTheme || 'dark';
 
     setTheme(initialTheme);
     document.documentElement.setAttribute('data-theme', initialTheme);
@@ -340,6 +348,18 @@ export default function App() {
       window.removeEventListener('popstate', handlePopState);
     };
   }, []);
+
+  // Estilo visual (Bauhaus / Técnico): aplica no <html> e persiste
+  useEffect(() => {
+    document.documentElement.setAttribute('data-skin', skin);
+    try {
+      localStorage.setItem('skin', skin);
+    } catch {
+      /* armazenamento indisponível: só não persiste */
+    }
+  }, [skin]);
+
+  const handleToggleSkin = () => setSkin((s) => (s === 'bauhaus' ? 'tecnico' : 'bauhaus'));
 
   // Update theme and persist
   const handleToggleTheme = () => {
@@ -522,7 +542,7 @@ export default function App() {
   }
 
   return (
-    <div className={`app-container page-shell ${activeTab === 'kml' ? 'kml-mode-active' : ''}`}>
+    <div className={`app-container page-shell ${activeTab === 'kml' ? 'kml-mode-active' : ''} ${activeTab === 'dashboard' ? 'fx-on-dash' : ''}`}>
       <div className="app-content">
         {/* Header */}
         <div className="app-header">
@@ -550,6 +570,14 @@ export default function App() {
               aria-label="Abrir busca global"
             >
               <i className="fas fa-magnifying-glass"></i>
+            </button>
+            <button
+              className="theme-toggle fx-skin-toggle"
+              onClick={handleToggleSkin}
+              title={`Estilo: ${skin === 'bauhaus' ? 'Bauhaus' : 'Técnico'} (clique para alternar)`}
+              aria-label="Alternar estilo visual entre Bauhaus e Técnico"
+            >
+              <i className="fas fa-palette"></i>
             </button>
             <button className="theme-toggle" onClick={handleToggleTheme} aria-label="Alternar tema claro/escuro">
               <i className={theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'}></i>
@@ -637,111 +665,22 @@ export default function App() {
 
         {/* Main Content Area */}
         {activeTab === 'dashboard' ? (
-          <div className="dashboard-container">
-            <div className="dashboard-intro">
-              <h2>Painel de Ferramentas de Campo</h2>
-              <p>Selecione um dos utilitários integrados para iniciar suas operações e gerenciar as atividades de campo.</p>
-            </div>
-
-            <div className="metro-group-label">ferramentas</div>
-
-            <div className="dashboard-grid" role="list" aria-label="Ferramentas disponíveis">
-              {orderedTools.map((tool) => (
-                <div
-                  key={tool.id}
-                  className="dashboard-card"
-                  style={{ '--tool-color': tool.color, '--tool-color-rgb': tool.colorRgb } as React.CSSProperties}
-                  onClick={() => handleTabChange(tool.id)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTabChange(tool.id); } }}
-                  role="listitem"
-                  aria-label={`${tool.name}. ${tool.desc}`}
-                  tabIndex={0}
-                >
-                  <div className="dashboard-card-glow"></div>
-                  <div className="dashboard-card-top">
-                    <div className="dashboard-card-header">
-                      <div className="dashboard-card-icon">
-                        <i className={`fas ${tool.icon}`}></i>
-                      </div>
-                      <button
-                        className="dash-fav-btn"
-                        onClick={(e) => { e.stopPropagation(); toggleFavorite(tool.id); }}
-                        title={favorites.includes(tool.id) ? 'Remover dos favoritos' : 'Fixar nas primeiras posições'}
-                        aria-label={favorites.includes(tool.id) ? `Remover ${tool.name} dos favoritos` : `Fixar ${tool.name} nos favoritos`}
-                      >
-                        <i className={favorites.includes(tool.id) ? 'fas fa-star' : 'far fa-star'}></i>
-                      </button>
-                    </div>
-                    <div className="dashboard-card-title">{tool.name}</div>
-                    <div className="dashboard-card-desc">{tool.desc}</div>
-                    {(favorites.includes(tool.id) || (usage[tool.id]?.count ?? 0) > 0) && (
-                      <div className="dash-fav-meta">
-                        {favorites.includes(tool.id) && <span><i className="fas fa-star"></i> Fixada</span>}
-                        {(usage[tool.id]?.count ?? 0) > 0 && <span><i className="fas fa-clock-rotate-left"></i> {usage[tool.id].count} uso(s)</span>}
-                      </div>
-                    )}
-                  </div>
-                  <div className="dashboard-card-footer">
-                    Acessar <i className="fas fa-arrow-right"></i>
-                  </div>
-                </div>
-              ))}
-
-              {user?.role === 'admin' && (
-                <div
-                  className="dashboard-card"
-                  style={{ '--tool-color': '#b91c1c', '--tool-color-rgb': '185, 28, 28' } as React.CSSProperties}
-                  onClick={() => handleTabChange('admin')}
-                >
-                  <div className="dashboard-card-glow"></div>
-                  <div className="dashboard-card-top">
-                    <div className="dashboard-card-header">
-                      <div className="dashboard-card-icon">
-                        <i className="fas fa-user-shield"></i>
-                      </div>
-                    </div>
-                    <div className="dashboard-card-title">Painel do Administrador</div>
-                    <div className="dashboard-card-desc">
-                      Gestão de usuários, dados, arquivos e logs de atividade — exclusivo para admin.
-                    </div>
-                  </div>
-                  <div className="dashboard-card-footer">
-                    Acessar <i className="fas fa-arrow-right"></i>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="metro-group-label">sistemas</div>
-
-            <div className="metro-shortcuts">
-              <div
-                className="dashboard-card metro-shortcut-tile"
-                style={{ '--tool-color': '#6B2FA0', '--tool-color-rgb': '107, 47, 160' } as React.CSSProperties}
-                onClick={openSigitm}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSigitm(); } }}
-                role="listitem"
-                aria-label="SIGITM — Sistema de Gestão de TI Vivo. Abre em janela dedicada."
-                tabIndex={0}
-              >
-                <div className="dashboard-card-glow"></div>
-                <div className="dashboard-card-top">
-                  <div className="dashboard-card-header">
-                    <div className="dashboard-card-icon">
-                      <i className="fas fa-briefcase"></i>
-                    </div>
-                  </div>
-                  <div className="dashboard-card-title">SIGITM</div>
-                  <div className="dashboard-card-desc">
-                    Sistema de gestão de TI da Vivo — abre em janela dedicada em um clique.
-                  </div>
-                </div>
-                <div className="dashboard-card-footer">
-                  Abrir <i className="fas fa-arrow-up-right-from-square"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+          <SkinDashboard
+            tools={orderedTools}
+            favorites={favorites}
+            usage={usage}
+            isOnline={isOnline}
+            isAdmin={user?.role === 'admin'}
+            version={APP_VERSION}
+            buildTime={BUILD_TIME}
+            skin={skin}
+            theme={theme}
+            onSkin={setSkin}
+            onToggleTheme={handleToggleTheme}
+            onOpenTool={handleTabChange}
+            onToggleFav={toggleFavorite}
+            onOpenSigitm={openSigitm}
+          />
         ) : (
           <>
             {/* Active Panel View */}

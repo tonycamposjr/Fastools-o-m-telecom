@@ -1,0 +1,2135 @@
+/* ==========================================================================
+   CENTRAL DE CAMPO — ESTILOS VISUAIS ALTERNÁVEIS
+   --------------------------------------------------------------------------
+   Carregado por ÚLTIMO (depois de index.css e skeuo.css).
+   Dois estilos, escolhidos pelo atributo  <html data-skin="...">:
+     • bauhaus  — formas geométricas (azul / vermelho / amarelo), cartões
+                  alternados claro/escuro, tipografia geométrica.
+     • tecnico  — painel de instrumento em aço escovado, parafusos, LEDs e
+                  botões em relevo azul.
+   Cada um suporta tema escuro (padrão) e claro (data-theme).
+   O botão discreto (paleta) na barra de controles alterna entre eles; a
+   escolha fica salva em localStorage('skin').
+   ========================================================================== */
+
+/* ======================= 0. PALETAS ======================= */
+html[data-skin="bauhaus"] {
+  --fx-bg: #141a24;
+  --fx-side: #10151d;
+  --fx-line: #2a3342;
+  --fx-text: #f4f0e6;
+  --fx-muted: #a9b2bf;
+  --fx-light-bg: #ece7db;
+  --fx-light-text: #14203a;
+  --fx-light-muted: #4a5568;
+  --fx-dark-bg: #1b222d;
+  --fx-dark-text: #f4f0e6;
+  --fx-dark-muted: #aeb7c4;
+  --fx-blue: #1f6fe0;
+  --fx-blue-deep: #0f3f93;
+  --fx-red: #e03a2b;
+  --fx-yellow: #f2b21b;
+  --fx-navy: #14264a;
+  --fx-font: 'Outfit', 'Inter', system-ui, sans-serif;
+  --fx-input: #0f141c;
+  --fx-btn: #232c3a;
+}
+
+html[data-skin="bauhaus"][data-theme="light"] {
+  --fx-bg: #efe9db;
+  --fx-side: #f7f2e6;
+  --fx-line: #cfc6b2;
+  --fx-text: #14203a;
+  --fx-muted: #566074;
+  --fx-light-bg: #fffdf7;
+  --fx-light-text: #14203a;
+  --fx-light-muted: #4a5568;
+  --fx-dark-bg: #1d2740;
+  --fx-dark-text: #f4f0e6;
+  --fx-dark-muted: #bcc6d6;
+  --fx-input: #ffffff;
+  --fx-btn: #f1ebdc;
+}
+
+html[data-skin="tecnico"] {
+  --fx-bg: #0e1218;
+  --fx-text: #f1f5fb;
+  --fx-muted: #9fb0c6;
+  --fx-steel-1: #c3c6ca;
+  --fx-steel-2: #9a9ea5;
+  --fx-steel-3: #b2b5ba;
+  --fx-steel-text: #151c29;
+  --fx-steel-muted: #384255;
+  --fx-edge: #5b5f66;
+  --fx-dark-1: #3d4148;
+  --fx-dark-2: #23262c;
+  --fx-blue-1: #2a71d8;
+  --fx-blue-2: #0b3377;
+  --fx-blue-glow: rgba(60, 140, 255, 0.55);
+  --fx-led: #28d65a;
+  --fx-font: 'Inter', system-ui, sans-serif;
+  --fx-input: #0b0e13;
+  --fx-input-text: #f1f5fb;
+}
+
+html[data-skin="tecnico"][data-theme="light"] {
+  --fx-bg: #c9cfd8;
+  --fx-text: #141c2b;
+  --fx-muted: #3f4b60;
+  --fx-steel-1: #e6e8eb;
+  --fx-steel-2: #c1c5cb;
+  --fx-steel-3: #d5d8dc;
+  --fx-edge: #8b9098;
+  --fx-dark-1: #ccd0d6;
+  --fx-dark-2: #aeb3bb;
+  --fx-input: #e9ebee;
+  --fx-input-text: #151c29;
+}
+
+/* ---- Tokens globais para as demais telas (ferramentas) seguirem o estilo ---- */
+html.sk-skin[data-skin="bauhaus"][data-theme="dark"] {
+  --bg: #141a24;
+  --card: #1b222d;
+  --fg: #f4f0e6;
+  --fg-heading: #ffffff;
+  --muted: #a9b2bf;
+  --border: #2a3342;
+  --accent: #3d8bff;
+  --accent-hover: #6aa5ff;
+  --accent-rgb: 61, 139, 255;
+  --sk-edge: #2a3342;
+  --sk-panel-grad: linear-gradient(#1b222d, #1b222d);
+  --sk-chrome-grad: linear-gradient(#1b222d, #1b222d);
+  --sk-btn-grad: linear-gradient(#232c3a, #232c3a);
+  --sk-out: none;
+}
+
+html.sk-skin[data-skin="bauhaus"][data-theme="light"] {
+  --bg: #efe9db;
+  --card: #fffdf7;
+  --fg: #14203a;
+  --fg-heading: #0b1426;
+  --muted: #566074;
+  --border: #cfc6b2;
+  --accent: #1f6fe0;
+  --accent-hover: #1757b5;
+  --accent-rgb: 31, 111, 224;
+  --sk-edge: #cfc6b2;
+  --sk-panel-grad: linear-gradient(#fffdf7, #fffdf7);
+  --sk-chrome-grad: linear-gradient(#fffdf7, #fffdf7);
+  --sk-btn-grad: linear-gradient(#f4eedf, #f4eedf);
+  --sk-out: none;
+}
+
+html.sk-skin[data-skin="tecnico"][data-theme="dark"] {
+  --bg: #0e1218;
+  --card: #2a2f37;
+  --accent: #4a9bff;
+  --accent-hover: #7bb6ff;
+  --accent-rgb: 74, 155, 255;
+  --sk-edge: #50555d;
+  --sk-panel-grad: linear-gradient(180deg, #3a3f47, #272b32);
+  --sk-chrome-grad: linear-gradient(180deg, #424750, #2c3037);
+  --sk-btn-grad: linear-gradient(180deg, #4a4f58, #30343b);
+}
+
+html.sk-skin[data-skin="tecnico"][data-theme="light"] {
+  --bg: #c9cfd8;
+  --card: #dfe2e6;
+  --fg: #1c2432;
+  --fg-heading: #0e1522;
+  --muted: #3f4b60;
+  --border: #8b9098;
+  --accent: #1f62c6;
+  --accent-hover: #174e9f;
+  --accent-rgb: 31, 98, 198;
+  --sk-edge: #9aa0a8;
+  --sk-panel-grad: linear-gradient(180deg, #eceef0, #cfd3d8);
+  --sk-chrome-grad: linear-gradient(180deg, #f1f2f4, #d4d8dd);
+  --sk-btn-grad: linear-gradient(180deg, #f4f5f6, #cdd1d6);
+}
+
+/* Fundo da página (substitui o cinza fixo do tema anterior) */
+html.sk-skin[data-skin] body {
+  background-image: none;
+  background-color: var(--fx-bg);
+}
+
+html.sk-skin[data-skin="tecnico"] body {
+  background-image:
+    radial-gradient(90% 60% at 50% -10%, rgba(60, 110, 190, 0.16), transparent 60%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 4px);
+}
+
+html[data-skin="bauhaus"] h1,
+html[data-skin="bauhaus"] h2,
+html[data-skin="bauhaus"] h3 {
+  font-family: var(--fx-font);
+}
+
+/* Alternância de elementos exclusivos de um estilo */
+html[data-skin="bauhaus"] .fx-only-tecnico,
+html[data-skin="tecnico"] .fx-only-bauhaus {
+  display: none !important;
+}
+
+/* ======================= 1. BOTÃO DISCRETO DE ESTILO ======================= */
+.fx-skin-toggle {
+  opacity: 0.5;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.fx-skin-toggle:hover,
+.fx-skin-toggle:focus-visible {
+  opacity: 1;
+}
+
+.fx-skin-toggle:active {
+  transform: rotate(-18deg);
+}
+
+/* ======================= 2. CASCA DO PAINEL ======================= */
+/* No painel, o título antigo some (a marca fica na barra lateral) e o rodapé
+   antigo cede lugar à barra de status do novo layout. */
+.app-container.fx-on-dash {
+  padding-inline: clamp(8px, 1vw, 16px);
+}
+
+.fx-on-dash .app-title,
+.fx-on-dash .app-footer {
+  display: none;
+}
+
+.fx-on-dash .app-header {
+  margin-bottom: 6px;
+}
+
+.fx-on-dash .controls-bar {
+  margin-bottom: 4px;
+  justify-content: flex-end;
+}
+
+.fx-dash {
+  --fx-side-w: clamp(176px, 12vw, 232px);
+  display: grid;
+  grid-template-columns: var(--fx-side-w) minmax(0, 1fr);
+  min-height: calc(100dvh - 70px);
+  font-family: var(--fx-font);
+  color: var(--fx-text);
+  position: relative;
+}
+
+.fx-dash button {
+  font-family: inherit;
+}
+
+.fx-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: clamp(14px, 2.2vh, 24px);
+}
+
+.fx-side {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+}
+
+.fx-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.fx-brand span {
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.fx-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.fx-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font-size: 15px;
+  transition: background 0.15s ease, color 0.15s ease, filter 0.15s ease;
+}
+
+.fx-nav-item i {
+  width: 24px;
+  text-align: center;
+  font-size: 19px;
+}
+
+.fx-side-foot {
+  margin-top: auto;
+}
+
+.fx-vivo {
+  display: block;
+  width: 118px;
+  height: 37px;
+  background: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+
+/* ---- Pílula de status ---- */
+.fx-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f1f5fb;
+  background: #0b1018;
+  white-space: nowrap;
+}
+
+.fx-pill em {
+  font-style: normal;
+  padding-left: 14px;
+  margin-left: 2px;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  color: #dbe6f5;
+}
+
+.fx-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #2fcf4f;
+  box-shadow: 0 0 0 0 rgba(47, 207, 79, 0.6);
+  animation: fxPulse 2.4s ease-out infinite;
+}
+
+.fx-dot.off {
+  background: #e0a030;
+  animation: none;
+}
+
+@keyframes fxPulse {
+  0% { box-shadow: 0 0 0 0 rgba(47, 207, 79, 0.55); }
+  70% { box-shadow: 0 0 0 9px rgba(47, 207, 79, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(47, 207, 79, 0); }
+}
+
+/* ---- Hero (estrutura comum) ---- */
+.fx-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.fx-hero-art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fx-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+html[data-skin="bauhaus"] .fx-art--tecnico,
+html[data-skin="tecnico"] .fx-art--bauhaus {
+  display: none;
+}
+
+.fx-tower line,
+.fx-tower {
+  stroke-width: 1.6;
+}
+
+.fx-tower-panel {
+  fill: currentColor;
+  stroke: none;
+}
+
+.fx-hero-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.fx-hero-copy h2 {
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.fx-hero-copy p {
+  margin: 0;
+}
+
+/* ---- Rótulo de seção ---- */
+.fx-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 clamp(10px, 1.6vh, 16px);
+  text-transform: uppercase;
+}
+
+/* ---- Cartões de ferramenta (estrutura comum) ---- */
+.fx-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 18px);
+}
+
+.fx-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: clamp(104px, 14.5vh, 142px);
+  padding: 18px 84px 18px 22px;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.fx-card:hover {
+  transform: translateY(-2px);
+}
+
+.fx-card:active {
+  transform: translateY(0);
+}
+
+.fx-card:focus-visible,
+.fx-sigitm:focus-visible,
+.fx-nav-item:focus-visible,
+.fx-fav:focus-visible {
+  outline: 3px solid #5aa2ff;
+  outline-offset: 2px;
+}
+
+.fx-card-icon {
+  flex: none;
+  width: 62px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.fx-card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.fx-card-copy b {
+  font-size: clamp(17px, 1.35vw, 22px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.fx-card-copy span {
+  font-size: clamp(12.5px, 0.95vw, 15px);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fx-go {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  z-index: 3;
+  transition: transform 0.15s ease;
+}
+
+.fx-card:hover .fx-go,
+.fx-sigitm:hover .fx-go {
+  transform: translateY(-50%) translateX(3px);
+}
+
+.fx-fav {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  z-index: 4;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.38);
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.fx-card:hover .fx-fav,
+.fx-card:focus-within .fx-fav,
+.fx-fav.on {
+  opacity: 1;
+}
+
+.fx-fav.on {
+  color: #ffd24a;
+}
+
+@media (hover: none) {
+  .fx-fav {
+    opacity: 0.7;
+  }
+}
+
+.fx-empty {
+  padding: 28px;
+  border: 1px dashed var(--fx-muted);
+  color: var(--fx-muted);
+  text-align: center;
+}
+
+/* ---- Sistemas integrados ---- */
+.fx-systems {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(0, 1.15fr);
+  gap: clamp(12px, 1.4vw, 18px);
+}
+
+.fx-sigitm,
+.fx-info {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: clamp(80px, 11vh, 104px);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.fx-sigitm {
+  cursor: pointer;
+  padding: 18px 90px 18px 36px;
+  color: #fff;
+}
+
+.fx-sigitm b {
+  display: block;
+  font-size: clamp(24px, 2.2vw, 34px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.fx-sigitm span {
+  font-size: clamp(14px, 1.1vw, 17px);
+  opacity: 0.92;
+}
+
+.fx-sigitm-icon {
+  font-size: clamp(34px, 3vw, 46px);
+}
+
+.fx-info {
+  padding: 16px 24px;
+  gap: 16px;
+}
+
+.fx-info > i {
+  font-size: 22px;
+  flex: none;
+}
+
+.fx-info b {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.fx-info span {
+  font-size: 13.5px;
+  line-height: 1.4;
+  display: block;
+}
+
+/* ---- Barra de status ---- */
+.fx-status {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  padding: 14px 4px 4px;
+  font-size: 14px;
+}
+
+.fx-status-l,
+.fx-status-r {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fx-sep {
+  width: 1px;
+  height: 18px;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+.fx-conn i {
+  color: #2fcf4f;
+}
+
+.fx-conn.off i {
+  color: #e0a030;
+}
+
+/* ---- Diálogo ---- */
+.fx-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(5, 8, 14, 0.6);
+}
+
+.fx-dialog {
+  width: min(92vw, 420px);
+  padding: 24px;
+  font-family: var(--fx-font);
+}
+
+.fx-dialog h4 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.fx-dialog p {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.fx-dialog .fx-dialog-sub {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-top: 16px;
+}
+
+.fx-seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 8px;
+}
+
+.fx-seg button,
+.fx-dialog-close {
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+}
+
+.fx-dialog-close {
+  margin-top: 22px;
+  width: 100%;
+}
+
+/* ======================= 3. ESTILO BAUHAUS ======================= */
+html[data-skin="bauhaus"] .fx-dash {
+  background: var(--fx-bg);
+  gap: 0;
+  margin-inline: calc(-1 * clamp(8px, 1vw, 16px));
+}
+
+html[data-skin="bauhaus"] .fx-side {
+  background: var(--fx-side);
+  border-right: 1px solid var(--fx-line);
+  padding-top: clamp(26px, 5vh, 46px);
+  overflow: hidden;
+}
+
+html[data-skin="bauhaus"] .fx-brand {
+  padding: 0 14px;
+  color: var(--fx-text);
+}
+
+html[data-skin="bauhaus"] .fx-brand-icon {
+  font-size: 52px;
+  margin-bottom: 4px;
+  color: var(--fx-text);
+}
+
+html[data-skin="bauhaus"] .fx-brand span {
+  font-size: clamp(20px, 1.5vw, 26px);
+}
+
+html[data-skin="bauhaus"] .fx-nav {
+  margin-top: clamp(34px, 8vh, 74px);
+  border-top: 1px solid var(--fx-line);
+}
+
+html[data-skin="bauhaus"] .fx-nav-item {
+  padding: clamp(14px, 2vh, 20px) 28px;
+  background: transparent;
+  color: var(--fx-muted);
+  border-left: 5px solid transparent;
+  border-bottom: 1px solid var(--fx-line);
+}
+
+html[data-skin="bauhaus"] .fx-nav-item:hover {
+  color: var(--fx-text);
+  background: rgba(127, 140, 160, 0.12);
+}
+
+html[data-skin="bauhaus"] .fx-nav-item.active {
+  background: var(--fx-blue);
+  color: #fff;
+  border-left-color: #5aa2ff;
+}
+
+html[data-skin="bauhaus"] .fx-side-foot {
+  padding: 0 24px clamp(120px, 17vh, 168px);
+  color: var(--fx-text);
+}
+
+html[data-skin="bauhaus"] .fx-side-shapes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(100px, 15vh, 150px);
+  display: flex;
+  align-items: flex-end;
+  border-top: 1px solid var(--fx-line);
+}
+
+html[data-skin="bauhaus"] .fx-side-shapes i {
+  display: block;
+  width: 50%;
+}
+
+html[data-skin="bauhaus"] .fx-side-shapes i:first-child {
+  height: 100%;
+  background: var(--fx-red);
+  border-radius: 100% 0 0 0;
+}
+
+html[data-skin="bauhaus"] .fx-side-shapes i:last-child {
+  height: 100%;
+  background: #e6e0d2;
+  border-radius: 100% 100% 0 0;
+  margin-left: -2px;
+}
+
+html[data-skin="bauhaus"] .fx-main {
+  padding: 0 clamp(16px, 2.4vw, 42px) 0;
+  gap: clamp(16px, 3vh, 30px);
+}
+
+/* Hero */
+html[data-skin="bauhaus"] .fx-hero {
+  margin-inline: calc(-1 * clamp(16px, 2.4vw, 42px));
+  padding: clamp(28px, 6vh, 56px) clamp(16px, 2.4vw, 42px) clamp(18px, 3vh, 28px);
+  min-height: clamp(210px, 32vh, 300px);
+  background: #141a24;
+  border-bottom: 1px solid var(--fx-line);
+  color: #f4f0e6;
+  display: flex;
+  align-items: center;
+}
+
+html[data-skin="bauhaus"] .fx-hero-art {
+  left: auto;
+  width: 44%;
+  color: #1b1f27;
+}
+
+html[data-skin="bauhaus"] .fx-hero-copy {
+  max-width: 56%;
+}
+
+html[data-skin="bauhaus"] .fx-flags {
+  display: flex;
+  gap: 12px;
+  margin-bottom: clamp(10px, 2vh, 20px);
+}
+
+html[data-skin="bauhaus"] .fx-flags i {
+  display: block;
+  height: 14px;
+}
+
+html[data-skin="bauhaus"] .fx-flags i:first-child {
+  width: 88px;
+  background: var(--fx-blue);
+}
+
+html[data-skin="bauhaus"] .fx-flags i:last-child {
+  width: 74px;
+  background: var(--fx-red);
+}
+
+html[data-skin="bauhaus"] .fx-hero-copy h2 {
+  font-size: clamp(32px, 4.4vw, 66px);
+  font-weight: 700;
+  line-height: 1.02;
+  color: #f4f0e6;
+}
+
+html[data-skin="bauhaus"] .fx-hero-copy p {
+  margin-top: clamp(10px, 1.6vh, 18px);
+  padding-top: clamp(10px, 1.4vh, 16px);
+  position: relative;
+  font-size: clamp(14px, 1.3vw, 20px);
+  color: #e6e0d2;
+}
+
+html[data-skin="bauhaus"] .fx-hero-copy p::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 74px;
+  height: 1px;
+  background: #8e97a5;
+}
+
+html[data-skin="bauhaus"] .fx-hero .fx-pill {
+  position: absolute;
+  top: clamp(18px, 3vh, 30px);
+  right: clamp(16px, 2.4vw, 42px);
+  z-index: 3;
+  padding: 14px 24px;
+  border-radius: 40px 0 0 40px;
+  border-radius: 999px;
+  background: #11161f;
+}
+
+/* Rótulos */
+html[data-skin="bauhaus"] .fx-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  color: var(--fx-text);
+}
+
+html[data-skin="bauhaus"] .fx-label::before {
+  content: '';
+  width: 6px;
+  height: 22px;
+  background: var(--fx-red);
+}
+
+html[data-skin="bauhaus"] .fx-label--blue::before {
+  background: var(--fx-blue);
+}
+
+html[data-skin="bauhaus"] .fx-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--fx-line);
+}
+
+/* Cartões: alternância claro / escuro em xadrez (3 colunas) */
+html[data-skin="bauhaus"] .fx-card {
+  --c-bg: var(--fx-dark-bg);
+  --c-text: var(--fx-dark-text);
+  --c-muted: var(--fx-dark-muted);
+  background: var(--c-bg);
+  color: var(--c-text);
+  border: 1px solid var(--fx-line);
+  border-radius: 2px;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(odd) {
+  --c-bg: var(--fx-light-bg);
+  --c-text: var(--fx-light-text);
+  --c-muted: var(--fx-light-muted);
+  border-color: transparent;
+}
+
+html[data-skin="bauhaus"] .fx-card-copy span {
+  color: var(--c-muted);
+}
+
+/* Ícone: quadrado azul-marinho nos cartões claros, solto nos escuros */
+html[data-skin="bauhaus"] .fx-card-icon {
+  color: var(--c-text);
+  font-size: 34px;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(odd) .fx-card-icon {
+  background: var(--fx-navy);
+  color: #fff;
+  font-size: 28px;
+  border-radius: 2px;
+}
+
+/* Formas geométricas de canto */
+html[data-skin="bauhaus"] .fx-card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  background: var(--fx-blue);
+  right: 0;
+  bottom: 0;
+  width: 27%;
+  height: 100%;
+  border-radius: 100% 0 0 0;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(6n+2)::before {
+  background: var(--fx-red);
+  top: 0;
+  bottom: auto;
+  width: 24%;
+  height: 44%;
+  border-radius: 0 0 0 100%;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(6n+3)::before {
+  background: var(--fx-yellow);
+  top: 0;
+  bottom: auto;
+  width: 26%;
+  height: 52%;
+  border-radius: 100% 0 0 0;
+  border-radius: 100% 100% 0 0 / 100% 100% 0 0;
+  border-radius: 100% 0 0 0;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(6n+4)::before {
+  background: var(--fx-yellow);
+  right: auto;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 42px;
+  height: auto;
+  border-radius: 0;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(6n+4) {
+  padding-left: 62px;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(6n+6)::before {
+  background: var(--fx-red);
+  width: 22%;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(6n+5)::before {
+  width: 25%;
+}
+
+html[data-skin="bauhaus"] .fx-go {
+  background: var(--fx-navy);
+  color: #fff;
+  border: 2px solid #fff;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(even) .fx-go {
+  background: transparent;
+  border-color: #f4f0e6;
+  color: #f4f0e6;
+}
+
+html[data-skin="bauhaus"] .fx-card:nth-child(odd) .fx-go {
+  background: #0c1a38;
+  border-color: #0c1a38;
+}
+
+html[data-skin="bauhaus"] .fx-card:hover {
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* Sistemas */
+html[data-skin="bauhaus"] .fx-sigitm {
+  background: #0e3a8c;
+  border-radius: 2px;
+}
+
+html[data-skin="bauhaus"] .fx-sigitm::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: 0;
+  width: 20%;
+  height: 100%;
+  background: var(--fx-blue);
+  border-radius: 100% 0 0 0;
+}
+
+html[data-skin="bauhaus"] .fx-sigitm .fx-go {
+  background: #0c1a38;
+  border-color: #0c1a38;
+  color: #fff;
+}
+
+html[data-skin="bauhaus"] .fx-info {
+  background: var(--fx-dark-bg);
+  color: var(--fx-dark-text);
+  border: 1px solid var(--fx-line);
+  border-radius: 2px;
+}
+
+html[data-skin="bauhaus"] .fx-info::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 16px;
+  bottom: 16px;
+  width: 4px;
+  background: var(--fx-yellow);
+}
+
+html[data-skin="bauhaus"] .fx-info::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 22%;
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 7px);
+}
+
+html[data-skin="bauhaus"] .fx-info > i {
+  margin-left: 14px;
+}
+
+html[data-skin="bauhaus"] .fx-info span {
+  color: var(--fx-dark-muted);
+}
+
+/* Status */
+html[data-skin="bauhaus"] .fx-status {
+  border-top: 1px solid var(--fx-line);
+  padding: 16px 0 14px;
+  color: var(--fx-text);
+}
+
+html[data-skin="bauhaus"] .fx-status-l i {
+  color: var(--fx-blue);
+}
+
+/* Diálogo */
+html[data-skin="bauhaus"] .fx-dialog {
+  background: var(--fx-light-bg);
+  color: var(--fx-light-text);
+  border-radius: 2px;
+  border-top: 8px solid var(--fx-red);
+}
+
+html[data-skin="bauhaus"] .fx-seg button.on {
+  background: var(--fx-blue);
+  border-color: var(--fx-blue);
+  color: #fff;
+}
+
+html[data-skin="bauhaus"] .fx-dialog-close {
+  background: var(--fx-navy);
+  border-color: var(--fx-navy);
+  color: #fff;
+}
+
+/* ======================= 4. ESTILO TÉCNICO (AÇO ESCOVADO) ======================= */
+/* Texturas e peças reutilizáveis */
+html[data-skin="tecnico"] {
+  --brushed: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, rgba(0, 0, 0, 0.03) 1px 3px);
+  --screws:
+    radial-gradient(circle at 10px 10px, #2a2d33 0 2.2px, #8d9096 2.5px 4px, transparent 4.5px),
+    radial-gradient(circle at calc(100% - 10px) 10px, #2a2d33 0 2.2px, #8d9096 2.5px 4px, transparent 4.5px),
+    radial-gradient(circle at 10px calc(100% - 10px), #2a2d33 0 2.2px, #8d9096 2.5px 4px, transparent 4.5px),
+    radial-gradient(circle at calc(100% - 10px) calc(100% - 10px), #2a2d33 0 2.2px, #8d9096 2.5px 4px, transparent 4.5px);
+  --steel: linear-gradient(180deg, var(--fx-steel-1), var(--fx-steel-2) 55%, var(--fx-steel-3));
+  --dark-steel: linear-gradient(180deg, var(--fx-dark-1), var(--fx-dark-2));
+  --blue-glossy: linear-gradient(180deg, #2f7be6 0%, #1450ad 46%, #0b3377 100%);
+  --green-glossy: linear-gradient(180deg, #34c166 0%, #1b8a45 48%, #0f5f2e 100%);
+  --red-glossy: linear-gradient(180deg, #ee5a4a 0%, #c0281a 48%, #861409 100%);
+}
+
+html[data-skin="tecnico"] .fx-dash {
+  gap: 14px;
+  padding-bottom: 6px;
+}
+
+/* Barra lateral */
+html[data-skin="tecnico"] .fx-side {
+  background: var(--brushed), var(--dark-steel);
+  border: 1px solid var(--fx-edge);
+  border-radius: 18px;
+  padding: 22px 12px 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -2px 6px rgba(0, 0, 0, 0.4), 0 8px 22px rgba(0, 0, 0, 0.45);
+}
+
+html[data-skin="tecnico"] .fx-side::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--screws);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+html[data-skin="tecnico"] .fx-brand {
+  color: var(--fx-text);
+  padding: 8px 6px 18px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+html[data-skin="tecnico"][data-theme="light"] .fx-brand,
+html[data-skin="tecnico"][data-theme="light"] .fx-side-foot {
+  color: #141c2b;
+}
+
+html[data-skin="tecnico"] .fx-brand-icon {
+  font-size: 54px;
+  color: #2f86ff;
+  filter: drop-shadow(0 0 10px var(--fx-blue-glow));
+}
+
+html[data-skin="tecnico"] .fx-brand span {
+  font-size: clamp(20px, 1.6vw, 28px);
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+html[data-skin="tecnico"][data-theme="light"] .fx-brand span {
+  text-shadow: none;
+}
+
+html[data-skin="tecnico"] .fx-nav {
+  gap: 8px;
+}
+
+html[data-skin="tecnico"] .fx-nav-item {
+  padding: clamp(12px, 1.8vh, 17px) 16px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #484d56, #30343b);
+  border: 1px solid #1d2026;
+  color: #f1f5fb;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+html[data-skin="tecnico"][data-theme="light"] .fx-nav-item {
+  background: linear-gradient(180deg, #f3f4f6, #c9cdd3);
+  border-color: #8b9098;
+  color: #1a2232;
+  box-shadow: inset 0 1px 0 #fff, 0 2px 4px rgba(0, 0, 0, 0.22);
+}
+
+html[data-skin="tecnico"] .fx-nav-item:hover {
+  filter: brightness(1.12);
+}
+
+html[data-skin="tecnico"] .fx-nav-item.active,
+html[data-skin="tecnico"][data-theme="light"] .fx-nav-item.active {
+  background: var(--blue-glossy);
+  border-color: #0a2a63;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 14px var(--fx-blue-glow);
+}
+
+html[data-skin="tecnico"] .fx-nav::after {
+  content: '';
+  display: block;
+  height: clamp(60px, 10vh, 96px);
+  margin-top: 10px;
+  border-radius: 9px;
+  background: repeating-linear-gradient(180deg, #0c0e12 0 5px, #2b2f36 5px 9px);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+html[data-skin="tecnico"] .fx-side-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5fb;
+}
+
+html[data-skin="tecnico"] .fx-side-foot small {
+  font-size: 12.5px;
+  line-height: 1.3;
+  opacity: 0.85;
+}
+
+html[data-skin="tecnico"] .fx-vivo {
+  width: 104px;
+  height: 32px;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* Barra superior */
+html[data-skin="tecnico"] .fx-topbar {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 10px 22px;
+  border-radius: 16px;
+  border: 1px solid var(--fx-edge);
+  background: var(--brushed), var(--steel);
+  color: var(--fx-steel-text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 5px rgba(0, 0, 0, 0.25), 0 6px 16px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+html[data-skin="tecnico"] .fx-topbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--screws);
+  opacity: 0.8;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+html[data-skin="tecnico"] .fx-topbar-title b {
+  display: block;
+  font-size: clamp(22px, 2vw, 32px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+html[data-skin="tecnico"] .fx-topbar-title small {
+  font-size: 13px;
+  color: var(--fx-steel-muted);
+}
+
+html[data-skin="tecnico"] .fx-topbar-tag {
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.25;
+  padding-left: 22px;
+  border-left: 1px solid rgba(0, 0, 0, 0.4);
+  color: var(--fx-steel-muted);
+}
+
+html[data-skin="tecnico"] .fx-topbar .fx-pill {
+  margin-left: auto;
+  border-radius: 14px;
+  border: 1px solid #000;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+  color: #7ff09c;
+}
+
+html[data-skin="tecnico"] .fx-topbar .fx-pill em {
+  color: #f1f5fb;
+}
+
+html[data-skin="tecnico"] .fx-dot {
+  background: var(--fx-led);
+  box-shadow: 0 0 10px var(--fx-led);
+}
+
+html[data-skin="tecnico"] .fx-dot.off {
+  background: #e0a030;
+  box-shadow: 0 0 10px #e0a030;
+}
+
+/* Hero (banner) */
+html[data-skin="tecnico"] .fx-hero {
+  display: flex;
+  align-items: center;
+  min-height: clamp(130px, 19vh, 178px);
+  border-radius: 16px;
+  border: 1px solid var(--fx-edge);
+  background: #070a10;
+  box-shadow: inset 0 0 0 3px #1a1d23, 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+
+html[data-skin="tecnico"] .fx-hero-art {
+  -webkit-mask-image: linear-gradient(90deg, #000 62%, transparent 82%);
+  mask-image: linear-gradient(90deg, #000 62%, transparent 82%);
+  color: #0a0f18;
+}
+
+html[data-skin="tecnico"] .fx-hero-copy {
+  margin-left: auto;
+  width: min(46%, 640px);
+  padding: 18px 28px 18px 26px;
+  position: relative;
+  z-index: 2;
+}
+
+html[data-skin="tecnico"] .fx-hero-copy::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 22px;
+  bottom: 54px;
+  width: 4px;
+  background: #2f86ff;
+  box-shadow: 0 0 10px var(--fx-blue-glow);
+}
+
+html[data-skin="tecnico"] .fx-hero-copy h2 {
+  font-size: clamp(22px, 2.5vw, 40px);
+  font-weight: 600;
+  line-height: 1.05;
+  color: #f4f7fc;
+  padding-left: 22px;
+}
+
+html[data-skin="tecnico"] .fx-hero-copy p {
+  margin-top: 8px;
+  padding-left: 22px;
+  font-size: clamp(12.5px, 1vw, 16px);
+  color: #cfd9e8;
+}
+
+/* Rótulos */
+html[data-skin="tecnico"] .fx-label {
+  position: relative;
+  padding: 8px 18px 8px 78px;
+  border-radius: 10px;
+  border: 1px solid var(--fx-edge);
+  background: var(--dark-steel);
+  color: #f1f5fb;
+  font-size: 17px;
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 3px 8px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  gap: 12px;
+}
+
+html[data-skin="tecnico"][data-theme="light"] .fx-label {
+  color: #141c2b;
+}
+
+html[data-skin="tecnico"] .fx-label::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: -2px;
+  width: 54px;
+  height: 130%;
+  background: repeating-linear-gradient(115deg, #2f86ff 0 8px, transparent 8px 14px);
+  opacity: 0.9;
+}
+
+html[data-skin="tecnico"] .fx-label i {
+  color: #7fb4ff;
+  font-size: 20px;
+  filter: drop-shadow(0 0 6px var(--fx-blue-glow));
+}
+
+/* Cartões: placas de aço; os "destaques" são azuis brilhantes */
+html[data-skin="tecnico"] .fx-card {
+  border-radius: 10px;
+  border: 1px solid var(--fx-edge);
+  background: var(--screws), var(--brushed), var(--steel);
+  color: var(--fx-steel-text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 4px rgba(0, 0, 0, 0.22), 0 6px 14px rgba(0, 0, 0, 0.45);
+}
+
+html[data-skin="tecnico"] .fx-card:hover {
+  filter: brightness(1.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 4px rgba(0, 0, 0, 0.22), 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+html[data-skin="tecnico"] .fx-card-copy span {
+  color: var(--fx-steel-muted);
+}
+
+html[data-skin="tecnico"] .fx-card-icon {
+  color: #1f5fc4;
+  font-size: 38px;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.6));
+}
+
+html[data-skin="tecnico"] .fx-go {
+  background: linear-gradient(180deg, #3a3e45, #16181c);
+  border: 2px solid #9a9ea5;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Destaques azuis (1º e 5º de cada bloco de 6) */
+html[data-skin="tecnico"] .fx-card:nth-child(6n+1),
+html[data-skin="tecnico"] .fx-card:nth-child(6n+5) {
+  background: var(--screws), var(--blue-glossy);
+  color: #fff;
+  border-color: #0a2a63;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 0 22px rgba(80, 160, 255, 0.25), 0 6px 14px rgba(0, 0, 0, 0.5);
+}
+
+html[data-skin="tecnico"] .fx-card:nth-child(6n+1) .fx-card-copy span,
+html[data-skin="tecnico"] .fx-card:nth-child(6n+5) .fx-card-copy span {
+  color: #cfe0fb;
+}
+
+html[data-skin="tecnico"] .fx-card:nth-child(6n+1) .fx-card-icon,
+html[data-skin="tecnico"] .fx-card:nth-child(6n+5) .fx-card-icon {
+  color: #8fc2ff;
+  background: #0a1e44;
+  border-radius: 8px;
+  border: 1px solid #3d78d6;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7), 0 0 12px rgba(80, 160, 255, 0.35);
+  filter: drop-shadow(0 0 5px rgba(120, 190, 255, 0.7));
+  font-size: 30px;
+}
+
+html[data-skin="tecnico"] .fx-card:nth-child(6n+1) .fx-go,
+html[data-skin="tecnico"] .fx-card:nth-child(6n+5) .fx-go {
+  background: #0a1e44;
+  border-color: #cfe0fb;
+}
+
+/* Sistemas */
+html[data-skin="tecnico"] .fx-sigitm {
+  border-radius: 12px;
+  border: 1px solid #0a2a63;
+  background: var(--screws), var(--blue-glossy);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 8px 18px rgba(0, 0, 0, 0.5);
+}
+
+html[data-skin="tecnico"] .fx-sigitm .fx-go {
+  background: #0a1e44;
+  border-color: #cfe0fb;
+}
+
+html[data-skin="tecnico"] .fx-info {
+  border-radius: 12px;
+  border: 1px solid var(--fx-edge);
+  background:
+    radial-gradient(60% 140% at 100% 100%, rgba(60, 140, 255, 0.35), transparent 70%),
+    radial-gradient(circle at 88% 50%, rgba(150, 200, 255, 0.18) 0 28%, transparent 29%),
+    #0a0f18;
+  color: #f1f5fb;
+  box-shadow: inset 0 0 0 3px #1a1d23, 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+html[data-skin="tecnico"] .fx-info > i {
+  color: #4a9bff;
+  font-size: 30px;
+  filter: drop-shadow(0 0 6px var(--fx-blue-glow));
+}
+
+html[data-skin="tecnico"] .fx-info::before {
+  content: '';
+  width: 3px;
+  align-self: stretch;
+  background: #2f86ff;
+  order: 1;
+  margin: 4px 0;
+}
+
+html[data-skin="tecnico"] .fx-info > div {
+  order: 2;
+}
+
+html[data-skin="tecnico"] .fx-info span {
+  color: #cfd9e8;
+}
+
+/* Barra de status */
+html[data-skin="tecnico"] .fx-status {
+  margin-top: auto;
+  padding: 8px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--fx-edge);
+  background: var(--brushed), var(--dark-steel);
+  color: #f1f5fb;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+html[data-skin="tecnico"][data-theme="light"] .fx-status {
+  color: #141c2b;
+}
+
+html[data-skin="tecnico"] .fx-status-l i {
+  color: #f0a53a;
+}
+
+html[data-skin="tecnico"] .fx-status-r > span:first-child {
+  padding: 5px 16px;
+  border-radius: 10px;
+  background: #0b0e13;
+  color: #f1f5fb;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+html[data-skin="tecnico"] .fx-status-r > span:first-child i {
+  color: #cfd9e8;
+}
+
+html[data-skin="tecnico"] .fx-conn {
+  color: #6cf08f;
+  font-weight: 600;
+}
+
+html[data-skin="tecnico"][data-theme="light"] .fx-conn {
+  color: #0d7a2b;
+}
+
+html[data-skin="tecnico"] .fx-conn.off {
+  color: #f0b04a;
+}
+
+/* Diálogo */
+html[data-skin="tecnico"] .fx-dialog {
+  background: var(--screws), var(--brushed), var(--steel);
+  color: var(--fx-steel-text);
+  border-radius: 14px;
+  border: 1px solid var(--fx-edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+html[data-skin="tecnico"] .fx-seg button,
+html[data-skin="tecnico"] .fx-dialog-close {
+  border-radius: 9px;
+  border-color: #6b7078;
+  background: linear-gradient(180deg, #f1f2f4, #c3c7cd);
+  color: #151c29;
+}
+
+html[data-skin="tecnico"] .fx-seg button.on,
+html[data-skin="tecnico"] .fx-dialog-close {
+  background: var(--blue-glossy, linear-gradient(180deg, #2f7be6, #0b3377));
+  border-color: #0a2a63;
+  color: #fff;
+}
+
+/* ======================= 4b. COMPONENTES COMPARTILHADOS (TODAS AS FERRAMENTAS) ======================= */
+/* Vale para OTDR, Carimbo, Calculadora, Tabela, NSAP, Datacom, Registros, TA,
+   Rotas HL4, Equipamentos, KML, Topologia e Admin — todas usam estas classes. */
+
+/* ---- Cabeçalho das telas internas ---- */
+html[data-skin] .app-container:not(.fx-on-dash) .app-header {
+  margin-bottom: 12px;
+}
+
+html[data-skin="bauhaus"] .app-container:not(.fx-on-dash) .app-header::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 10px;
+  margin-bottom: 8px;
+  background:
+    linear-gradient(var(--fx-blue), var(--fx-blue)) 0 0 / 88px 10px no-repeat,
+    linear-gradient(var(--fx-red), var(--fx-red)) 100px 0 / 74px 10px no-repeat,
+    linear-gradient(var(--fx-yellow), var(--fx-yellow)) 186px 0 / 40px 10px no-repeat;
+}
+
+html[data-skin="tecnico"] .app-container:not(.fx-on-dash) .controls-bar {
+  padding: 8px 14px;
+  margin-bottom: 0;
+  border-radius: 14px;
+  border: 1px solid var(--fx-edge);
+  background: var(--brushed), var(--steel);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -2px 5px rgba(0, 0, 0, 0.25), 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+html[data-skin="tecnico"] .app-container:not(.fx-on-dash) .crumb-name,
+html[data-skin="tecnico"] .app-container:not(.fx-on-dash) .crumb-sep {
+  color: var(--fx-steel-text) !important;
+}
+
+html[data-skin="bauhaus"] .back-inline .crumb-name {
+  color: var(--fx-text) !important;
+  font-weight: 700;
+  font-family: var(--fx-font);
+}
+
+/* ---- Superfícies (painéis, cartões, tabelas, modais) ---- */
+html.sk-skin[data-skin] :is(.tab-content, .section, .panel, .modal-content, .info-item, .stat-card, .metric-card, .backup-card, .filters-container, .details-card, .topo-card, .client-mobile-card, .client-card-body, .table-container, .sk-sheet, .nsap-panel, .database-container, .kml-summary-bar) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* BAUHAUS: planos, cantos retos, filete de cor */
+html.sk-skin[data-skin="bauhaus"] :is(.section, .panel, .modal-content, .info-item, .stat-card, .metric-card, .backup-card, .filters-container, .details-card, .topo-card, .client-mobile-card, .client-card-body, .table-container, .sk-sheet, .nsap-panel, .database-container, .kml-summary-bar) {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+html.sk-skin[data-skin="bauhaus"] .tab-content {
+  background:
+    linear-gradient(90deg, var(--fx-blue) 0 34%, var(--fx-red) 34% 67%, var(--fx-yellow) 67% 100%) top left / 100% 6px no-repeat,
+    var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  box-shadow: none;
+  padding-top: calc(6px + 1em);
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.panel, .section, .info-item, .topo-card, .metric-card) {
+  border-left: 5px solid var(--fx-blue);
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.panel, .section, .info-item, .topo-card, .metric-card):nth-of-type(3n+2) {
+  border-left-color: var(--fx-red);
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.panel, .section, .info-item, .topo-card, .metric-card):nth-of-type(3n) {
+  border-left-color: var(--fx-yellow);
+}
+
+html.sk-skin[data-skin="bauhaus"] .stat-card {
+  border-top: 5px solid var(--fx-blue);
+}
+
+html.sk-skin[data-skin="bauhaus"] .stat-card:nth-child(3n+2) {
+  border-top-color: var(--fx-red);
+}
+
+html.sk-skin[data-skin="bauhaus"] .stat-card:nth-child(3n) {
+  border-top-color: var(--fx-yellow);
+}
+
+html.sk-skin[data-skin="bauhaus"] .modal-content {
+  border-top: 8px solid var(--fx-red);
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(h1, h2, h3, h4, .panel-title, .section-head) {
+  font-family: var(--fx-font);
+  letter-spacing: 0.01em;
+}
+
+html.sk-skin[data-skin="bauhaus"] .panel-title {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+html.sk-skin[data-skin="bauhaus"] .form-group > label,
+html.sk-skin[data-skin="bauhaus"] .input-group > label {
+  font-family: var(--fx-font);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* TÉCNICO: placas de aço escovado; parafusos nos painéis grandes */
+html.sk-skin[data-skin="tecnico"] :is(.section, .panel, .modal-content, .info-item, .stat-card, .metric-card, .backup-card, .filters-container, .details-card, .topo-card, .client-mobile-card, .client-card-body, .table-container, .sk-sheet, .nsap-panel, .database-container, .kml-summary-bar) {
+  background: var(--brushed), var(--dark-steel);
+  border: 1px solid var(--fx-edge);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -2px 5px rgba(0, 0, 0, 0.35), 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+html.sk-skin[data-skin="tecnico"] :is(.tab-content, .panel, .modal-content, .section, .database-container) {
+  background: var(--screws), var(--brushed), var(--dark-steel);
+}
+
+html.sk-skin[data-skin="tecnico"] .tab-content {
+  border: 1px solid var(--fx-edge);
+  border-radius: 16px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -2px 6px rgba(0, 0, 0, 0.4), 0 10px 24px rgba(0, 0, 0, 0.45);
+}
+
+html.sk-skin[data-skin="tecnico"] :is(.stat-card, .info-item, .metric-card, .topo-card, .filters-container) {
+  background: var(--brushed), var(--dark-steel);
+}
+
+html.sk-skin[data-skin="tecnico"] .panel-title,
+html.sk-skin[data-skin="tecnico"] .section-head {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+html.sk-skin[data-skin="tecnico"][data-theme="light"] .panel-title,
+html.sk-skin[data-skin="tecnico"][data-theme="light"] .section-head {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* ---- Campos de formulário ---- */
+html.sk-skin[data-skin] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+  background: var(--fx-input);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-bottom: 3px solid var(--fx-blue);
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(input, select, textarea):focus {
+  outline: none;
+  border-color: var(--fx-blue);
+  border-bottom-color: var(--fx-red);
+  box-shadow: 0 0 0 3px rgba(31, 111, 224, 0.28);
+}
+
+html.sk-skin[data-skin="tecnico"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+  color: var(--fx-input-text);
+  border: 1px solid #000;
+  border-radius: 9px;
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.75), 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+html.sk-skin[data-skin="tecnico"][data-theme="light"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]), select, textarea) {
+  border-color: #7a8089;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3), 0 1px 0 #fff;
+}
+
+html.sk-skin[data-skin="tecnico"] :is(input, select, textarea):focus {
+  outline: none;
+  border-color: #2f86ff;
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(47, 134, 255, 0.5), 0 0 12px var(--fx-blue-glow);
+}
+
+html[data-skin] :is(input[type="checkbox"], input[type="radio"], input[type="range"]) {
+  accent-color: var(--accent);
+}
+
+/* ---- Botões ---- */
+html.sk-skin[data-skin] :is(.btn, .btn-sm, .db-btn, .action-btn, .nsap-btn, .filter-btn, .preset-btn, .view-mode-btn, .topo-mini-btn, .page-btn, .copy-btn, .dl-btn, .btn-ghost, .back-to-dashboard-btn, .controls-bar .export-btn, .controls-bar .reset-btn) {
+  font-family: var(--fx-font);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* BAUHAUS: botões chapados, cantos retos */
+html.sk-skin[data-skin="bauhaus"] :is(.btn, .btn-sm, .db-btn, .action-btn, .nsap-btn, .filter-btn, .preset-btn, .view-mode-btn, .topo-mini-btn, .page-btn, .copy-btn, .dl-btn, .btn-ghost, .back-to-dashboard-btn, .controls-bar .export-btn, .controls-bar .reset-btn, .controls-bar .theme-toggle) {
+  background: var(--fx-btn);
+  color: var(--fg);
+  border: 1px solid var(--fx-text);
+  border-color: color-mix(in srgb, var(--fx-text) 40%, transparent);
+  border-radius: 2px !important;
+  box-shadow: none !important;
+  text-shadow: none;
+  filter: none;
+  transform: none;
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.btn, .btn-sm, .db-btn, .action-btn, .nsap-btn, .filter-btn, .preset-btn, .view-mode-btn, .topo-mini-btn, .page-btn, .copy-btn, .dl-btn, .btn-ghost, .back-to-dashboard-btn, .controls-bar .export-btn, .controls-bar .reset-btn, .controls-bar .theme-toggle):hover:not(:disabled) {
+  background: var(--fx-text);
+  color: var(--fx-bg);
+  border-color: var(--fx-text);
+  transform: none;
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.btn-primary, .btn.primary, .db-btn.primary, .nsap-btn.primary, .preset-btn.active, .view-mode-btn.active, .filter-btn.active, .page-btn.active, .primary) {
+  background: var(--fx-blue);
+  color: #fff;
+  border-color: var(--fx-blue);
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.btn-primary, .btn.primary, .db-btn.primary, .nsap-btn.primary, .preset-btn.active, .view-mode-btn.active):hover:not(:disabled) {
+  background: #1757b5;
+  color: #fff;
+  border-color: #1757b5;
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.btn-success, .db-btn.success, .nsap-btn.success, .success) {
+  background: var(--fx-yellow);
+  color: #14203a;
+  border-color: var(--fx-yellow);
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.btn-success, .db-btn.success, .nsap-btn.success):hover:not(:disabled) {
+  background: #ffc93c;
+  color: #14203a;
+  border-color: #ffc93c;
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.btn-danger, .db-btn.danger, .danger, .history-del-btn) {
+  background: var(--fx-red);
+  color: #fff;
+  border-color: var(--fx-red);
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.btn-danger, .db-btn.danger, .danger):hover:not(:disabled) {
+  background: #f0503f;
+  color: #fff;
+  border-color: #f0503f;
+}
+
+html.sk-skin[data-skin="bauhaus"] .controls-bar .theme-toggle {
+  border-radius: 50% !important;
+}
+
+/* TÉCNICO: botões de aço em relevo; destaques em azul/verde/vermelho brilhante */
+html.sk-skin[data-skin="tecnico"] :is(.btn, .btn-sm, .db-btn, .action-btn, .nsap-btn, .filter-btn, .preset-btn, .view-mode-btn, .topo-mini-btn, .page-btn, .copy-btn, .dl-btn, .btn-ghost, .back-to-dashboard-btn, .controls-bar .export-btn, .controls-bar .reset-btn, .controls-bar .theme-toggle) {
+  background: linear-gradient(180deg, #4d525b, #30343b);
+  color: #f1f5fb;
+  border: 1px solid #1a1d23;
+  border-radius: 9px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 3px 6px rgba(0, 0, 0, 0.4) !important;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+html.sk-skin[data-skin="tecnico"][data-theme="light"] :is(.btn, .btn-sm, .db-btn, .action-btn, .nsap-btn, .filter-btn, .preset-btn, .view-mode-btn, .topo-mini-btn, .page-btn, .copy-btn, .dl-btn, .btn-ghost, .back-to-dashboard-btn, .controls-bar .export-btn, .controls-bar .reset-btn, .controls-bar .theme-toggle) {
+  background: linear-gradient(180deg, #f6f7f8, #c8ccd2);
+  color: #151c29;
+  border-color: #7a8089;
+  box-shadow: inset 0 1px 0 #fff, 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+html.sk-skin[data-skin="tecnico"] :is(.btn, .btn-sm, .db-btn, .action-btn, .nsap-btn, .filter-btn, .preset-btn, .view-mode-btn, .topo-mini-btn, .page-btn, .copy-btn, .dl-btn, .btn-ghost, .back-to-dashboard-btn, .controls-bar .export-btn, .controls-bar .reset-btn, .controls-bar .theme-toggle):hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+html.sk-skin[data-skin="tecnico"] :is(.btn, .btn-sm, .db-btn, .action-btn, .nsap-btn, .filter-btn, .preset-btn, .view-mode-btn, .topo-mini-btn, .page-btn, .copy-btn, .dl-btn, .btn-ghost, .back-to-dashboard-btn, .controls-bar .export-btn, .controls-bar .reset-btn, .controls-bar .theme-toggle):active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6) !important;
+}
+
+html.sk-skin[data-skin="tecnico"] :is(.btn-primary, .btn.primary, .db-btn.primary, .nsap-btn.primary, .preset-btn.active, .view-mode-btn.active, .filter-btn.active, .page-btn.active, .primary),
+html.sk-skin[data-skin="tecnico"][data-theme="light"] :is(.btn-primary, .btn.primary, .db-btn.primary, .nsap-btn.primary, .preset-btn.active, .view-mode-btn.active, .filter-btn.active, .page-btn.active, .primary) {
+  background: var(--blue-glossy);
+  color: #fff;
+  border-color: #0a2a63;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 12px var(--fx-blue-glow) !important;
+}
+
+html.sk-skin[data-skin="tecnico"] :is(.btn-success, .db-btn.success, .nsap-btn.success, .success):is(button, a),
+html.sk-skin[data-skin="tecnico"][data-theme="light"] :is(.btn-success, .db-btn.success, .nsap-btn.success):is(button, a) {
+  background: var(--green-glossy);
+  color: #fff;
+  border-color: #0b4a22;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(40, 200, 100, 0.4) !important;
+}
+
+html.sk-skin[data-skin="tecnico"] :is(.btn-danger, .db-btn.danger, .danger):is(button, a),
+html.sk-skin[data-skin="tecnico"][data-theme="light"] :is(.btn-danger, .db-btn.danger, .danger):is(button, a) {
+  background: var(--red-glossy);
+  color: #fff;
+  border-color: #5e0d05;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(230, 70, 50, 0.4) !important;
+}
+
+html.sk-skin[data-skin] :is(button, .btn):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Tabelas ---- */
+html.sk-skin[data-skin] .table-container table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+html.sk-skin[data-skin="bauhaus"] .table-container th {
+  background: var(--fx-navy);
+  color: #fff;
+  font-family: var(--fx-font);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 0;
+  border-bottom: 3px solid var(--fx-red);
+}
+
+html.sk-skin[data-skin="bauhaus"] .table-container td {
+  border-color: var(--border);
+}
+
+html.sk-skin[data-skin="bauhaus"] .table-container tbody tr:hover td {
+  background: rgba(31, 111, 224, 0.12);
+}
+
+html.sk-skin[data-skin="tecnico"] .table-container th {
+  background: var(--brushed), linear-gradient(180deg, #4a4f58, #2d3138);
+  color: #f1f5fb;
+  font-weight: 700;
+  border: 0;
+  border-bottom: 1px solid #000;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+html.sk-skin[data-skin="tecnico"][data-theme="light"] .table-container th {
+  background: var(--brushed), linear-gradient(180deg, #f3f4f6, #c4c8ce);
+  color: #151c29;
+  text-shadow: 0 1px 0 #fff;
+}
+
+html.sk-skin[data-skin="tecnico"] .table-container tbody tr:hover td {
+  background: rgba(74, 155, 255, 0.14);
+}
+
+/* ---- Abas / seletores / emblemas ---- */
+html.sk-skin[data-skin="bauhaus"] :is(.preset-selector, .view-mode-selector) {
+  gap: 6px;
+}
+
+html.sk-skin[data-skin="bauhaus"] :is(.nsap-pill, .version-badge, .badge, .status-badge, .tag) {
+  border-radius: 2px;
+}
+
+html.sk-skin[data-skin="tecnico"] :is(.tooltip-icon, .sec-num) {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* ---- Rodapé das telas internas ---- */
+html.sk-skin[data-skin="bauhaus"] .app-container:not(.fx-on-dash) .app-footer {
+  border-top: 3px solid var(--fx-blue);
+  margin-top: 16px;
+}
+
+html.sk-skin[data-skin="tecnico"] .app-container:not(.fx-on-dash) .app-footer {
+  margin-top: 16px;
+  padding: 8px 16px;
+  border: 1px solid var(--fx-edge);
+  border-radius: 14px;
+  background: var(--brushed), var(--dark-steel);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* ======================= 5. RESPONSIVO ======================= */
+@media (max-width: 1199px) {
+  .fx-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* xadrez para 2 colunas */
+  html[data-skin="bauhaus"] .fx-card:nth-child(odd) {
+    --c-bg: var(--fx-dark-bg);
+    --c-text: var(--fx-dark-text);
+    --c-muted: var(--fx-dark-muted);
+    border-color: var(--fx-line);
+  }
+
+  html[data-skin="bauhaus"] .fx-card:nth-child(4n+1),
+  html[data-skin="bauhaus"] .fx-card:nth-child(4n+4) {
+    --c-bg: var(--fx-light-bg);
+    --c-text: var(--fx-light-text);
+    --c-muted: var(--fx-light-muted);
+    border-color: transparent;
+  }
+
+  html[data-skin="bauhaus"] .fx-card:nth-child(odd) .fx-card-icon,
+  html[data-skin="bauhaus"] .fx-card:nth-child(even) .fx-card-icon {
+    background: transparent;
+    color: var(--c-text);
+    font-size: 34px;
+  }
+
+  html[data-skin="bauhaus"] .fx-card:nth-child(4n+1) .fx-card-icon,
+  html[data-skin="bauhaus"] .fx-card:nth-child(4n+4) .fx-card-icon {
+    background: var(--fx-navy);
+    color: #fff;
+    font-size: 28px;
+  }
+
+  html[data-skin="bauhaus"] .fx-card:nth-child(odd) .fx-go,
+  html[data-skin="bauhaus"] .fx-card:nth-child(even) .fx-go {
+    background: transparent;
+    border-color: #f4f0e6;
+    color: #f4f0e6;
+  }
+
+  html[data-skin="bauhaus"] .fx-card:nth-child(4n+1) .fx-go,
+  html[data-skin="bauhaus"] .fx-card:nth-child(4n+4) .fx-go {
+    background: #0c1a38;
+    border-color: #0c1a38;
+    color: #fff;
+  }
+}
+
+@media (max-width: 999px) {
+  .fx-dash {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  /* barra lateral vira faixa horizontal rolável */
+  .fx-side {
+    padding: 8px !important;
+    overflow: visible;
+  }
+
+  .fx-brand,
+  .fx-side-foot,
+  .fx-side-shapes,
+  html[data-skin="tecnico"] .fx-nav::after {
+    display: none !important;
+  }
+
+  .fx-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    margin-top: 0 !important;
+    border-top: 0 !important;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fx-nav-item {
+    width: auto;
+    flex: none;
+    padding: 12px 16px !important;
+    white-space: nowrap;
+  }
+
+  html[data-skin="bauhaus"] .fx-nav-item {
+    border-bottom: 0;
+    border-left: 0;
+  }
+
+  html[data-skin="bauhaus"] .fx-dash {
+    margin-inline: 0;
+  }
+
+  html[data-skin="bauhaus"] .fx-main {
+    padding-inline: 12px;
+  }
+
+  html[data-skin="bauhaus"] .fx-hero {
+    margin-inline: -12px;
+    padding-inline: 16px;
+  }
+
+  html[data-skin="bauhaus"] .fx-hero-art {
+    width: 55%;
+    opacity: 0.55;
+  }
+
+  html[data-skin="bauhaus"] .fx-hero-copy {
+    max-width: 100%;
+  }
+
+  html[data-skin="tecnico"] .fx-topbar-tag {
+    display: none;
+  }
+
+  html[data-skin="tecnico"] .fx-hero-copy {
+    width: 100%;
+  }
+
+  html[data-skin="tecnico"] .fx-hero-art {
+    -webkit-mask-image: linear-gradient(90deg, #000 20%, transparent 90%);
+    mask-image: linear-gradient(90deg, #000 20%, transparent 90%);
+    opacity: 0.6;
+  }
+
+  .fx-systems {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .fx-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 1 coluna: alterna linha a linha */
+  html[data-skin="bauhaus"] .fx-card:nth-child(4n+1),
+  html[data-skin="bauhaus"] .fx-card:nth-child(4n+4),
+  html[data-skin="bauhaus"] .fx-card:nth-child(even),
+  html[data-skin="bauhaus"] .fx-card:nth-child(odd) {
+    --c-bg: var(--fx-dark-bg);
+    --c-text: var(--fx-dark-text);
+    --c-muted: var(--fx-dark-muted);
+    border-color: var(--fx-line);
+  }
+
+  html[data-skin="bauhaus"] .fx-card:nth-child(odd) {
+    --c-bg: var(--fx-light-bg);
+    --c-text: var(--fx-light-text);
+    --c-muted: var(--fx-light-muted);
+    border-color: transparent;
+  }
+
+  html[data-skin="bauhaus"] .fx-card .fx-card-icon {
+    background: transparent;
+    color: var(--c-text);
+  }
+
+  html[data-skin="bauhaus"] .fx-card:nth-child(odd) .fx-card-icon {
+    background: var(--fx-navy);
+    color: #fff;
+  }
+
+  html[data-skin="bauhaus"] .fx-card .fx-go {
+    background: transparent;
+    border-color: #f4f0e6;
+    color: #f4f0e6;
+  }
+
+  html[data-skin="bauhaus"] .fx-card:nth-child(odd) .fx-go {
+    background: #0c1a38;
+    border-color: #0c1a38;
+  }
+
+  html[data-skin="tecnico"] .fx-topbar {
+    padding: 10px 14px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  html[data-skin="tecnico"] .fx-topbar .fx-pill {
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+
+  .fx-card {
+    padding-right: 72px;
+  }
+
+  .fx-go {
+    right: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-dot { animation: none; }
+  .fx-card, .fx-go { transition: none; }
+}
