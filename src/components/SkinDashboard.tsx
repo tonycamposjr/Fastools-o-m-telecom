@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import type { ToolDef } from '../types';
 import vivoLogo from '../assets/logo-vivo.svg?inline';
+import { applyMotionPref, readMotionPref, type MotionPref } from '../lib/motion';
 
 export type Skin = 'bauhaus' | 'tecnico';
 type Theme = 'light' | 'dark';
@@ -163,6 +164,12 @@ export default function SkinDashboard(props: Props) {
   const [filter, setFilter] = useState<Filter>('all');
   const [dialog, setDialog] = useState<DialogKind>(null);
   const [now, setNow] = useState(() => new Date());
+  const [motion, setMotion] = useState<MotionPref>(readMotionPref);
+
+  const changeMotion = (m: MotionPref) => {
+    setMotion(m);
+    applyMotionPref(m);
+  };
 
   useEffect(() => {
     const id = window.setInterval(() => setNow(new Date()), 30_000);
@@ -287,6 +294,7 @@ export default function SkinDashboard(props: Props) {
                   <div
                     key={tool.id}
                     className="fx-card"
+                    data-tool={tool.id}
                     role="listitem"
                     tabIndex={0}
                     aria-label={`${tool.name}. ${tool.desc}`}
@@ -415,6 +423,11 @@ export default function SkinDashboard(props: Props) {
                 <div className="fx-seg" role="radiogroup" aria-label="Tema">
                   <button type="button" role="radio" aria-checked={theme === 'light'} className={theme === 'light' ? 'on' : ''} onClick={() => theme !== 'light' && onToggleTheme()}>Claro</button>
                   <button type="button" role="radio" aria-checked={theme === 'dark'} className={theme === 'dark' ? 'on' : ''} onClick={() => theme !== 'dark' && onToggleTheme()}>Escuro</button>
+                </div>
+                <p className="fx-dialog-sub">Animações</p>
+                <div className="fx-seg" role="radiogroup" aria-label="Animações">
+                  <button type="button" role="radio" aria-checked={motion === 'auto'} className={motion === 'auto' ? 'on' : ''} onClick={() => changeMotion('auto')}>Normais</button>
+                  <button type="button" role="radio" aria-checked={motion === 'reduced'} className={motion === 'reduced' ? 'on' : ''} onClick={() => changeMotion('reduced')}>Reduzidas</button>
                 </div>
               </>
             ) : (

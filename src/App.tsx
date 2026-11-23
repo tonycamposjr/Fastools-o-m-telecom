@@ -9,6 +9,7 @@ import * as api from './lib/api';
 import type { AuthUser } from './lib/api';
 import type { ToolDef } from './types';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
+import { withViewTransition } from './lib/motion';
 import pkg from '../package.json';
 
 declare const __BUILD_TIME__: string;
@@ -339,7 +340,7 @@ export default function App() {
         ? stateTab
         : (VALID_TABS.includes(currentHash) ? currentHash : 'dashboard');
 
-      setActiveTab(targetTab);
+      withViewTransition(() => setActiveTab(targetTab));
       localStorage.setItem('lastActiveTab', targetTab);
     };
 
@@ -373,7 +374,7 @@ export default function App() {
   // Update active tab, persist and push to native history for device back navigation
   const handleTabChange = (tabId: string, pushToHistory: boolean = true) => {
     if (tabId === activeTab) return;
-    setActiveTab(tabId);
+    withViewTransition(() => setActiveTab(tabId));
     localStorage.setItem('lastActiveTab', tabId);
     if (pushToHistory) {
       window.history.pushState({ tab: tabId }, '', '#' + tabId);

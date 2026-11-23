@@ -4,6 +4,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { easeOutCubic, prefersReducedMotion } from '../lib/motion';
 import * as api from '../lib/api';
 import type { AuthUser } from '../lib/api';
 import { usePWAInstall } from '../hooks/usePWAInstall';
@@ -81,6 +82,11 @@ export default function OtdrModule({ user }: { user: AuthUser | null }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const layoutRef = useRef<any>(null);
   const zoomRef = useRef({ min: 0, max: 1 });
+  // Revelação do traço (0..1): o gráfico "se desenha" da esquerda para a direita ao carregar
+  const revealRef = useRef(1);
+  const revealRafRef = useRef<number | null>(null);
+  // Sempre aponta para a versão mais recente de drawGraph (evita desenhar com estado antigo durante a animação)
+  const drawGraphRef = useRef<() => void>(() => {});
   const draggingRef = useRef<any>(null);
 
   // PWA & Connection Hooks
@@ -197,6 +203,42 @@ export default function OtdrModule({ user }: { user: AuthUser | null }) {
       showToast(err?.message || 'Erro ao baixar arquivo.', 'error');
     }
   };
+
+  // Animação de entrada do traço (declarada ANTES dos efeitos que desenham, para zerar a revelação primeiro)
+  useEffect(() => {
+    if (revealRafRef.current !== null) {
+      cancelAnimationFrame(revealRafRef.current);
+      revealRafRef.current = null;
+    }
+    if (!trace || prefersReducedMotion()) {
+      revealRef.current = 1;
+      return;
+    }
+    const DURATION = 900;
+    const t0 = performance.now();
+    revealRef.current = 0;
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / DURATION);
+      revealRef.current = easeOutCubic(k);
+      drawGraphRef.current();
+      if (k < 1) {
+        revealRafRef.current = requestAnimationFrame(step);
+      } else {
+        revealRef.current = 1;
+        revealRafRef.current = null;
+        drawGraphRef.current();
+      }
+    };
+    revealRafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (revealRafRef.current !== null) {
+        cancelAnimationFrame(revealRafRef.current);
+        revealRafRef.current = null;
+      }
+      revealRef.current = 1;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trace]);
 
   // Set trace background theme
   useEffect(() => {
@@ -542,6 +584,16 @@ export default function OtdrModule({ user }: { user: AuthUser | null }) {
       ctx.setLineDash([]);
     }
 
+    // Revelação animada: curva e preenchimento são recortados até a posição atual
+    const reveal = revealRef.current;
+    const revealX = pad.left + plotW * reveal;
+    ctx.save();
+    if (reveal < 1) {
+      ctx.beginPath();
+      ctx.rect(0, 0, revealX, rect.height);
+      ctx.clip();
+    }
+
     // Main Fill under the curve
     ctx.beginPath();
     for (let pi = 0; pi < activePts.length; pi++) {
@@ -565,12 +617,14 @@ export default function OtdrModule({ user }: { user: AuthUser | null }) {
       if (pj === 0) ctx.moveTo(qx, qy); else ctx.lineTo(qx, qy);
     }
     ctx.stroke();
+    ctx.restore();
 
     // Plot key events
     ctx.font = 'bold 10px -apple-system, sans-serif';
     trace.events.forEach((e, idx) => {
       if (e.distanceKm < fromKm - span * 0.05 || e.distanceKm > toKm + span * 0.05) return;
       const ex = xS(e.distanceKm);
+      if (reveal < 1 && ex > revealX) return; // evento aparece quando o traço o alcança
       const kind = classify(e);
       const baseColor = EVENT_COLORS[kind];
       const lossColor = (typeof e.spliceLossDb === 'number' && isFinite(e.spliceLossDb))
@@ -617,6 +671,8 @@ export default function OtdrModule({ user }: { user: AuthUser | null }) {
       });
     }
   };
+
+  drawGraphRef.current = drawGraph;
 
   // Redraw when resized (ResizeObserver no contêiner + fallback para window.resize).
   // Mantém zoom, marcadores A/B e seleção de eventos: apenas redesenha com a mesma view.

@@ -12,6 +12,18 @@ barra de navegação inferior. O acabamento em vidro agora é fixo (sem alternâ
 
 ---
 
+## Animações e movimento
+
+Camada aditiva em `src/motion.css` (carregada por último) + `src/lib/motion.ts`. Não altera cores nem layout.
+
+- **Troca de ferramenta**: View Transition API (fade + deslize curto, ~250 ms). Em navegadores sem suporte, entrada simples do painel.
+- **Painel**: cartões entram escalonados (40 ms entre eles); seta e favorito com microinterações; diálogos e avisos com entrada suave.
+- **Leitor OTDR**: o traço se desenha da esquerda para a direita (~0,9 s) e os eventos aparecem quando o traço os alcança.
+- **Acessibilidade e bateria**: tudo respeita `prefers-reduced-motion` e a chave **Configurações → Animações → Reduzidas**
+  (salva em `localStorage('motion')`). Só `transform`/`opacity`; sem animações em loop infinito.
+
+---
+
 ## Contas de usuário, login e segurança (novo — backend próprio)
 
 O app agora exige **conta própria (usuário + senha)** para acessar as ferramentas, com

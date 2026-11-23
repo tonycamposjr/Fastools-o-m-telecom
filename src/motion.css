@@ -1,0 +1,181 @@
+/* ==========================================================================
+   CENTRAL DE CAMPO — CAMADA DE MOVIMENTO
+   --------------------------------------------------------------------------
+   Carregado por ÚLTIMO (depois de index.css, skeuo.css e skins.css).
+   Só adiciona animações — não altera cores, layout nem tipografia.
+   Princípios: transform/opacity apenas, durações curtas, sem loops infinitos
+   e totalmente desligável (prefers-reduced-motion ou html[data-motion="reduced"]).
+   ========================================================================== */
+
+:root {
+  --mo-fast: 160ms;
+  --mo-base: 260ms;
+  --mo-slow: 420ms;
+  --mo-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --mo-ease-snap: cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+/* ---------- 1. Troca entre telas (View Transition API) ---------- */
+@keyframes moOut {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes moIn {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+::view-transition-old(root) {
+  animation: moOut var(--mo-fast) var(--mo-ease-snap) both;
+}
+::view-transition-new(root) {
+  animation: moIn var(--mo-base) var(--mo-ease-out) both;
+}
+
+/* Fallback (navegadores sem View Transition): entrada simples do painel da ferramenta */
+@keyframes moPanelIn {
+  from { opacity: 0; transform: translateY(10px); }
+}
+@supports not (view-transition-name: none) {
+  .tab-panels {
+    animation: moPanelIn var(--mo-base) var(--mo-ease-out) backwards;
+  }
+}
+
+/* ---------- 2. Cartões do painel: entrada escalonada ---------- */
+@keyframes moRise {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+}
+
+/* "backwards": só segura o estado inicial durante o atraso. Depois da animação
+   o :hover/:active do próprio cartão volta a mandar no transform. */
+.fx-grid > .fx-card {
+  animation: moRise var(--mo-slow) var(--mo-ease-out) backwards;
+}
+.fx-grid > .fx-card:nth-child(1)  { animation-delay: 0ms; }
+.fx-grid > .fx-card:nth-child(2)  { animation-delay: 40ms; }
+.fx-grid > .fx-card:nth-child(3)  { animation-delay: 80ms; }
+.fx-grid > .fx-card:nth-child(4)  { animation-delay: 120ms; }
+.fx-grid > .fx-card:nth-child(5)  { animation-delay: 160ms; }
+.fx-grid > .fx-card:nth-child(6)  { animation-delay: 200ms; }
+.fx-grid > .fx-card:nth-child(7)  { animation-delay: 240ms; }
+.fx-grid > .fx-card:nth-child(8)  { animation-delay: 280ms; }
+.fx-grid > .fx-card:nth-child(9)  { animation-delay: 320ms; }
+.fx-grid > .fx-card:nth-child(10) { animation-delay: 360ms; }
+.fx-grid > .fx-card:nth-child(n+11) { animation-delay: 400ms; }
+
+/* Cabeçalho do painel e blocos abaixo dos cartões */
+.fx-hero,
+.fx-systems,
+.fx-status {
+  animation: moRise var(--mo-slow) var(--mo-ease-out) backwards;
+}
+.fx-systems { animation-delay: 160ms; }
+.fx-status  { animation-delay: 220ms; }
+
+/* ---------- 3. Microinterações ---------- */
+.fx-card {
+  transition:
+    transform var(--mo-fast) var(--mo-ease-out),
+    box-shadow var(--mo-fast) var(--mo-ease-out),
+    filter var(--mo-fast) var(--mo-ease-out);
+}
+.fx-card:active { transform: scale(0.985); }
+
+/* Seta "ir" desliza um pouco no hover */
+.fx-go i {
+  transition: transform var(--mo-fast) var(--mo-ease-out);
+}
+.fx-card:hover .fx-go i,
+.fx-card:focus-visible .fx-go i,
+.fx-sigitm:hover .fx-go i {
+  transform: translateX(3px);
+}
+
+/* Estrela de favorito: pequeno "pop" ao fixar */
+@keyframes moPop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.fx-fav.on i { animation: moPop var(--mo-base) var(--mo-ease-out); }
+
+/* Itens do menu lateral e botões da barra de controles */
+.fx-nav-item,
+.theme-toggle,
+.export-btn,
+.reset-btn,
+.back-to-dashboard-btn {
+  transition:
+    transform var(--mo-fast) var(--mo-ease-out),
+    background-color var(--mo-fast) ease,
+    box-shadow var(--mo-fast) ease;
+}
+.theme-toggle:active,
+.export-btn:active,
+.reset-btn:active,
+.back-to-dashboard-btn:active { transform: scale(0.96); }
+
+/* Diálogos do painel (Configurações / Sobre) */
+@keyframes moFade { from { opacity: 0; } }
+@keyframes moPopIn { from { opacity: 0; transform: translateY(8px) scale(0.97); } }
+.fx-overlay { animation: moFade var(--mo-fast) ease-out backwards; }
+.fx-dialog  { animation: moPopIn var(--mo-base) var(--mo-ease-out) backwards; }
+
+/* Aviso (toast): entrada pela lateral, mais evidente que o padrão */
+@keyframes moToast {
+  from { opacity: 0; transform: translateX(18px); }
+}
+html.sk-skin .sk-toast { animation: moToast var(--mo-base) var(--mo-ease-out) backwards; }
+
+/* Indicador "Online": pulsa algumas vezes e para (sem loop infinito = menos bateria) */
+.fx-dot { animation-iteration-count: 5; }
+
+/* ---------- 4. Esqueleto de carregamento (usado pelo TabFallback) ---------- */
+@keyframes moShimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+.mo-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(127, 140, 160, 0.16);
+}
+.mo-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  animation: moShimmer 1.2s ease-in-out 3;
+}
+
+/* ---------- 5. Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Mesma regra, acionada pela chave "Animações reduzidas" das Configurações */
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+html[data-motion="reduced"]::view-transition-group(*),
+html[data-motion="reduced"]::view-transition-old(*),
+html[data-motion="reduced"]::view-transition-new(*) {
+  animation: none !important;
+}

@@ -1398,22 +1398,35 @@ html[data-skin="tecnico"] .fx-go {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Destaques azuis (1º e 5º de cada bloco de 6) */
-html[data-skin="tecnico"] .fx-card:nth-child(6n+1),
-html[data-skin="tecnico"] .fx-card:nth-child(6n+5) {
+/* Destaques azuis — fixos por ferramenta (não mudam com a ordem/favoritos):
+   OTDR, NSAP, Registros, Mapa KML, Calculadora Óptica e Rotas HL4 */
+html[data-skin="tecnico"] .fx-card[data-tool="otdr"],
+html[data-skin="tecnico"] .fx-card[data-tool="nsap"],
+html[data-skin="tecnico"] .fx-card[data-tool="clientes"],
+html[data-skin="tecnico"] .fx-card[data-tool="kml"],
+html[data-skin="tecnico"] .fx-card[data-tool="calculadora"],
+html[data-skin="tecnico"] .fx-card[data-tool="rotas_hl4"] {
   background: var(--screws), var(--blue-glossy);
   color: #fff;
   border-color: #0a2a63;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 0 22px rgba(80, 160, 255, 0.25), 0 6px 14px rgba(0, 0, 0, 0.5);
 }
 
-html[data-skin="tecnico"] .fx-card:nth-child(6n+1) .fx-card-copy span,
-html[data-skin="tecnico"] .fx-card:nth-child(6n+5) .fx-card-copy span {
+html[data-skin="tecnico"] .fx-card[data-tool="otdr"] .fx-card-copy span,
+html[data-skin="tecnico"] .fx-card[data-tool="nsap"] .fx-card-copy span,
+html[data-skin="tecnico"] .fx-card[data-tool="clientes"] .fx-card-copy span,
+html[data-skin="tecnico"] .fx-card[data-tool="kml"] .fx-card-copy span,
+html[data-skin="tecnico"] .fx-card[data-tool="calculadora"] .fx-card-copy span,
+html[data-skin="tecnico"] .fx-card[data-tool="rotas_hl4"] .fx-card-copy span {
   color: #cfe0fb;
 }
 
-html[data-skin="tecnico"] .fx-card:nth-child(6n+1) .fx-card-icon,
-html[data-skin="tecnico"] .fx-card:nth-child(6n+5) .fx-card-icon {
+html[data-skin="tecnico"] .fx-card[data-tool="otdr"] .fx-card-icon,
+html[data-skin="tecnico"] .fx-card[data-tool="nsap"] .fx-card-icon,
+html[data-skin="tecnico"] .fx-card[data-tool="clientes"] .fx-card-icon,
+html[data-skin="tecnico"] .fx-card[data-tool="kml"] .fx-card-icon,
+html[data-skin="tecnico"] .fx-card[data-tool="calculadora"] .fx-card-icon,
+html[data-skin="tecnico"] .fx-card[data-tool="rotas_hl4"] .fx-card-icon {
   color: #8fc2ff;
   background: #0a1e44;
   border-radius: 8px;
@@ -1423,8 +1436,12 @@ html[data-skin="tecnico"] .fx-card:nth-child(6n+5) .fx-card-icon {
   font-size: 30px;
 }
 
-html[data-skin="tecnico"] .fx-card:nth-child(6n+1) .fx-go,
-html[data-skin="tecnico"] .fx-card:nth-child(6n+5) .fx-go {
+html[data-skin="tecnico"] .fx-card[data-tool="otdr"] .fx-go,
+html[data-skin="tecnico"] .fx-card[data-tool="nsap"] .fx-go,
+html[data-skin="tecnico"] .fx-card[data-tool="clientes"] .fx-go,
+html[data-skin="tecnico"] .fx-card[data-tool="kml"] .fx-go,
+html[data-skin="tecnico"] .fx-card[data-tool="calculadora"] .fx-go,
+html[data-skin="tecnico"] .fx-card[data-tool="rotas_hl4"] .fx-go {
   background: #0a1e44;
   border-color: #cfe0fb;
 }
